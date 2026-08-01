@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#0a0a1a">
     <title>BUBBLE</title>
     <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:none !important; user-select:none; -webkit-user-select:none; }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:none; user-select:none; -webkit-user-select:none; }
 html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:#fff; touch-action:none; }
 :root {
     --safe-top: env(safe-area-inset-top, 0px);
@@ -49,11 +49,11 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .progress-fill { height:100%; width:0%; background:linear-gradient(90deg,#ff8c00,#ffd700); border-radius:0; transition:width 0.3s ease; }
 #btn-pause { position:absolute; top:max(12px, var(--safe-top)); right:16px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; pointer-events:auto !important; z-index:10; }
 #btn-pause:active { transform:scale(0.9); background:rgba(255,255,255,0.15); }
-.bonus-bar { position:absolute; top:max(60px, calc(var(--safe-top) + 48px)); left:50%; transform:translateX(-50%); display:flex; gap:8px; pointer-events:none; }
-.bonus-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); position:relative; }
+.bonus-bar { position:absolute; top:max(12px, var(--safe-top)); left:16px; display:flex; gap:8px; pointer-events:none; z-index:10; }
+.bonus-icon { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); position:relative; backdrop-filter:blur(4px); }
 .bonus-icon.flash { animation:bonusFlash 0.5s ease infinite alternate; }
 @keyframes bonusFlash { from{opacity:1;transform:scale(1)} to{opacity:0.5;transform:scale(1.1)} }
-.bonus-timer { position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); font-size:8px; color:#fff; background:rgba(0,0,0,0.6); padding:1px 4px; border-radius:4px; white-space:nowrap; }
+.bonus-timer { position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); font-size:9px; color:#fff; background:rgba(0,0,0,0.6); padding:1px 5px; border-radius:4px; white-space:nowrap; font-weight:700; }
 .dead-title { font-size:34px; font-weight:900; color:#ff4500; letter-spacing:4px; margin-bottom:16px; animation:shake 0.5s ease; }
 @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 .dead-bubble { width:60px; height:60px; margin:0 auto 20px; border-radius:50%; background:radial-gradient(circle,rgba(255,100,100,0.3),transparent); border:2px solid rgba(255,100,100,0.5); position:relative; animation:popDead 0.6s ease; }
@@ -63,7 +63,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .stat-label { display:block; font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:4px; }
 .stat-value { font-size:24px; font-weight:900; color:#fff; }
 .levels-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:16px; }
-.level-card { aspect-ratio:1.3; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; pointer-events:auto; }
+.level-card { aspect-ratio:1.8; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; pointer-events:auto; }
 .level-card.completed { border-color:#4caf50; background:rgba(76,175,80,0.08); }
 .level-card.locked { opacity:0.35; pointer-events:none; }
 .level-card:active { transform:scale(0.95); }
@@ -76,7 +76,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .skins-glass { max-height:min(82vh, calc(100vh - var(--safe-top) - var(--safe-bottom) - 40px)); overflow-y:auto; padding:clamp(16px, 4vmin, 28px) clamp(12px, 3.5vmin, 20px); }
 .screen-title { font-size:24px; font-weight:900; letter-spacing:3px; margin-bottom:8px; }
 .coins-display { font-size:18px; color:#ffd700; margin-bottom:16px; font-weight:700; }
-.skins-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(8px, 2.5vmin, 14px); margin-bottom:clamp(10px, 3vmin, 18px); }
+.skins-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(8px, 2.5vmin, 14px); margin-bottom:clamp(10px, 3vmin, 18px); }
 .skin-card { aspect-ratio:1; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; padding:clamp(4px, 1.5vmin, 10px); pointer-events:auto; min-height:70px; }
 .skin-card.active { border-color:#ff8c00; background:rgba(255,140,0,0.08); }
 .skin-card.locked { opacity:0.35; }
@@ -109,7 +109,40 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .coin-icon::after { content:'$'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:9px; font-weight:900; color:rgba(140,100,0,0.7); }
 .coin-small { width:10px !important; height:10px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; top:-1px !important; position:relative !important; }
 .coin-small::after { font-size:6px !important; transform:translate(-50%,-50%) !important; }
-.skins-glass::-webkit-scrollbar{display:none} .skins-glass{-ms-overflow-style:none;scrollbar-width:none}
+.skins-glass::-webkit-scrollbar{display:none} .skins-glass{-ms-overflow-style:none;scrollbar-width:none; touch-action:pan-y !important;}
+.levels-grid{touch-action:pan-y !important;}
+
+.shop-scroll { max-height:min(45vh, 300px); overflow-y:auto !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:10px; border-radius:var(--btn-radius); background:rgba(0,0,0,0.15); padding:10px; -webkit-overflow-scrolling:touch; min-height:120px; }
+.shop-scroll::-webkit-scrollbar { display:none; }
+#shop-content { width:100%; }
+.shop-actions { display:flex; gap:8px; margin-top:8px; }
+.shop-actions .btn { margin:0; min-height:44px; }
+.shop-actions .btn:disabled { opacity:0.4; cursor:not-allowed; }
+.skin-card { position:relative; pointer-events:auto; cursor:pointer; transition:all 0.2s ease; }
+.skin-card .skin-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:4px; }
+.skin-card .skin-preview-wrap .skin-shell { width:90%; height:90%; border-radius:50%; position:relative; }
+.skin-card .skin-preview-wrap .skin-shell::after { content:''; position:absolute; top:15%; left:18%; width:22%; height:22%; border-radius:50%; background:rgba(255,255,255,0.7); filter:blur(0.5px); }
+.skin-card .skin-name { font-size:9px; color:rgba(255,255,255,0.65); text-align:center; line-height:1.2; }
+.skin-card .skin-price { font-size:9px; color:#ffd700; margin-top:2px; text-align:center; }
+.skin-card.active { border-color:#ff8c00; background:rgba(255,140,0,0.08); }
+.skin-card.locked { opacity:0.45; }
+.skin-card.affordable { opacity:1; border-color:rgba(255,215,0,0.4); box-shadow:0 0 12px rgba(255,215,0,0.1); }
+.trail-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:4px; background:rgba(0,0,0,0.2); overflow:hidden; }
+.case-box { width:100%; height:150px; border-radius:18px; background:linear-gradient(145deg, rgba(40,30,10,0.6), rgba(20,15,5,0.8)); border:2px solid rgba(180,140,40,0.5); display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:14px; position:relative; overflow:hidden; box-shadow:inset 0 1px 0 rgba(255,215,0,0.1), 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,215,0,0.08); }
+.case-box::before { content:''; position:absolute; inset:2px; border-radius:16px; border:1px dashed rgba(255,215,0,0.2); pointer-events:none; }
+.case-box .case-lid { position:absolute; top:0; left:0; width:100%; height:48%; background:linear-gradient(180deg, rgba(255,200,80,0.3), rgba(180,130,20,0.15)); border-bottom:2px solid rgba(255,180,60,0.5); transform-origin:top; transition:transform 0.8s cubic-bezier(0.22,1,0.36,1); box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:3; }
+.case-box .case-lid::after { content:'★'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:22px; color:rgba(255,215,0,0.6); text-shadow:0 0 8px rgba(255,215,0,0.4); }
+.case-box.open .case-lid { transform:rotateX(-125deg); opacity:0.3; }
+.case-box .case-glow-ring { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:70px; height:70px; border-radius:50%; border:2px solid rgba(255,215,0,0.15); box-shadow:0 0 20px rgba(255,215,0,0.1), inset 0 0 20px rgba(255,215,0,0.05); }
+.case-strip-modern { display:flex; gap:16px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
+.case-item-modern { width:90px; height:90px; border-radius:16px; background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 0 20px rgba(255,255,255,0.03); }
+.case-selector-modern { position:absolute; top:0; left:50%; transform:translateX(-50%); width:3px; height:100%; background:linear-gradient(180deg,transparent,rgba(255,215,0,0.8),transparent); z-index:2; box-shadow:0 0 8px rgba(255,215,0,0.4); }
+.case-glow-modern { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:96px; height:96px; border-radius:18px; box-shadow:0 0 40px rgba(255,215,0,0.3), 0 0 80px rgba(255,215,0,0.1); pointer-events:none; border:1px solid rgba(255,215,0,0.15); }
+.case-strip-modern { display:flex; gap:16px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
+.case-item-modern { width:90px; height:90px; border-radius:16px; background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 0 20px rgba(255,255,255,0.03); }
+.case-selector-modern { position:absolute; top:0; left:50%; transform:translateX(-50%); width:4px; height:100%; background:linear-gradient(180deg,transparent,#ffd700,transparent); z-index:2; }
+.case-glow-modern { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:94px; height:94px; border-radius:16px; box-shadow:0 0 30px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.15); pointer-events:none; }
+
 @media (max-height:600px) { .game-title{font-size:clamp(26px, 8vmin, 34px)} .menu-glass{padding:16px 12px} .btn{padding:10px;margin:5px 0;font-size:13px} .menu-bubble-demo{width:55px;height:55px;margin-bottom:12px} .score-value{font-size:clamp(28px, 9vmin, 40px)} .skin-card{padding:4px} .levels-grid{grid-template-columns:repeat(3,1fr)} }
 @media (min-height:800px) { .menu-glass{padding:clamp(28px, 6vmin, 48px) clamp(20px, 5vmin, 40px)} .game-title{font-size:clamp(40px, 11vmin, 56px)} .score-value{font-size:clamp(48px, 13vmin, 68px)} }
 @media (max-width:360px) { .menu-glass{width:92%;padding:16px 12px} .skins-grid{grid-template-columns:repeat(3,1fr);gap:8px} .skin-card{padding:4px} .skin-preview{width:40px;height:40px} .levels-grid{grid-template-columns:repeat(2,1fr)} }
@@ -134,16 +167,16 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                 </div>
             </div>
             <div id="hud" class="screen">
+                <div class="bonus-bar" id="bonus-bar"></div>
                 <div class="hud-center">
                     <span class="score-label" data-i18n="height">ВЫСОТА</span>
                     <span class="score-value" id="hud-score">0</span>
                 </div>
-                <button id="btn-pause">⏸</button>
+                <button id="btn-pause"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="2" width="4" height="14" rx="1.5" fill="white" fill-opacity="0.9"/><rect x="11" y="2" width="4" height="14" rx="1.5" fill="white" fill-opacity="0.9"/></svg></button>
                 <div class="hud-bottom">
                     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
                 </div>
-                <div class="bonus-bar" id="bonus-bar"></div>
-            </div>
+                </div>
             <div id="pause-screen" class="screen">
                 <div class="menu-glass">
                     <h2 class="screen-title" data-i18n="paused">ПАУЗА</h2>
@@ -183,7 +216,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                 </div>
             </div>
             <div id="shop-screen" class="screen">
-                <div class="menu-glass skins-glass">
+                <div class="menu-glass" style="padding-bottom:12px;">
                     <h2 class="screen-title" data-i18n="shop">МАГАЗИН</h2>
                     <div class="coins-display"><span class="coin-icon"></span> <span id="shop-coins">0</span></div>
                     <div class="shop-tabs">
@@ -258,35 +291,35 @@ function updateLanguage(lang) {
 
 // ==================== SKINS DATA ====================
 const SKINS_DATA = [
-    { id: 'water', name: {ru:'Вода',en:'Water'}, rarity: 'common', price: 400, drink: 'water',
+    { id: 'water', name: {ru:'Вода',en:'Water'}, rarity: 'common', price: 200, drink: 'water',
       colors: { main:'rgba(100,200,255,0.3)', highlight:'rgba(255,255,255,0.8)', shadow:'rgba(50,100,200,0.2)', edge:'rgba(100,200,255,0.1)', innerGlow:'rgba(150,220,255,0.15)', glow:'rgba(100,200,255,0.3)' },
       theme: { stops:[{h:205,s:45,l:12},{h:210,s:40,l:16},{h:215,s:50,l:20},{h:200,s:55,l:10}], ray:[160,210,255], wave:[120,190,240] },
       obstacles: { ice:'#c8e6f5', lemon:'#f0e060', mint:'#7cb342', straw:'#ff5555', berry:'#e91e63', lime:'#cddc39', cherry:'#d32f2f' } },
-    { id: 'lemonade', name: {ru:'Лимонад',en:'Lemonade'}, rarity: 'common', price: 400, drink: 'lemonade',
+    { id: 'lemonade', name: {ru:'Лимонад',en:'Lemonade'}, rarity: 'common', price: 200, drink: 'lemonade',
       colors: { main:'rgba(255,235,100,0.35)', highlight:'rgba(255,255,220,0.9)', shadow:'rgba(200,180,0,0.25)', edge:'rgba(255,235,100,0.15)', innerGlow:'rgba(255,245,150,0.2)', glow:'rgba(255,235,100,0.35)' },
       theme: { stops:[{h:50,s:60,l:13},{h:55,s:55,l:17},{h:60,s:50,l:21},{h:45,s:70,l:11}], ray:[255,240,100], wave:[255,220,80] },
       obstacles: { ice:'#fff9c4', lemon:'#ffeb3b', mint:'#81c784', straw:'#ff9800', berry:'#f48fb1', lime:'#dce775', cherry:'#ef5350' } },
-    { id: 'berrymors', name: {ru:'Ягодный морс',en:'Berry Mors'}, rarity: 'common', price: 400, drink: 'berry',
+    { id: 'berrymors', name: {ru:'Ягодный морс',en:'Berry Mors'}, rarity: 'common', price: 200, drink: 'berry',
       colors: { main:'rgba(200,50,100,0.35)', highlight:'rgba(255,180,200,0.85)', shadow:'rgba(150,20,60,0.3)', edge:'rgba(200,50,100,0.2)', innerGlow:'rgba(255,150,180,0.2)', glow:'rgba(200,50,100,0.35)' },
       theme: { stops:[{h:340,s:50,l:12},{h:345,s:45,l:16},{h:350,s:55,l:20},{h:335,s:60,l:10}], ray:[255,150,180], wave:[255,120,150] },
       obstacles: { ice:'#f8bbd0', lemon:'#f06292', mint:'#c2185b', straw:'#e91e63', berry:'#ad1457', lime:'#f48fb1', cherry:'#880e4f' } },
-    { id: 'minttea', name: {ru:'Мятный чай',en:'Mint Tea'}, rarity: 'common', price: 400, drink: 'tea',
+    { id: 'minttea', name: {ru:'Мятный чай',en:'Mint Tea'}, rarity: 'common', price: 200, drink: 'tea',
       colors: { main:'rgba(100,220,150,0.3)', highlight:'rgba(200,255,220,0.9)', shadow:'rgba(50,150,100,0.25)', edge:'rgba(100,220,150,0.15)', innerGlow:'rgba(150,255,200,0.2)', glow:'rgba(100,220,150,0.3)' },
       theme: { stops:[{h:150,s:45,l:12},{h:155,s:40,l:16},{h:160,s:50,l:20},{h:145,s:55,l:10}], ray:[150,255,200], wave:[120,230,170] },
       obstacles: { ice:'#c8e6c9', lemon:'#fff59d', mint:'#2e7d32', straw:'#66bb6a', berry:'#a5d6a7', lime:'#81c784', cherry:'#388e3c' } },
-    { id: 'orange', name: {ru:'Апельсиновый сок',en:'Orange Juice'}, rarity: 'uncommon', price: 200, drink: 'orange',
+    { id: 'orange', name: {ru:'Апельсиновый сок',en:'Orange Juice'}, rarity: 'uncommon', price: 400, drink: 'orange',
       colors: { main:'rgba(255,160,50,0.35)', highlight:'rgba(255,230,180,0.9)', shadow:'rgba(200,120,0,0.3)', edge:'rgba(255,160,50,0.2)', innerGlow:'rgba(255,200,100,0.2)', glow:'rgba(255,160,50,0.35)' },
       theme: { stops:[{h:28,s:55,l:13},{h:32,s:50,l:17},{h:36,s:60,l:21},{h:24,s:65,l:11}], ray:[255,180,80], wave:[255,150,50] },
       obstacles: { ice:'#ffe0b2', lemon:'#ffb74d', mint:'#ff8a65', straw:'#ff5722', berry:'#ffab91', lime:'#ffcc80', cherry:'#f4511e' } },
-    { id: 'strawberry', name: {ru:'Клубничный смузи',en:'Strawberry Smoothie'}, rarity: 'uncommon', price: 200, drink: 'smoothie',
+    { id: 'strawberry', name: {ru:'Клубничный смузи',en:'Strawberry Smoothie'}, rarity: 'uncommon', price: 400, drink: 'smoothie',
       colors: { main:'rgba(255,100,120,0.35)', highlight:'rgba(255,220,230,0.9)', shadow:'rgba(200,50,70,0.3)', edge:'rgba(255,100,120,0.2)', innerGlow:'rgba(255,180,190,0.2)', glow:'rgba(255,100,120,0.35)' },
       theme: { stops:[{h:350,s:50,l:13},{h:355,s:45,l:17},{h:360,s:55,l:21},{h:345,s:60,l:11}], ray:[255,150,160], wave:[255,120,130] },
       obstacles: { ice:'#ffcdd2', lemon:'#ef9a9a', mint:'#e57373', straw:'#f44336', berry:'#d32f2f', lime:'#ff8a80', cherry:'#c62828' } },
-    { id: 'soda', name: {ru:'Газировка',en:'Soda'}, rarity: 'uncommon', price: 200, drink: 'soda',
+    { id: 'soda', name: {ru:'Газировка',en:'Soda'}, rarity: 'uncommon', price: 400, drink: 'soda',
       colors: { main:'rgba(100,220,255,0.35)', highlight:'rgba(220,250,255,0.95)', shadow:'rgba(50,150,200,0.3)', edge:'rgba(100,220,255,0.2)', innerGlow:'rgba(180,240,255,0.25)', glow:'rgba(100,220,255,0.35)' },
       theme: { stops:[{h:190,s:55,l:13},{h:195,s:50,l:17},{h:200,s:60,l:21},{h:185,s:65,l:11}], ray:[180,240,255], wave:[150,220,240] },
       obstacles: { ice:'#e1f5fe', lemon:'#81d4fa', mint:'#4fc3f7', straw:'#29b6f6', berry:'#039be5', lime:'#b3e5fc', cherry:'#0288d1' } },
-    { id: 'lavender', name: {ru:'Лавандовый латте',en:'Lavender Latte'}, rarity: 'uncommon', price: 200, drink: 'latte',
+    { id: 'lavender', name: {ru:'Лавандовый латте',en:'Lavender Latte'}, rarity: 'uncommon', price: 400, drink: 'latte',
       colors: { main:'rgba(180,150,220,0.35)', highlight:'rgba(230,220,255,0.9)', shadow:'rgba(130,100,180,0.3)', edge:'rgba(180,150,220,0.2)', innerGlow:'rgba(210,190,240,0.2)', glow:'rgba(180,150,220,0.35)' },
       theme: { stops:[{h:270,s:40,l:13},{h:275,s:35,l:17},{h:280,s:45,l:21},{h:265,s:50,l:11}], ray:[210,190,255], wave:[190,170,230] },
       obstacles: { ice:'#e1bee7', lemon:'#ce93d8', mint:'#ba68c8', straw:'#ab47bc', berry:'#9c27b0', lime:'#d1c4e9', cherry:'#7b1fa2' } },
@@ -647,14 +680,29 @@ class Bonus {
     update(dt) { this.floatPhase += dt * 2.5; this.sparklePhase += dt * 5; this.pulsePhase += dt * 3; this.y += Math.sin(this.floatPhase) * 3 * dt; if (this.collected) { this.scale += dt * 5; this.alpha -= dt * 4; } }
     render(ctx) {
         if (this.alpha <= 0) return; ctx.save(); ctx.translate(this.x, this.y); ctx.scale(this.scale * (1 + Math.sin(this.pulsePhase) * 0.08), this.scale * (1 + Math.sin(this.pulsePhase) * 0.08)); ctx.globalAlpha = this.alpha;
-        const r = this.radius; const colors = { shield: '#2196f3', slow: '#9c27b0', coin2x: '#ffd700', mini: '#4caf50' }; const icons = { shield: '🛡', slow: '⏱', coin2x: '×2', mini: '🔍' }; const c = colors[this.type] || '#fff';
+        const r = this.radius; const colors = { shield: '#2196f3', slow: '#9c27b0', coin2x: '#ffd700', mini: '#4caf50' }; const c = colors[this.type] || '#fff';
         ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.beginPath(); ctx.arc(1, 2, r, 0, Math.PI * 2); ctx.fill();
         const g = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
         g.addColorStop(0, '#fff'); g.addColorStop(0.4, c); g.addColorStop(1, '#333');
         ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
         ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 1.2; ctx.stroke();
-        ctx.fillStyle = '#fff'; ctx.font = 'bold ' + Math.floor(r * 0.9) + 'px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(icons[this.type] || '?', 0, 1);
+        ctx.fillStyle = '#fff'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+        if (this.type === 'shield') {
+            ctx.beginPath(); ctx.moveTo(0, -r*0.55); ctx.lineTo(-r*0.45, -r*0.2); ctx.lineTo(-r*0.45, r*0.1); ctx.quadraticCurveTo(0, r*0.55, r*0.45, r*0.1); ctx.lineTo(r*0.45, -r*0.2); ctx.closePath(); ctx.globalAlpha = this.alpha * 0.9; ctx.stroke(); ctx.globalAlpha = this.alpha;
+            ctx.beginPath(); ctx.moveTo(0, -r*0.55); ctx.lineTo(0, r*0.35); ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1; ctx.stroke();
+        } else if (this.type === 'slow') {
+            ctx.beginPath(); ctx.arc(0, 0, r*0.45, -Math.PI*0.5, Math.PI*0.8); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, -r*0.45); ctx.lineTo(r*0.15, -r*0.25); ctx.lineTo(-r*0.1, -r*0.25); ctx.closePath(); ctx.fill();
+            ctx.beginPath(); ctx.arc(0, 0, r*0.1, 0, Math.PI*2); ctx.fill();
+        } else if (this.type === 'coin2x') {
+            ctx.font = 'bold ' + Math.floor(r * 0.85) + 'px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText('×2', 0, 1);
+        } else if (this.type === 'mini') {
+            const arr = 0.25;
+            ctx.beginPath(); ctx.moveTo(-r*arr, -r*0.5); ctx.lineTo(-r*arr, -r*0.25); ctx.lineTo(-r*0.5, -r*0.25); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(r*arr, -r*0.5); ctx.lineTo(r*arr, -r*0.25); ctx.lineTo(r*0.5, -r*0.25); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(-r*arr, r*0.5); ctx.lineTo(-r*arr, r*0.25); ctx.lineTo(-r*0.5, r*0.25); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(r*arr, r*0.5); ctx.lineTo(r*arr, r*0.25); ctx.lineTo(r*0.5, r*0.25); ctx.stroke();
+        }
         if (Math.sin(this.sparklePhase) > 0.8) { ctx.beginPath(); ctx.arc(r * 0.5, -r * 0.5, 2, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fill(); }
         ctx.restore();
     }
@@ -815,12 +863,12 @@ class World {
         const glass = Game.glass;
         const xFromRel = function(rel) { return glass.leftX + rel * glass.width; };
         (lvl.obstacles || []).forEach(function(o) {
-            const x = xFromRel(o.x); const y = -o.y; let obs;
+            const x = xFromRel(o.x); const y = o.y; let obs;
             switch(o.type) { case 'ice': obs = new IceCube(x, y); break; case 'lemon': obs = new LemonSlice(x, y); break; case 'straw': obs = new Straw(x, y); if (o.rot) obs.rotation = o.rot; break; case 'mint': obs = new MintLeaf(x, y); break; case 'berry': obs = new Berry(x, y); break; case 'lime': obs = new LimeSlice(x, y); break; case 'cherry': obs = new Cherry(x, y); break; }
             if (obs) Game.world.obstacles.push(obs);
         });
-        (lvl.coins || []).forEach(function(c) { Game.world.coins.push(new Coin(xFromRel(c.x), -c.y)); });
-        (lvl.hearts || []).forEach(function(h) { Game.world.hearts.push(new Heart(xFromRel(h.x), -h.y)); });
+        (lvl.coins || []).forEach(function(c) { Game.world.coins.push(new Coin(xFromRel(c.x), c.y)); });
+        (lvl.hearts || []).forEach(function(h) { Game.world.hearts.push(new Heart(xFromRel(h.x), h.y)); });
         this.finishWall = { y: -lvl.length, width: glass.width, height: 60, heartsRequired: (lvl.hearts || []).length };
     }
     update(dt, bubble, cameraY) {
@@ -831,7 +879,7 @@ class World {
                 this.spawnDistance = Math.max(120, 250 - Game.score * 0.35);
                 const coinChance = bubble.coin2xActive ? 0.5 : 0.22;
                 if (Math.random() < coinChance) this.spawnCoin(spawnY + this.spawnDistance * 0.5);
-                if (Math.random() < 0.08) this.spawnBonus(spawnY + this.spawnDistance * 0.5);
+                if (Math.random() < 0.04) this.spawnBonus(spawnY + this.spawnDistance * 0.5);
             }
         }
         this.obstacles.forEach(function(o) { o.update(dt); });
@@ -842,7 +890,9 @@ class World {
                 if (bubble.shieldActive) {
                     this.createShieldDestroyEffect(o.x, o.y);
                     this.obstacles.splice(i, 1); i--;
+                    bubble.shieldActive = false; bubble.shieldTimer = 0; bubble.shieldFlash = false;
                     if (AudioEngine.ctx) AudioEngine.play('shield');
+                    break;
                 } else {
                     bubble.dead = true; Game.camera.addShake(8);
                     if (AudioEngine.ctx) AudioEngine.play('pop');
@@ -895,10 +945,22 @@ class World {
     }
     activateBonus(type, bubble) {
         switch(type) {
-            case 'shield': bubble.shieldActive = true; bubble.shieldTimer = 10; bubble.shieldFlash = false; break;
-            case 'slow': bubble.slowActive = true; bubble.slowTimer = 10; bubble.slowRecoverTimer = 0; break;
-            case 'coin2x': bubble.coin2xActive = true; bubble.coin2xTimer = 10; break;
-            case 'mini': bubble.miniActive = true; bubble.miniTimer = 10; bubble.miniFlash = false; bubble.radius = bubble.baseRadius * 0.5; break;
+            case 'shield': 
+                if (bubble.shieldActive) { bubble.shieldTimer += 10; break; }
+                bubble.shieldActive = true; bubble.shieldTimer = 10; bubble.shieldFlash = false; 
+                break;
+            case 'slow': 
+                if (bubble.slowActive) { bubble.slowTimer += 10; break; }
+                bubble.slowActive = true; bubble.slowTimer = 10; bubble.slowRecoverTimer = 0; 
+                break;
+            case 'coin2x': 
+                if (bubble.coin2xActive) { bubble.coin2xTimer += 10; break; }
+                bubble.coin2xActive = true; bubble.coin2xTimer = 10; 
+                break;
+            case 'mini': 
+                if (bubble.miniActive) { bubble.miniTimer += 10; break; }
+                bubble.miniActive = true; bubble.miniTimer = 10; bubble.miniFlash = false; bubble.radius = bubble.baseRadius * 0.667; 
+                break;
         }
         Game.updateBonusBar();
     }
@@ -917,7 +979,20 @@ class World {
         if (!tooClose) this.obstacles.push(obs);
     }
     spawnCoin(y) { const glass = Game.glass; const margin = 45; const x = glass.leftX + margin + Math.random() * (glass.width - margin * 2); const tooClose = this.obstacles.some(function(o) { return Math.abs(o.y - y) < 70 && Math.abs(o.x - x) < 55; }); if (!tooClose) this.coins.push(new Coin(x, y)); }
-    spawnBonus(y) { const glass = Game.glass; const margin = 50; const x = glass.leftX + margin + Math.random() * (glass.width - margin * 2); const types = ['shield', 'slow', 'coin2x', 'mini']; const type = types[Math.floor(Math.random() * types.length)]; const tooClose = this.obstacles.some(function(o) { return Math.abs(o.y - y) < 80 && Math.abs(o.x - x) < 60; }); if (!tooClose) this.bonuses.push(new Bonus(x, y, type)); }
+    spawnBonus(y) { 
+        const glass = Game.glass; 
+        const margin = 50; 
+        const x = glass.leftX + margin + Math.random() * (glass.width - margin * 2); 
+        let types = [];
+        if (Game.score >= 50) types.push('coin2x');
+        if (Game.score >= 150) types.push('shield');
+        if (Game.score >= 250) types.push('mini');
+        if (Game.score >= 350) types.push('slow');
+        if (types.length === 0) return;
+        const type = types[Math.floor(Math.random() * types.length)]; 
+        const tooClose = this.obstacles.some(function(o) { return Math.abs(o.y - y) < 80 && Math.abs(o.x - x) < 60; }); 
+        if (!tooClose) this.bonuses.push(new Bonus(x, y, type)); 
+    }
     renderObstacles(ctx, cameraY) {
         this.obstacles.forEach(function(o) { o.render(ctx); });
         this.coins.forEach(function(c) { c.render(ctx); });
@@ -1056,55 +1131,146 @@ const SkinManager = {
     renderShop(tab) {
         const content = document.getElementById('shop-content');
         content.innerHTML = '';
+        this._shopTab = tab;
         if (tab === 'skins') this.renderSkinsGrid(content);
         else if (tab === 'trails') this.renderTrailsGrid(content);
         else if (tab === 'cases') this.renderCases(content);
     },
     renderSkinsGrid(container) {
-        const grid = document.createElement('div'); grid.className = 'skins-grid';
         const self = this;
+        const wrap = document.createElement('div'); wrap.className = 'shop-scroll';
+        const grid = document.createElement('div'); grid.className = 'skins-grid';
+        let selectedId = Game.currentSkin;
+
+        function refreshActions() {
+            const actions = document.getElementById('shop-actions');
+            if (!actions) return;
+            const skin = SKINS_DATA.find(function(s) { return s.id === selectedId; });
+            const unlocked = self.isSkinUnlocked(selectedId);
+            const active = Game.currentSkin === selectedId;
+            const affordable = Game.coins >= skin.price;
+            let html = '';
+            if (active) {
+                html = '<button class="btn btn-secondary" disabled style="opacity:0.5;margin:0;">' + t('selected') + '</button>';
+            } else if (unlocked) {
+                html = '<button class="btn btn-primary" id="btn-skin-action" style="margin:0;">' + t('select') + '</button>';
+            } else if (affordable) {
+                html = '<button class="btn btn-primary" id="btn-skin-action" style="margin:0;"><span class="coin-icon"></span> ' + skin.price + ' — ' + t('unlock') + '</button>';
+            } else {
+                html = '<button class="btn btn-secondary" disabled style="opacity:0.35;margin:0;"><span class="coin-icon"></span> ' + skin.price + ' — ' + t('unlock') + '</button>';
+            }
+            actions.innerHTML = html;
+            const btn = document.getElementById('btn-skin-action');
+            if (btn) {
+                btn.addEventListener('click', function() {
+                    if (unlocked) {
+                        Game.currentSkin = selectedId;
+                        Game.save(); self.save(); self.updateMenuBubble();
+                        if (AudioEngine.ctx) AudioEngine.play('combo');
+                    } else if (affordable) {
+                        Game.coins -= skin.price;
+                        self.unlockSkin(selectedId);
+                        Game.currentSkin = selectedId;
+                        Game.save(); self.save(); self.updateMenuBubble();
+                        Game.updateHUD();
+                        if (AudioEngine.ctx) AudioEngine.play('combo');
+                    }
+                    self.renderShop('skins');
+                });
+            }
+        }
+
         SKINS_DATA.forEach(function(skin) {
             const active = Game.currentSkin === skin.id;
             const unlocked = self.isSkinUnlocked(skin.id);
-            const affordable = Game.coins >= skin.price;
             const c = skin.colors;
             const card = document.createElement('div');
-            card.className = 'skin-card' + (active ? ' active' : '') + (!unlocked ? ' locked' : '') + (!unlocked && affordable ? ' affordable' : '');
-            card.innerHTML = '<div class="rarity-badge rarity-' + skin.rarity + '"></div><div class="skin-preview" style="background: radial-gradient(circle at 30% 30%, ' + c.highlight + ', ' + c.main + ', ' + c.shadow + '); box-shadow: 0 0 12px ' + c.glow.replace(')', ',0.4)') + ', inset 0 0 10px rgba(255,255,255,0.15); border: 1px solid ' + c.edge + ';"></div><div class="skin-name">' + skin.name[currentLang] + '</div>' + (!unlocked ? '<div class="skin-price"><span class="coin-icon coin-small"></span> ' + skin.price + '</div>' : '') + (active ? '<div class="skin-check">✓</div>' : '');
+            card.className = 'skin-card' + (active ? ' active' : '') + (!unlocked ? ' locked' : '');
+            card.innerHTML = '<div class="rarity-badge rarity-' + skin.rarity + '"></div><div class="skin-preview-wrap"><div class="skin-shell" style="background: radial-gradient(circle at 30% 30%, ' + c.highlight + ', ' + c.main + ', ' + c.shadow + '); box-shadow: 0 0 12px ' + c.glow.replace(')', ',0.4)') + ', inset 0 0 10px rgba(255,255,255,0.15); border: 1px solid ' + c.edge + ';"></div></div><div class="skin-name">' + skin.name[currentLang] + '</div>';
             card.addEventListener('click', function() {
-                if (active) return;
-                if (unlocked) { Game.currentSkin = skin.id; Game.save(); self.save(); self.renderShop('skins'); self.updateMenuBubble(); if (AudioEngine.ctx) AudioEngine.play('combo'); }
-                else if (affordable) { Game.coins -= skin.price; self.unlockSkin(skin.id); Game.currentSkin = skin.id; Game.save(); self.save(); self.renderShop('skins'); self.updateMenuBubble(); Game.updateHUD(); if (AudioEngine.ctx) AudioEngine.play('combo'); }
-                else { card.style.animation = 'shake 0.3s ease'; setTimeout(function() { card.style.animation = ''; }, 300); }
+                selectedId = skin.id;
+                document.querySelectorAll('.skin-card').forEach(function(c) { c.classList.remove('active'); });
+                card.classList.add('active');
+                refreshActions();
+                if (AudioEngine.ctx) AudioEngine.play('stick');
             });
             grid.appendChild(card);
         });
-        container.appendChild(grid);
+        wrap.appendChild(grid);
+        container.appendChild(wrap);
+        const actions = document.createElement('div'); actions.className = 'shop-actions'; actions.id = 'shop-actions';
+        container.appendChild(actions);
+        refreshActions();
     },
     renderTrailsGrid(container) {
-        const grid = document.createElement('div'); grid.className = 'skins-grid';
         const self = this;
+        const wrap = document.createElement('div'); wrap.className = 'shop-scroll';
+        const grid = document.createElement('div'); grid.className = 'skins-grid';
+        let selectedId = Game.currentTrail;
+
+        function refreshActions() {
+            const actions = document.getElementById('shop-actions');
+            if (!actions) return;
+            const trail = TRAILS_DATA.find(function(t) { return t.id === selectedId; });
+            const unlocked = self.isTrailUnlocked(selectedId);
+            const active = Game.currentTrail === selectedId;
+            const affordable = Game.coins >= trail.price;
+            let html = '';
+            if (active) {
+                html = '<button class="btn btn-secondary" disabled style="opacity:0.5;margin:0;">' + t('selected') + '</button>';
+            } else if (unlocked) {
+                html = '<button class="btn btn-primary" id="btn-trail-action" style="margin:0;">' + t('select') + '</button>';
+            } else if (affordable) {
+                html = '<button class="btn btn-primary" id="btn-trail-action" style="margin:0;"><span class="coin-icon"></span> ' + trail.price + ' — ' + t('unlock') + '</button>';
+            } else {
+                html = '<button class="btn btn-secondary" disabled style="opacity:0.35;margin:0;"><span class="coin-icon"></span> ' + trail.price + ' — ' + t('unlock') + '</button>';
+            }
+            actions.innerHTML = html;
+            const btn = document.getElementById('btn-trail-action');
+            if (btn) {
+                btn.addEventListener('click', function() {
+                    if (unlocked) {
+                        Game.currentTrail = selectedId;
+                        Game.save(); self.save();
+                        if (AudioEngine.ctx) AudioEngine.play('combo');
+                    } else if (affordable) {
+                        Game.coins -= trail.price;
+                        self.unlockTrail(selectedId);
+                        Game.currentTrail = selectedId;
+                        Game.save(); self.save();
+                        Game.updateHUD();
+                        if (AudioEngine.ctx) AudioEngine.play('combo');
+                    }
+                    self.renderShop('trails');
+                });
+            }
+        }
+
         TRAILS_DATA.forEach(function(trail) {
             const active = Game.currentTrail === trail.id;
             const unlocked = self.isTrailUnlocked(trail.id);
-            const affordable = Game.coins >= trail.price;
             const card = document.createElement('div');
-            card.className = 'skin-card' + (active ? ' active' : '') + (!unlocked ? ' locked' : '') + (!unlocked && affordable ? ' affordable' : '');
-            const color = trail.color === 'rainbow' ? '#f0f' : trail.color;
-            card.innerHTML = '<div class="rarity-badge rarity-' + trail.rarity + '"></div><div class="trail-preview" style="background:rgba(0,0,0,0.3);"><div style="position:absolute;top:30%;left:20%;width:6px;height:6px;border-radius:50%;background:' + color + ';opacity:0.8;"></div><div style="position:absolute;top:50%;left:40%;width:5px;height:5px;border-radius:50%;background:' + color + ';opacity:0.6;"></div><div style="position:absolute;top:70%;left:60%;width:4px;height:4px;border-radius:50%;background:' + color + ';opacity:0.4;"></div></div><div class="skin-name">' + trail.name[currentLang] + '</div>' + (!unlocked ? '<div class="skin-price"><span class="coin-icon coin-small"></span> ' + trail.price + '</div>' : '') + (active ? '<div class="skin-check">✓</div>' : '');
+            card.className = 'skin-card' + (active ? ' active' : '') + (!unlocked ? ' locked' : '');
+            const color = trail.color === 'rainbow' ? 'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)' : trail.color;
+            card.innerHTML = '<div class="rarity-badge rarity-' + trail.rarity + '"></div><div class="trail-preview-wrap"><div style="width:70%;height:70%;border-radius:50%;background:' + color + ';opacity:0.8;box-shadow:0 0 12px ' + (trail.color === 'rainbow' ? '#f0f' : trail.color) + ';"></div></div><div class="skin-name">' + trail.name[currentLang] + '</div>';
             card.addEventListener('click', function() {
-                if (active) return;
-                if (unlocked) { Game.currentTrail = trail.id; Game.save(); self.save(); self.renderShop('trails'); if (AudioEngine.ctx) AudioEngine.play('combo'); }
-                else if (affordable) { Game.coins -= trail.price; self.unlockTrail(trail.id); Game.currentTrail = trail.id; Game.save(); self.save(); self.renderShop('trails'); Game.updateHUD(); if (AudioEngine.ctx) AudioEngine.play('combo'); }
-                else { card.style.animation = 'shake 0.3s ease'; setTimeout(function() { card.style.animation = ''; }, 300); }
+                selectedId = trail.id;
+                document.querySelectorAll('.skin-card').forEach(function(c) { c.classList.remove('active'); });
+                card.classList.add('active');
+                refreshActions();
+                if (AudioEngine.ctx) AudioEngine.play('stick');
             });
             grid.appendChild(card);
         });
-        container.appendChild(grid);
+        wrap.appendChild(grid);
+        container.appendChild(wrap);
+        const actions = document.createElement('div'); actions.className = 'shop-actions'; actions.id = 'shop-actions';
+        container.appendChild(actions);
+        refreshActions();
     },
     renderCases(container) {
         const wrapper = document.createElement('div');
-        wrapper.innerHTML = '<div style="margin-bottom:16px;"><div style="font-size:16px;font-weight:700;margin-bottom:8px;color:#fff;">' + t('caseSkin') + '</div><button class="btn btn-primary" id="btn-case-skin" style="margin:0;"><span class="coin-icon"></span> 500 — ' + t('openCase') + '</button></div><div style="margin-bottom:16px;"><div style="font-size:16px;font-weight:700;margin-bottom:8px;color:#fff;">' + t('caseTrail') + '</div><button class="btn btn-primary" id="btn-case-trail" style="margin:0;"><span class="coin-icon"></span> 500 — ' + t('openCase') + '</button></div><div id="case-result" style="margin-top:16px;min-height:80px;"></div>';
+        wrapper.innerHTML = '<div style="display:flex;gap:12px;justify-content:center;margin-bottom:16px;"><div class="case-box" id="case-skin-box" style="width:48%;"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;text-align:center;"><div style="font-size:12px;font-weight:900;color:#ffd700;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;">' + t('caseSkin') + '</div><div style="width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.5), rgba(50,100,200,0.3));margin:0 auto 8px;box-shadow:0 0 16px rgba(100,200,255,0.35), inset 0 0 12px rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.15);"></div><button class="btn btn-primary" id="btn-case-skin" style="margin:0;font-size:11px;padding:7px 10px;min-height:36px;"><span class="coin-icon"></span> 500</button></div></div><div class="case-box" id="case-trail-box" style="width:48%;"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;text-align:center;"><div style="font-size:12px;font-weight:900;color:#ffd700;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;">' + t('caseTrail') + '</div><div style="width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);margin:0 auto 8px;box-shadow:0 0 16px rgba(255,215,0,0.35), inset 0 0 12px rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.15);"></div><button class="btn btn-primary" id="btn-case-trail" style="margin:0;font-size:11px;padding:7px 10px;min-height:36px;"><span class="coin-icon"></span> 500</button></div></div></div><div id="case-result" style="min-height:80px;"></div>';
         container.appendChild(wrapper);
         const self = this;
         document.getElementById('btn-case-skin').addEventListener('click', function() { self.openCase('skin'); });
@@ -1123,31 +1289,57 @@ const SkinManager = {
             res.innerHTML = '<div style="color:#4caf50;font-weight:700;">Все предметы уже получены!</div>';
             Game.coins += 500; Game.updateHUD(); Game.save(); return;
         }
+        const boxId = type === 'skin' ? 'case-skin-box' : 'case-trail-box';
+        const box = document.getElementById(boxId);
+        if (box) box.classList.add('open');
+
         const res = document.getElementById('case-result');
-        res.innerHTML = '<div class="case-container"><div class="case-selector"></div><div class="case-glow"></div><div class="case-strip" id="case-strip"></div></div>';
+        res.innerHTML = '<div style="position:relative;width:100%;height:140px;overflow:hidden;margin:20px 0;background:rgba(0,0,0,0.25);border-radius:16px;border:1px solid rgba(255,255,255,0.1);"><div class="case-selector-modern"></div><div class="case-glow-modern"></div><div class="case-strip-modern" id="case-strip"></div></div>';
         const strip = document.getElementById('case-strip');
-        const items = []; const winner = pool[Math.floor(Math.random() * pool.length)];
-        for (let i = 0; i < 30; i++) { const item = pool[Math.floor(Math.random() * pool.length)]; items.push(item); }
-        items[25] = winner;
-        items.forEach(function(item) {
-            const div = document.createElement('div'); div.className = 'case-item';
+        const items = []; 
+        const winner = pool[Math.floor(Math.random() * pool.length)];
+        for (let i = 0; i < 40; i++) { const item = pool[Math.floor(Math.random() * pool.length)]; items.push(item); }
+        items[32] = winner;
+        items.forEach(function(item, idx) {
+            const div = document.createElement('div'); div.className = 'case-item-modern';
             const isSkin = type === 'skin';
+            const isWinner = idx === 32;
             const color = isSkin ? item.colors.main : (item.color === 'rainbow' ? '#f0f' : item.color);
-            div.innerHTML = '<div style="width:40px;height:40px;border-radius:50%;background:' + (isSkin ? 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')' : color) + ';margin-bottom:4px;"></div><div style="font-size:9px;color:rgba(255,255,255,0.6);">' + item.name[currentLang] + '</div>';
+            div.style.borderColor = isWinner ? 'rgba(255,215,0,0.6)' : 'rgba(255,255,255,0.1)';
+            div.style.background = isWinner ? 'rgba(255,215,0,0.08)' : 'rgba(255,255,255,0.04)';
+            div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:' + (isSkin ? 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')' : (item.color === 'rainbow' ? 'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)' : item.color)) + ';margin-bottom:4px;box-shadow:0 0 12px ' + (isSkin ? item.colors.glow.replace(')', ',0.3)') : (item.color === 'rainbow' ? 'rgba(255,0,255,0.3)' : item.color.replace(')', ',0.3)'))) + ';"></div><div style="font-size:9px;color:rgba(255,255,255,0.6);font-weight:' + (isWinner ? '700' : '400') + ';">' + item.name[currentLang] + '</div>';
             strip.appendChild(div);
         });
-        let pos = 0; const target = -(25 * 92) + 120;
+        let pos = 0; 
+        const itemW = 106; 
+        const target = -(32 * itemW) + 140;
+        let velocity = 0;
+        const maxVel = 45;
+        let phase = 'accelerating';
+        let holdTimer = 0;
+
         const animate = function() {
-            const diff = target - pos; pos += diff * 0.08;
+            if (phase === 'accelerating') {
+                velocity += 1.2;
+                if (velocity >= maxVel) { velocity = maxVel; phase = 'cruising'; holdTimer = 45; }
+            } else if (phase === 'cruising') {
+                holdTimer--;
+                if (holdTimer <= 0) phase = 'decelerating';
+            } else if (phase === 'decelerating') {
+                const diff = target - pos;
+                velocity = diff * 0.04;
+                if (Math.abs(diff) < 2) { pos = target; phase = 'done'; }
+            }
+            pos += velocity;
             strip.style.transform = 'translate(' + pos + 'px, -50%)';
-            if (Math.abs(diff) > 1) requestAnimationFrame(animate);
+            if (phase !== 'done') requestAnimationFrame(animate);
             else {
                 if (type === 'skin') SkinManager.unlockSkin(winner.id); else SkinManager.unlockTrail(winner.id);
                 SkinManager.save(); Game.save();
                 setTimeout(function() {
-                    res.innerHTML = '<div style="text-align:center;animation:glassIn 0.5s ease;"><div style="font-size:18px;font-weight:700;color:#ffd700;margin-bottom:8px;">' + t('caseResult') + '</div><div style="width:80px;height:80px;border-radius:50%;margin:0 auto 8px;background:' + (type === 'skin' ? 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')' : (winner.color === 'rainbow' ? 'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)' : winner.color)) + ';box-shadow:0 0 20px rgba(255,215,0,0.3);"></div><div style="font-size:16px;font-weight:700;color:#fff;">' + winner.name[currentLang] + '</div><div style="font-size:12px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:2px;">' + winner.rarity + '</div></div>';
+                    res.innerHTML = '<div style="text-align:center;animation:glassIn 0.6s cubic-bezier(0.22,1,0.36,1);"><div style="font-size:20px;font-weight:900;color:#ffd700;margin-bottom:12px;letter-spacing:2px;">' + t('caseResult') + '</div><div style="width:90px;height:90px;border-radius:50%;margin:0 auto 12px;background:' + (type === 'skin' ? 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')' : (winner.color === 'rainbow' ? 'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)' : winner.color)) + ';box-shadow:0 0 30px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.15);border:2px solid rgba(255,215,0,0.3);"></div><div style="font-size:18px;font-weight:900;color:#fff;margin-bottom:4px;">' + winner.name[currentLang] + '</div><div style="font-size:13px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:3px;font-weight:700;">' + winner.rarity + '</div></div>';
                     if (AudioEngine.ctx) AudioEngine.play('combo');
-                }, 500);
+                }, 600);
             }
         };
         animate();
@@ -1163,7 +1355,7 @@ const Game = {
     currentSkin: 'water', currentTrail: 'default',
     gameMode: 'endless', currentLevel: 0, levelProgress: [], collectedHearts: 0,
     paused: false, speedMult: 1, showedHeartMessage: false,
-    floatingTexts: [],
+    floatingTexts: [], heartBlockTimer: 0,
 
     init() {
         this.canvas = document.getElementById('game-canvas');
@@ -1206,6 +1398,7 @@ const Game = {
         const down = function(e) {
             if (self.state !== 'playing' || self.paused) return;
             if (e.type === 'touchstart') e.preventDefault();
+            if (e.target && e.target.closest && e.target.closest('#btn-pause')) return;
             if (self.bubble) self.bubble.clickSide(getSide(e));
         };
         c.addEventListener('mousedown', down);
@@ -1218,10 +1411,12 @@ const Game = {
         this.currentLevel = levelIndex || 0;
         this.state = 'playing'; this.score = 0; this.paused = false;
         this.speedMult = 1; this.showedHeartMessage = false;
-        this.collectedHearts = 0;
+        this.collectedHearts = 0; this.heartBlockTimer = 0;
         this.bubble.reset(); this.camera.reset();
         this.world.reset();
-        if (this.gameMode === 'level') this.world.loadLevel(this.currentLevel);
+        if (this.gameMode === 'level') {
+            this.world.loadLevel(this.currentLevel);
+        }
         this.updateHUD(); this.updateBonusBar();
         document.getElementById('game-canvas').style.filter = 'none';
     },
@@ -1301,7 +1496,7 @@ const Game = {
             if (this.world) this.world.update(dt, this.bubble, this.camera.y);
             const ns = Math.max(0, Math.floor(-this.bubble.y / 100));
             if (ns > this.score) { this.score = ns; this.updateHUD(); }
-            if (this.bubble.dead) this.gameOver();
+            if (this.bubble.dead && this.state === 'playing') this.gameOver();
             this.updateFloatingTexts(dt);
             this.updateBonusBar();
         } else if (this.state === 'gameover' && this.world) {
@@ -1369,16 +1564,20 @@ const Game = {
         if (!this.bubble || !bar) return;
         const b = this.bubble;
         let html = '';
+        const svgShield = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L3 5v4c0 4.5 2.5 7.5 6 8 3.5-.5 6-3.5 6-8V5L9 2z" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.15)"/><path d="M9 2v13" stroke="white" stroke-width="1" opacity="0.4"/></svg>';
+        const svgSlow = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.15)"/><path d="M9 5v4.5l3 1.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>';
+        const svgCoin = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.15)"/><text x="9" y="13" text-anchor="middle" fill="white" font-size="10" font-weight="bold">×2</text></svg>';
+        const svgMini = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 4v3H2M13 4v3h3M5 14v-3H2M13 14v-3h3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
         const bonuses = [
-            { active: b.shieldActive, timer: b.shieldTimer, icon: '🛡', flash: b.shieldFlash },
-            { active: b.slowActive, timer: b.slowTimer, icon: '⏱', flash: false },
-            { active: b.coin2xActive, timer: b.coin2xTimer, icon: '×2', flash: false },
-            { active: b.miniActive, timer: b.miniTimer, icon: '🔍', flash: b.miniFlash }
+            { active: b.shieldActive, timer: b.shieldTimer, icon: svgShield, flash: b.shieldFlash },
+            { active: b.slowActive, timer: b.slowTimer, icon: svgSlow, flash: false },
+            { active: b.coin2xActive, timer: b.coin2xTimer, icon: svgCoin, flash: false },
+            { active: b.miniActive, timer: b.miniTimer, icon: svgMini, flash: b.miniFlash }
         ];
         bonuses.forEach(function(bn) {
             if (bn.active) html += '<div class="bonus-icon' + (bn.flash ? ' flash' : '') + '">' + bn.icon + '<span class="bonus-timer">' + Math.ceil(bn.timer) + '</span></div>';
         });
-        bar.innerHTML = html;
+        if (bar.innerHTML !== html) bar.innerHTML = html;
     },
 
     showFloatingText(text, x, y) { this.floatingTexts.push({ text: text, x: x, y: y, life: 2, alpha: 1 }); },
@@ -1460,7 +1659,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.getElementById('btn-shop').addEventListener('click', function() {
         if (AudioEngine.ctx) AudioEngine.play('stick');
-        SkinManager.renderShop('skins'); showScreen('shop-screen');
+        document.querySelectorAll('.shop-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelector('.shop-tab[data-tab="skins"]').classList.add('active');
+        SkinManager.renderShop('skins');
+        showScreen('shop-screen');
     });
     document.getElementById('btn-settings').addEventListener('click', function() {
         if (AudioEngine.ctx) AudioEngine.play('stick');
@@ -1494,6 +1696,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.getElementById('btn-pause-menu').addEventListener('click', function() {
         Game.paused = false;
+        Game.state = 'menu';
         showScreen('main-menu'); Game.updateHUD(); SkinManager.updateMenuBubble();
     });
     document.getElementById('btn-next-level').addEventListener('click', function() {
@@ -1548,6 +1751,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('touchmove', function(e) { if (Game.state === 'playing') e.preventDefault(); }, { passive: false });
     document.addEventListener('touchstart', function(e) {
         if (Game.state === 'playing' && Game.bubble && e.changedTouches && e.changedTouches[0] && !Game.paused) {
+            if (e.target && e.target.closest && e.target.closest('#btn-pause')) return;
             const cx = e.changedTouches[0].clientX;
             Game.bubble.clickSide(cx < window.innerWidth / 2 ? 'left' : 'right');
         }
