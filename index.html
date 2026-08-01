@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui">
+    <meta name="apple-mobile-web-app-title" content="BUBBLE">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a1a">
+    <title>BUBBLE</title>
+    <style>
+/* ===== RESET ===== */
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:none !important; user-select:none; -webkit-user-select:none; }
+html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:#fff; touch-action:none; }
+:root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --btn-pad: clamp(12px, 3.2vmin, 18px);
+    --btn-radius: clamp(14px, 3.5vmin, 20px);
+    --title-size: clamp(32px, 10vmin, 56px);
+    --score-size: clamp(36px, 12vmin, 64px);
+    --glass-pad: clamp(20px, 5vmin, 40px);
+    --rarity-common: #a0a0a0;
+    --rarity-uncommon: #4caf50;
+    --rarity-rare: #2196f3;
+    --rarity-epic: #9c27b0;
+    --rarity-legendary: #ff9800;
+}
+
+#game-container { position:fixed; top:0; left:0; width:100%; height:100%; overflow:hidden; }
+#game-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:1; touch-action:none; transition: filter 0.45s cubic-bezier(0.22,1,0.36,1); }
+
+/* ===== UI ===== */
+#ui-layer { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2; }
+#ui-layer .screen { position:fixed; top:0; left:0; width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; padding:max(8px, var(--safe-top)) max(8px, var(--safe-right)) max(8px, var(--safe-bottom)) max(8px, var(--safe-left)); }
+#ui-layer .screen.active { display:flex; pointer-events:auto; }
+
+/* ===== GLASS ===== */
+.menu-glass { background:rgba(15,15,35,0.88); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.08); border-radius:var(--btn-radius); padding:var(--glass-pad) clamp(16px, 4.5vmin, 32px); width:min(90%, 380px); text-align:center; box-shadow:0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06); animation:glassIn 0.5s cubic-bezier(0.22,1,0.36,1); }
+@keyframes glassIn { from{opacity:0;transform:translateY(30px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+/* ===== MENU ===== */
+.game-title { font-size:var(--title-size); font-weight:900; letter-spacing:clamp(3px, 1.2vmin, 6px); background:linear-gradient(135deg,#ffd700,#ff8c00,#ff4500); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:clamp(4px, 1.5vmin, 8px); filter:drop-shadow(0 2px 8px rgba(255,140,0,0.3)); }
+.game-subtitle { font-size:clamp(11px, 3vmin, 15px); color:rgba(255,255,255,0.45); letter-spacing:clamp(4px, 1.8vmin, 8px); margin-bottom:clamp(16px, 6vmin, 32px); text-transform:uppercase; }
+.menu-bubble-demo { width:clamp(60px, 18vmin, 100px); height:clamp(60px, 18vmin, 100px); margin:0 auto clamp(14px, 5vmin, 32px); border-radius:50%; position:relative; animation:bubbleFloat 3s ease-in-out infinite; }
+.menu-bubble-demo::after { content:''; position:absolute; top:18%; left:22%; width:22%; height:22%; border-radius:50%; background:rgba(255,255,255,0.8); filter:blur(1px); }
+@keyframes bubbleFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.05)} }
+.best-score { margin-top:22px; font-size:14px; color:rgba(255,255,255,0.45); letter-spacing:1px; }
+.best-score span { color:#ffd700; font-weight:700; font-size:20px; }
+
+/* ===== BUTTONS ===== */
+.btn { display:block; width:100%; padding:var(--btn-pad) clamp(12px, 3vmin, 20px); margin:clamp(5px, 1.5vmin, 10px) 0; border:none; border-radius:var(--btn-radius); font-size:clamp(13px, 3.8vmin, 18px); font-weight:700; letter-spacing:clamp(1px, 0.5vmin, 3px); cursor:pointer; transition:all 0.15s ease; pointer-events:auto; position:relative; overflow:hidden; min-height:44px; }
+.btn:active { transform:scale(0.96); }
+.btn-primary { background:linear-gradient(135deg,#ff8c00,#ff4500); color:#fff; box-shadow:0 4px 18px rgba(255,69,0,0.3); }
+.btn-secondary { background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.8); border:1px solid rgba(255,255,255,0.12); }
+.btn-back { background:transparent; color:rgba(255,255,255,0.45); font-size:14px; margin-top:16px; }
+
+/* ===== HUD ===== */
+#hud { justify-content:space-between; align-items:center; padding:max(12px, var(--safe-top)) 0 0; pointer-events:none !important; }
+#hud * { pointer-events:none !important; }
+.hud-center { position:absolute; top:max(12px, var(--safe-top)); left:50%; transform:translateX(-50%); text-align:center; }
+.score-label { display:block; font-size:9px; letter-spacing:4px; color:rgba(255,255,255,0.3); margin-bottom:2px; }
+.score-value { font-size:var(--score-size); font-weight:900; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,0.6); line-height:1; }
+.hud-bottom { position:absolute; bottom:0; left:0; width:100%; padding:0 0 max(0px, var(--safe-bottom)) 0; }
+.progress-bar { width:100%; height:clamp(2px, 0.6vmin, 4px); background:rgba(255,255,255,0.06); border-radius:0; overflow:hidden; }
+.progress-fill { height:100%; width:0%; background:linear-gradient(90deg,#ff8c00,#ffd700); border-radius:0; transition:width 0.3s ease; }
+
+/* Pause button in HUD */
+#btn-pause { position:absolute; top:max(12px, var(--safe-top)); right:16px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; pointer-events:auto !important; z-index:10; }
+#btn-pause:active { transform:scale(0.9); background:rgba(255,255,255,0.15); }
+
+/* Bonus indicators */
+.bonus-bar { position:absolute; top:max(60px, calc(var(--safe-top) + 48px)); left:50%; transform:translateX(-50%); display:flex; gap:8px; pointer-events:none; }
+.bonus-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.15); position:relative; }
+.bonus-icon.flash { animation:bonusFlash 0.5s ease infinite alternate; }
+@keyframes bonusFlash { from{opacity:1;transform:scale(1)} to{opacity:0.5;transform:scale(1.1)} }
+.bonus-timer { position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); font-size:8px; color:#fff; background:rgba(0,0,0,0.6); padding:1px 4px; border-radius:4px; white-space:nowrap; }
+
+/* ===== GAME OVER ===== */
+.dead-title { font-size:34px; font-weight:900; color:#ff4500; letter-spacing:4px; margin-bottom:16px; animation:shake 0.5s ease; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+.dead-bubble { width:60px; height:60px; margin:0 auto 20px; border-radius:50%; background:radial-gradient(circle,rgba(255,100,100,0.3),transparent); border:2px solid rgba(255,100,100,0.5); position:relative; animation:popDead 0.6s ease; }
+@keyframes popDead { 0%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:0.5} 100%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
+.final-stats { display:flex; justify-content:space-around; margin:20px 0; padding:16px; background:rgba(0,0,0,0.2); border-radius:16px; }
+.stat { text-align:center; }
+.stat-label { display:block; font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:4px; }
+.stat-value { font-size:24px; font-weight:900; color:#fff; }
+
+/* ===== LEVELS ===== */
+.levels-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:16px; }
+.level-card { aspect-ratio:1.3; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; pointer-events:auto; }
+.level-card.completed { border-color:#4caf50; background:rgba(76,175,80,0.08); }
+.level-card.locked { opacity:0.35; pointer-events:none; }
+.level-card:active { transform:scale(0.95); }
+.level-num { font-size:22px; font-weight:900; color:#fff; }
+.level-stars { font-size:14px; color:#ffd700; margin-top:4px; }
+.level-hearts { font-size:12px; color:#ff4444; margin-top:2px; }
+
+/* ===== SKINS / SHOP ===== */
+.shop-tabs { display:flex; gap:8px; margin-bottom:16px; justify-content:center; }
+.shop-tab { padding:8px 16px; border-radius:20px; border:none; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.5); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; pointer-events:auto; }
+.shop-tab.active { background:linear-gradient(135deg,#ff8c00,#ff4500); color:#fff; }
+.skins-glass { max-height:min(82vh, calc(100vh - var(--safe-top) - var(--safe-bottom) - 40px)); overflow-y:auto; padding:clamp(16px, 4vmin, 28px) clamp(12px, 3.5vmin, 20px); }
+.screen-title { font-size:24px; font-weight:900; letter-spacing:3px; margin-bottom:8px; }
+.coins-display { font-size:18px; color:#ffd700; margin-bottom:16px; font-weight:700; }
+.skins-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(8px, 2.5vmin, 14px); margin-bottom:clamp(10px, 3vmin, 18px); }
+.skin-card { aspect-ratio:1; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; padding:clamp(4px, 1.5vmin, 10px); pointer-events:auto; min-height:70px; }
+.skin-card.active { border-color:#ff8c00; background:rgba(255,140,0,0.08); }
+.skin-card.locked { opacity:0.35; }
+.skin-card.affordable { opacity:1; border-color:rgba(255,215,0,0.4); box-shadow:0 0 12px rgba(255,215,0,0.1); }
+.skin-card:active { transform:scale(0.95); }
+.skin-preview { width:52px; height:52px; border-radius:50%; position:relative; margin-bottom:4px; }
+.skin-preview::after { content:''; position:absolute; top:15%; left:18%; width:22%; height:22%; border-radius:50%; background:rgba(255,255,255,0.7); filter:blur(0.5px); }
+.skin-name { font-size:10px; color:rgba(255,255,255,0.65); text-align:center; }
+.skin-price { font-size:10px; color:#ffd700; margin-top:2px; }
+.skin-check { position:absolute; top:4px; right:4px; width:18px; height:18px; background:#ff8c00; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; }
+.rarity-badge { position:absolute; top:4px; left:4px; width:8px; height:8px; border-radius:50%; }
+.rarity-common { background:var(--rarity-common); }
+.rarity-uncommon { background:var(--rarity-uncommon); }
+.rarity-rare { background:var(--rarity-rare); }
+.rarity-epic { background:var(--rarity-epic); }
+.rarity-legendary { background:var(--rarity-legendary); box-shadow:0 0 6px var(--rarity-legendary); }
+
+/* Trail preview */
+.trail-preview { width:52px; height:52px; border-radius:50%; position:relative; margin-bottom:4px; overflow:hidden; background:rgba(0,0,0,0.2); }
+.trail-particle { position:absolute; width:4px; height:4px; border-radius:50%; opacity:0.6; }
+
+/* ===== CASE OPENING ===== */
+.case-container { position:relative; width:100%; height:120px; overflow:hidden; margin:20px 0; background:rgba(0,0,0,0.2); border-radius:12px; border:1px solid rgba(255,255,255,0.08); }
+.case-strip { display:flex; gap:12px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
+.case-item { width:80px; height:80px; border-radius:12px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; }
+.case-selector { position:absolute; top:0; left:50%; transform:translateX(-50%); width:4px; height:100%; background:linear-gradient(180deg,transparent,#ffd700,transparent); z-index:2; }
+.case-glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:84px; height:84px; border-radius:12px; box-shadow:0 0 20px rgba(255,215,0,0.3); pointer-events:none; }
+
+/* ===== SETTINGS ===== */
+.setting-row { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:16px; color:rgba(255,255,255,0.8); }
+.toggle-btn { padding:6px 16px; border-radius:20px; border:none; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.45); font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s; pointer-events:auto; }
+.toggle-btn.active { background:linear-gradient(135deg,#ff8c00,#ff4500); color:#fff; }
+.lang-selector { display:flex; gap:8px; }
+.lang-btn { padding:6px 14px; border-radius:20px; border:none; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:12px; font-weight:700; cursor:pointer; pointer-events:auto; }
+.lang-btn.active { background:rgba(255,255,255,0.2); color:#fff; }
+
+/* ===== PAUSE ===== */
+.pause-overlay { background:rgba(0,0,0,0.6); backdrop-filter:blur(12px); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-height:600px) { .game-title{font-size:clamp(26px, 8vmin, 34px)} .menu-glass{padding:16px 12px} .btn{padding:10px;margin:5px 0;font-size:13px} .menu-bubble-demo{width:55px;height:55px;margin-bottom:12px} .score-value{font-size:clamp(28px, 9vmin, 40px)} .skin-card{padding:4px} .levels-grid{grid-template-columns:repeat(3,1fr)} }
+@media (min-height:800px) { .menu-glass{padding:clamp(28px, 6vmin, 48px) clamp(20px, 5vmin, 40px)} .game-title{font-size:clamp(40px, 11vmin, 56px)} .score-value{font-size:clamp(48px, 13vmin, 68px)} }
+@media (max-width:360px) { .menu-glass{width:92%;padding:16px 12px} .skins-grid{grid-template-columns:repeat(3,1fr);gap:8px} .skin-card{padding:4px} .skin-preview{width:40px;height:40px} .levels-grid{grid-template-columns:repeat(2,1fr)} }
+@media (min-width:420px) and (max-width:600px) { .menu-glass{max-width:340px} }
+@media (max-height:500px) { .hud-center{top:max(6px,var(--safe-top))} .score-value{font-size:clamp(24px,8vmin,32px)} .progress-bar{height:2px} }
+.coin-icon { display:inline-block; width:clamp(12px, 3.8vmin, 18px); height:clamp(12px, 3.8vmin, 18px); border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #daa520); border:clamp(1px, 0.35vmin, 1.5px) solid #b8860b; box-shadow:0 0 3px rgba(255,215,0,0.4); vertical-align:middle; margin-right:3px; position:relative; top:-1px; }
+.coin-icon::after { content:'$'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:9px; font-weight:900; color:rgba(140,100,0,0.7); }
+.coin-small { width:10px !important; height:10px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; top:-1px !important; position:relative !important; }
+.coin-small::after { font-size:6px !important; transform:translate(-50%,-50%) !important; }
+.skins-glass::-webkit-scrollbar{display:none} .skins-glass{-ms-overflow-style:none;scrollbar-width:none}
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas" tabindex="0"></canvas>
+        <div id="ui-layer">
+            <div id="main-menu" class="screen active">
+                <div class="menu-glass">
+                    <h1 class="game-title" data-i18n="title">BUBBLE</h1>
+                    <p class="game-subtitle" data-i18n="subtitle">Don't pop.</p>
+                    <div class="menu-bubble-demo" id="menu-bubble"></div>
+                    <button class="btn btn-primary" id="btn-play" data-i18n="play">PLAY</button>
+                    <button class="btn btn-secondary" id="btn-levels" data-i18n="levels">LEVELS</button>
+                    <button class="btn btn-secondary" id="btn-shop" data-i18n="shop">SHOP</button>
+                    <button class="btn btn-secondary" id="btn-settings" data-i18n="settings">SETTINGS</button>
+                    <div class="best-score"><span data-i18n="best">Best</span>: <span id="menu-best">0</span></div>
+                </div>
+            </div>
+
+            <div id="hud" class="screen">
+                <div class="hud-center">
+                    <span class="score-label" data-i18n="height">HEIGHT</span>
+                    <span class="score-value" id="hud-score">0</span>
+                </div>
+                <button id="btn-pause">⏸</button>
+                <div class="hud-bottom">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="bonus-bar" id="bonus-bar"></div>
+            </div>
+
+            <div id="pause-screen" class="screen">
+                <div class="menu-glass">
+                    <h2 class="screen-title" data-i18n="paused">PAUSED</h2>
+                    <button class="btn btn-primary" id="btn-resume" data-i18n="resume">RESUME</button>
+                    <button class="btn btn-secondary" id="btn-pause-restart" data-i18n="restart">RESTART</button>
+                    <button class="btn btn-secondary" id="btn-pause-menu" data-i18n="menu">MENU</button>
+                </div>
+            </div>
+
+            <div id="game-over" class="screen">
+                <div class="menu-glass">
+                    <h2 class="dead-title" data-i18n="popped">POPPED!</h2>
+                    <div class="dead-bubble" id="dead-bubble"></div>
+                    <div class="final-stats">
+                        <div class="stat"><span class="stat-label" data-i18n="height">HEIGHT</span><span class="stat-value" id="final-score">0</span></div>
+                        <div class="stat"><span class="stat-label" data-i18n="best">BEST</span><span class="stat-value" id="final-best">0</span></div>
+                    </div>
+                    <button class="btn btn-primary" id="btn-restart" data-i18n="again">AGAIN</button>
+                    <button class="btn btn-secondary" id="btn-menu" data-i18n="menu">MENU</button>
+                </div>
+            </div>
+
+            <div id="level-complete" class="screen">
+                <div class="menu-glass">
+                    <h2 class="screen-title" style="color:#4caf50;" data-i18n="levelComplete">LEVEL COMPLETE!</h2>
+                    <div class="final-stats">
+                        <div class="stat"><span class="stat-label" data-i18n="level">LEVEL</span><span class="stat-value" id="complete-level">1</span></div>
+                        <div class="stat"><span class="stat-label" data-i18n="coins">COINS</span><span class="stat-value" id="complete-coins">0</span></div>
+                    </div>
+                    <button class="btn btn-primary" id="btn-next-level" data-i18n="next">NEXT LEVEL</button>
+                    <button class="btn btn-secondary" id="btn-complete-menu" data-i18n="menu">MENU</button>
+                </div>
+            </div>
+
+            <div id="levels-screen" class="screen">
+                <div class="menu-glass skins-glass">
+                    <h2 class="screen-title" data-i18n="selectLevel">SELECT LEVEL</h2>
+                    <div class="levels-grid" id="levels-grid"></div>
+                    <button class="btn btn-back" id="btn-levels-back" data-i18n="back">← BACK</button>
+                </div>
+            </div>
+
+            <div id="shop-screen" class="screen">
+                <div class="menu-glass skins-glass">
+                    <h2 class="screen-title" data-i18n="shop">SHOP</h2>
+                    <div class="coins-display"><span class="coin-icon"></span> <span id="shop-coins">0</span></div>
+                    <div class="shop-tabs">
+                        <button class="shop-tab active" data-tab="skins" data-i18n="skins">SKINS</button>
+                        <button class="shop-tab" data-tab="trails" data-i18n="trails">TRAILS</button>
+                        <button class="shop-tab" data-tab="cases" data-i18n="cases">CASES</button>
+                    </div>
+                    <div id="shop-content"></div>
+                    <button class="btn btn-back" id="btn-shop-back" data-i18n="back">← BACK</button>
+                </div>
+            </div>
+
+            <div id="settings-screen" class="screen">
+                <div class="menu-glass">
+                    <h2 class="screen-title" data-i18n="settings">SETTINGS</h2>
+                    <div class="setting-row"><span data-i18n="sound">Sound</span><button class="toggle-btn active" id="toggle-sound">ON</button></div>
+                    <div class="setting-row"><span data-i18n="vibration">Vibration</span><button class="toggle-btn active" id="toggle-vibro">ON</button></div>
+                    <div class="setting-row"><span data-i18n="particles">Particles</span><button class="toggle-btn active" id="toggle-particles">ON</button></div>
+                    <div class="setting-row"><span data-i18n="language">Language</span>
+                        <div class="lang-selector">
+                            <button class="lang-btn active" data-lang="ru">RU</button>
+                            <button class="lang-btn" data-lang="en">EN</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-back" id="btn-settings-back" data-i18n="back">← BACK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+// ==================== LOCALIZATION ====================
+const I18N = {
+    ru: {
+        title: 'BUBBLE', subtitle: 'Не лопни.', play: 'ИГРАТЬ', levels: 'УРОВНИ',
+        shop: 'МАГАЗИН', settings: 'НАСТРОЙКИ', best: 'Рекорд', height: 'ВЫСОТА',
+        paused: 'ПАУЗА', resume: 'ПРОДОЛЖИТЬ', restart: 'ЗАНОВО', menu: 'МЕНЮ',
+        popped: 'ЛОПНУЛ!', again: 'ЕЩЁ РАЗ', levelComplete: 'УРОВЕНЬ ПРОЙДЕН!',
+        level: 'УРОВЕНЬ', coins: 'МОНЕТЫ', next: 'СЛЕДУЮЩИЙ', selectLevel: 'ВЫБЕРИ УРОВЕНЬ',
+        back: '← НАЗАД', skins: 'СКИНЫ', trails: 'СЛЕДЫ', cases: 'КЕЙСЫ',
+        sound: 'Звук', vibration: 'Вибрация', particles: 'Частицы', language: 'Язык',
+        caseSkin: 'КЕЙС СКИНОВ', caseTrail: 'КЕЙС СЛЕДОВ', openCase: 'ОТКРЫТЬ ЗА',
+        caseResult: 'ВЫ ПОЛУЧИЛИ!', insufficient: 'Недостаточно монет', unlock: 'КУПИТЬ',
+        select: 'ВЫБРАТЬ', selected: 'ВЫБРАНО', locked: 'ЗАБЛОКИРОВАНО',
+        shield: 'ЩИТ', slow: 'ЗАМЕДЛЕНИЕ', coin2x: 'МОНЕТЫ x2', mini: 'МИНИ',
+        levelLocked: 'Уровень заблокирован', needHearts: 'Соберите все сердечки!'
+    },
+    en: {
+        title: 'BUBBLE', subtitle: "Don't pop.", play: 'PLAY', levels: 'LEVELS',
+        shop: 'SHOP', settings: 'SETTINGS', best: 'Best', height: 'HEIGHT',
+        paused: 'PAUSED', resume: 'RESUME', restart: 'RESTART', menu: 'MENU',
+        popped: 'POPPED!', again: 'AGAIN', levelComplete: 'LEVEL COMPLETE!',
+        level: 'LEVEL', coins: 'COINS', next: 'NEXT LEVEL', selectLevel: 'SELECT LEVEL',
+        back: '← BACK', skins: 'SKINS', trails: 'TRAILS', cases: 'CASES',
+        sound: 'Sound', vibration: 'Vibration', particles: 'Particles', language: 'Language',
+        caseSkin: 'SKIN CASE', caseTrail: 'TRAIL CASE', openCase: 'OPEN FOR',
+        caseResult: 'YOU GOT!', insufficient: 'Not enough coins', unlock: 'BUY',
+        select: 'SELECT', selected: 'SELECTED', locked: 'LOCKED',
+        shield: 'SHIELD', slow: 'SLOWMO', coin2x: 'COINS x2', mini: 'MINI',
+        levelLocked: 'Level locked', needHearts: 'Collect all hearts!'
+    }
+};
+
+let currentLang = 'ru';
+function t(key) { return I18N[currentLang][key] || key; }
+function updateLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (I18N[lang][key]) el.textContent = I18N[lang][key];
+    });
+    document.documentElement.lang = lang;
+}
+
+// ==================== SKINS DATA (20) ====================
+const SKINS_DATA = [
+    { id: 'water', name: {ru:'Вода',en:'Water'}, rarity: 'common', price: 400, drink: 'water',
+      colors: { main:'rgba(100,200,255,0.3)', highlight:'rgba(255,255,255,0.8)', shadow:'rgba(50,100,200,0.2)', edge:'rgba(100,200,255,0.1)', innerGlow:'rgba(150,220,255,0.15)', glow:'rgba(100,200,255,0.3)' },
+      theme: { stops:[{h:205,s:45,l:12},{h:210,s:40,l:16},{h:215,s:50,l:20},{h:200,s:55,l:10}], ray:[160,210,255], wave:[120,190,240] },
+      obstacles: { ice:'#c8e6f5', lemon:'#f0e060', mint:'#7cb342', straw:'#ff5555', berry:'#e91e63', lime:'#cddc39', cherry:'#d32f2f' } },
+    { id: 'lemonade', name: {ru:'Лимонад',en:'Lemonade'}, rarity: 'common', price: 400, drink: 'lemonade',
+      colors: { main:'rgba(255,235,100,0.35)', highlight:'rgba(255,255,220,0.9)', shadow:'rgba(200,180,0,0.25)', edge:'rgba(255,235,100,0.15)', innerGlow:'rgba(255,245,150,0.2)', glow:'rgba(255,235,100,0.35)' },
+      theme: { stops:[{h:50,s:60,l:13},{h:55,s:55,l:17},{h:60,s:50,l:21},{h:45,s:70,l:11}], ray:[255,240,100], wave:[255,220,80] },
+      obstacles: { ice:'#fff9c4', lemon:'#ffeb3b', mint:'#81c784', straw:'#ff9800', berry:'#f48fb1', lime:'#dce775', cherry:'#ef5350' } },
+    { id: 'berrymors', name: {ru:'Ягодный морс',en:'Berry Mors'}, rarity: 'common', price: 400, drink: 'berry',
+      colors: { main:'rgba(200,50,100,0.35)', highlight:'rgba(255,180,200,0.85)', shadow:'rgba(150,20,60,0.3)', edge:'rgba(200,50,100,0.2)', innerGlow:'rgba(255,150,180,0.2)', glow:'rgba(200,50,100,0.35)' },
+      theme: { stops:[{h:340,s:50,l:12},{h:345,s:45,l:16},{h:350,s:55,l:20},{h:335,s:60,l:10}], ray:[255,150,180], wave:[255,120,150] },
+      obstacles: { ice:'#f8bbd0', lemon:'#f06292', mint:'#c2185b', straw:'#e91e63', berry:'#ad1457', lime:'#f48fb1', cherry:'#880e4f' } },
+    { id: 'minttea', name: {ru:'Мятный чай',en:'Mint Tea'}, rarity: 'common', price: 400, drink: 'tea',
+      colors: { main:'rgba(100,220,150,0.3)', highlight:'rgba(200,255,220,0.9)', shadow:'rgba(50,150,100,0.25)', edge:'rgba(100,220,150,0.15)', innerGlow:'rgba(150,255,200,0.2)', glow:'rgba(100,220,150,0.3)' },
+      theme: { stops:[{h:150,s:45,l:12},{h:155,s:40,l:16},{h:160,s:50,l:20},{h:145,s:55,l:10}], ray:[150,255,200], wave:[120,230,170] },
+      obstacles: { ice:'#c8e6c9', lemon:'#fff59d', mint:'#2e7d32', straw:'#66bb6a', berry:'#a5d6a7', lime:'#81c784', cherry:'#388e3c' } },
+    { id: 'orange', name: {ru:'Апельсиновый сок',en:'Orange Juice'}, rarity: 'uncommon', price: 200, drink: 'orange',
+      colors: { main:'rgba(255,160,50,0.35)', highlight:'rgba(255,230,180,0.9)', shadow:'rgba(200,120,0,0.3)', edge:'rgba(255,160,50,0.2)', innerGlow:'rgba(255,200,100,0.2)', glow:'rgba(255,160,50,0.35)' },
+      theme: { stops:[{h:28,s:55,l:13},{h:32,s:50,l:17},{h:36,s:60,l:21},{h:24,s:65,l:11}], ray:[255,180,80], wave:[255,150,50] },
+      obstacles: { ice:'#ffe0b2', lemon:'#ffb74d', mint:'#ff8a65', straw:'#ff5722', berry:'#ffab91', lime:'#ffcc80', cherry:'#f4511e' } },
+    { id: 'strawberry', name: {ru:'Клубничный смузи',en:'Strawberry Smoothie'}, rarity: 'uncommon', price: 200, drink: 'smoothie',
+      colors: { main:'rgba(255,100,120,0.35)', highlight:'rgba(255,220,230,0.9)', shadow:'rgba(200,50,70,0.3)', edge:'rgba(255,100,120,0.2)', innerGlow:'rgba(255,180,190,0.2)', glow:'rgba(255,100,120,0.35)' },
+      theme: { stops:[{h:350,s:50,l:13},{h:355,s:45,l:17},{h:360,s:55,l:21},{h:345,s:60,l:11}], ray:[255,150,160], wave:[255,120,130] },
+      obstacles: { ice:'#ffcdd2', lemon:'#ef9a9a', mint:'#e57373', straw:'#f44336', berry:'#d32f2f', lime:'#ff8a80', cherry:'#c62828' } },
+    { id: 'soda', name: {ru:'Газировка',en:'Soda'}, rarity: 'uncommon', price: 200, drink: 'soda',
+      colors: { main:'rgba(100,220,255,0.35)', highlight:'rgba(220,250,255,0.95)', shadow:'rgba(50,150,200,0.3)', edge:'rgba(100,220,255,0.2)', innerGlow:'rgba(180,240,255,0.25)', glow:'rgba(100,220,255,0.35)' },
+      theme: { stops:[{h:190,s:55,l:13},{h:195,s:50,l:17},{h:200,s:60,l:21},{h:185,s:65,l:11}], ray:[180,240,255], wave:[150,220,240] },
+      obstacles: { ice:'#e1f5fe', lemon:'#81d4fa', mint:'#4fc3f7', straw:'#29b6f6', berry:'#039be5', lime:'#b3e5fc', cherry:'#0288d1' } },
+    { id: 'lavender', name: {ru:'Лавандовый латте',en:'Lavender Latte'}, rarity: 'uncommon', price: 200, drink: 'latte',
+      colors: { main:'rgba(180,150,220,0.35)', highlight:'rgba(230,220,255,0.9)', shadow:'rgba(130,100,180,0.3)', edge:'rgba(180,150,220,0.2)', innerGlow:'rgba(210,190,240,0.2)', glow:'rgba(180,150,220,0.35)' },
+      theme: { stops:[{h:270,s:40,l:13},{h:275,s:35,l:17},{h:280,s:45,l:21},{h:265,s:50,l:11}], ray:[210,190,255], wave:[190,170,230] },
+      obstacles: { ice:'#e1bee7', lemon:'#ce93d8', mint:'#ba68c8', straw:'#ab47bc', berry:'#9c27b0', lime:'#d1c4e9', cherry:'#7b1fa2' } },
+    { id: 'cola', name: {ru:'Кола',en:'Cola'}, rarity: 'rare', price: 600, drink: 'cola',
+      colors: { main:'rgba(80,40,20,0.45)', highlight:'rgba(200,170,150,0.85)', shadow:'rgba(50,20,10,0.4)', edge:'rgba(80,40,20,0.3)', innerGlow:'rgba(140,100,70,0.25)', glow:'rgba(80,40,20,0.4)' },
+      theme: { stops:[{h:20,s:45,l:10},{h:22,s:40,l:14},{h:25,s:50,l:18},{h:18,s:55,l:9}], ray:[180,150,120], wave:[150,120,90] },
+      obstacles: { ice:'#d7ccc8', lemon:'#a1887f', mint:'#8d6e63', straw:'#ff5252', berry:'#bcaaa4', lime:'#ff8a80', cherry:'#5d4037' } },
+    { id: 'energy', name: {ru:'Энергетик',en:'Energy Drink'}, rarity: 'rare', price: 600, drink: 'energy',
+      colors: { main:'rgba(255,200,0,0.4)', highlight:'rgba(255,255,150,0.9)', shadow:'rgba(200,150,0,0.35)', edge:'rgba(255,200,0,0.25)', innerGlow:'rgba(255,230,80,0.3)', glow:'rgba(255,200,0,0.4)' },
+      theme: { stops:[{h:45,s:65,l:12},{h:48,s:60,l:16},{h:52,s:70,l:20},{h:42,s:75,l:10}], ray:[255,220,50], wave:[255,200,30] },
+      obstacles: { ice:'#fff9c4', lemon:'#ffee58', mint:'#cddc39', straw:'#ff9800', berry:'#ffc107', lime:'#ffeb3b', cherry:'#ff6f00' } },
+    { id: 'bubbletea', name: {ru:'Бабл-ти',en:'Bubble Tea'}, rarity: 'rare', price: 600, drink: 'bubbletea',
+      colors: { main:'rgba(160,120,90,0.4)', highlight:'rgba(230,210,190,0.9)', shadow:'rgba(110,80,50,0.35)', edge:'rgba(160,120,90,0.25)', innerGlow:'rgba(200,170,140,0.25)', glow:'rgba(160,120,90,0.4)' },
+      theme: { stops:[{h:25,s:35,l:12},{h:28,s:30,l:16},{h:32,s:40,l:20},{h:22,s:45,l:10}], ray:[220,200,170], wave:[200,170,140] },
+      obstacles: { ice:'#efebe9', lemon:'#d7ccc8', mint:'#a1887f', straw:'#ffab91', berry:'#bcaaa4', lime:'#ffccbc', cherry:'#8d6e63' } },
+    { id: 'mango', name: {ru:'Манговый ласси',en:'Mango Lassi'}, rarity: 'rare', price: 600, drink: 'lassi',
+      colors: { main:'rgba(255,200,80,0.35)', highlight:'rgba(255,240,180,0.9)', shadow:'rgba(200,150,30,0.3)', edge:'rgba(255,200,80,0.2)', innerGlow:'rgba(255,230,140,0.2)', glow:'rgba(255,200,80,0.35)' },
+      theme: { stops:[{h:38,s:55,l:13},{h:42,s:50,l:17},{h:46,s:60,l:21},{h:34,s:65,l:11}], ray:[255,220,120], wave:[255,190,80] },
+      obstacles: { ice:'#fff3e0', lemon:'#ffcc80', mint:'#ffb74d', straw:'#ff9800', berry:'#ffab91', lime:'#ffe0b2', cherry:'#f57c00' } },
+    { id: 'grape', name: {ru:'Виноградный сок',en:'Grape Juice'}, rarity: 'epic', price: 800, drink: 'grape',
+      colors: { main:'rgba(150,80,200,0.4)', highlight:'rgba(220,180,255,0.9)', shadow:'rgba(100,40,150,0.35)', edge:'rgba(150,80,200,0.25)', innerGlow:'rgba(190,140,230,0.25)', glow:'rgba(150,80,200,0.4)' },
+      theme: { stops:[{h:275,s:50,l:12},{h:280,s:45,l:16},{h:285,s:55,l:20},{h:270,s:60,l:10}], ray:[200,160,255], wave:[180,130,220] },
+      obstacles: { ice:'#e1bee7', lemon:'#ce93d8', mint:'#ba68c8', straw:'#9c27b0', berry:'#7b1fa2', lime:'#d1c4e9', cherry:'#4a148c' } },
+    { id: 'blueberry', name: {ru:'Черничный йогурт',en:'Blueberry Yogurt'}, rarity: 'epic', price: 800, drink: 'yogurt',
+      colors: { main:'rgba(100,150,220,0.35)', highlight:'rgba(200,220,255,0.9)', shadow:'rgba(60,100,170,0.3)', edge:'rgba(100,150,220,0.2)', innerGlow:'rgba(160,190,240,0.2)', glow:'rgba(100,150,220,0.35)' },
+      theme: { stops:[{h:215,s:45,l:13},{h:220,s:40,l:17},{h:225,s:50,l:21},{h:210,s:55,l:11}], ray:[180,210,255], wave:[150,190,240] },
+      obstacles: { ice:'#e3f2fd', lemon:'#90caf9', mint:'#64b5f6', straw:'#42a5f5', berry:'#1e88e5', lime:'#bbdefb', cherry:'#1565c0' } },
+    { id: 'tropical', name: {ru:'Тропический микс',en:'Tropical Mix'}, rarity: 'epic', price: 800, drink: 'tropical',
+      colors: { main:'rgba(255,120,80,0.35)', highlight:'rgba(255,220,200,0.9)', shadow:'rgba(200,70,30,0.3)', edge:'rgba(255,120,80,0.2)', innerGlow:'rgba(255,180,150,0.2)', glow:'rgba(255,120,80,0.35)' },
+      theme: { stops:[{h:18,s:55,l:13},{h:22,s:50,l:17},{h:26,s:60,l:21},{h:14,s:65,l:11}], ray:[255,200,160], wave:[255,170,120] },
+      obstacles: { ice:'#ffccbc', lemon:'#ffab91', mint:'#ff8a65', straw:'#ff5722', berry:'#ff7043', lime:'#ff9e80', cherry:'#d84315' } },
+    { id: 'matcha', name: {ru:'Матча',en:'Matcha'}, rarity: 'epic', price: 800, drink: 'matcha',
+      colors: { main:'rgba(120,180,80,0.35)', highlight:'rgba(220,255,190,0.9)', shadow:'rgba(70,130,40,0.3)', edge:'rgba(120,180,80,0.2)', innerGlow:'rgba(180,230,150,0.2)', glow:'rgba(120,180,80,0.35)' },
+      theme: { stops:[{h:95,s:45,l:12},{h:100,s:40,l:16},{h:105,s:50,l:20},{h:90,s:55,l:10}], ray:[200,255,170], wave:[170,230,130] },
+      obstacles: { ice:'#dcedc8', lemon:'#c5e1a5', mint:'#558b2f', straw:'#7cb342', berry:'#aed581', lime:'#9ccc65', cherry:'#33691e' } },
+    { id: 'champagne', name: {ru:'Золотой шампанского',en:'Golden Champagne'}, rarity: 'legendary', price: 1000, drink: 'champagne',
+      colors: { main:'rgba(255,215,0,0.45)', highlight:'rgba(255,255,200,0.95)', shadow:'rgba(200,160,0,0.35)', edge:'rgba(255,215,0,0.3)', innerGlow:'rgba(255,240,120,0.3)', glow:'rgba(255,215,0,0.45)' },
+      theme: { stops:[{h:45,s:60,l:14},{h:48,s:55,l:18},{h:52,s:65,l:22},{h:42,s:70,l:12}], ray:[255,230,100], wave:[255,200,60] },
+      obstacles: { ice:'#fffde7', lemon:'#fff59d', mint:'#dce775', straw:'#fbc02d', berry:'#fff176', lime:'#f0f4c3', cherry:'#f9a825' } },
+    { id: 'slime', name: {ru:'Радужный слайм',en:'Rainbow Slime'}, rarity: 'legendary', price: 1000, drink: 'slime',
+      colors: { main:'rgba(255,100,200,0.35)', highlight:'rgba(255,220,240,0.9)', shadow:'rgba(200,50,150,0.3)', edge:'rgba(255,100,200,0.2)', innerGlow:'rgba(255,180,220,0.25)', glow:'rgba(255,100,200,0.4)' },
+      theme: { stops:[{h:320,s:55,l:13},{h:325,s:50,l:17},{h:330,s:60,l:21},{h:315,s:65,l:11}], ray:[255,180,220], wave:[255,150,190] },
+      obstacles: { ice:'#f8bbd0', lemon:'#f48fb1', mint:'#ec407a', straw:'#e91e63', berry:'#d81b60', lime:'#f06292', cherry:'#ad1457' } },
+    { id: 'galaxy', name: {ru:'Галактический коктейль',en:'Galaxy Cocktail'}, rarity: 'legendary', price: 1000, drink: 'galaxy',
+      colors: { main:'rgba(100,0,150,0.45)', highlight:'rgba(200,150,255,0.9)', shadow:'rgba(60,0,100,0.4)', edge:'rgba(100,0,150,0.3)', innerGlow:'rgba(150,80,200,0.3)', glow:'rgba(150,100,255,0.45)' },
+      theme: { stops:[{h:270,s:55,l:11},{h:275,s:50,l:15},{h:280,s:60,l:19},{h:265,s:65,l:9}], ray:[180,120,255], wave:[150,100,220] },
+      obstacles: { ice:'#e1bee7', lemon:'#b39ddb', mint:'#9575cd', straw:'#7e57c2', berry:'#5e35b1', lime:'#d1c4e9', cherry:'#4527a0' } },
+    { id: 'diamond', name: {ru:'Алмазная вода',en:'Diamond Water'}, rarity: 'legendary', price: 1000, drink: 'diamond',
+      colors: { main:'rgba(200,240,255,0.45)', highlight:'rgba(255,255,255,0.95)', shadow:'rgba(150,200,220,0.35)', edge:'rgba(200,240,255,0.3)', innerGlow:'rgba(230,250,255,0.35)', glow:'rgba(200,240,255,0.45)' },
+      theme: { stops:[{h:195,s:55,l:14},{h:200,s:50,l:18},{h:205,s:60,l:22},{h:190,s:65,l:12}], ray:[200,240,255], wave:[180,220,240] },
+      obstacles: { ice:'#e0f7fa', lemon:'#b2ebf2', mint:'#80deea', straw:'#4dd0e1', berry:'#26c6da', lime:'#b2dfdb', cherry:'#00acc1' } }
+];
+
+// ==================== TRAILS DATA (20) ====================
+const TRAILS_DATA = [
+    { id: 'default', name: {ru:'Классик',en:'Classic'}, rarity: 'common', price: 400, color: 'rgba(255,255,255,0.22)' },
+    { id: 'gold', name: {ru:'Золото',en:'Gold'}, rarity: 'common', price: 400, color: 'rgba(255,215,0,0.35)' },
+    { id: 'fire', name: {ru:'Огонь',en:'Fire'}, rarity: 'common', price: 400, color: 'rgba(255,100,50,0.35)' },
+    { id: 'bubble', name: {ru:'Пузыри',en:'Bubbles'}, rarity: 'common', price: 400, color: 'rgba(100,200,255,0.3)' },
+    { id: 'neon', name: {ru:'Неон',en:'Neon'}, rarity: 'uncommon', price: 200, color: 'rgba(0,255,150,0.35)' },
+    { id: 'rose', name: {ru:'Роза',en:'Rose'}, rarity: 'uncommon', price: 200, color: 'rgba(255,150,180,0.35)' },
+    { id: 'ocean', name: {ru:'Океан',en:'Ocean'}, rarity: 'uncommon', price: 200, color: 'rgba(50,150,255,0.35)' },
+    { id: 'poison', name: {ru:'Яд',en:'Poison'}, rarity: 'uncommon', price: 200, color: 'rgba(150,255,50,0.35)' },
+    { id: 'magic', name: {ru:'Магия',en:'Magic'}, rarity: 'rare', price: 600, color: 'rgba(200,100,255,0.35)' },
+    { id: 'star', name: {ru:'Звёзды',en:'Stars'}, rarity: 'rare', price: 600, color: 'rgba(255,255,200,0.4)' },
+    { id: 'shadow', name: {ru:'Тень',en:'Shadow'}, rarity: 'rare', price: 600, color: 'rgba(80,80,100,0.4)' },
+    { id: 'candy', name: {ru:'Конфета',en:'Candy'}, rarity: 'rare', price: 600, color: 'rgba(255,105,180,0.35)' },
+    { id: 'plasma', name: {ru:'Плазма',en:'Plasma'}, rarity: 'epic', price: 800, color: 'rgba(150,0,255,0.35)' },
+    { id: 'crystal', name: {ru:'Кристалл',en:'Crystal'}, rarity: 'epic', price: 800, color: 'rgba(200,255,255,0.4)' },
+    { id: 'ember', name: {ru:'Угли',en:'Ember'}, rarity: 'epic', price: 800, color: 'rgba(255,80,0,0.4)' },
+    { id: 'frost', name: {ru:'Иней',en:'Frost'}, rarity: 'epic', price: 800, color: 'rgba(180,230,255,0.4)' },
+    { id: 'rainbow', name: {ru:'Радуга',en:'Rainbow'}, rarity: 'legendary', price: 1000, color: 'rainbow' },
+    { id: 'void', name: {ru:'Пустота',en:'Void'}, rarity: 'legendary', price: 1000, color: 'rgba(30,30,50,0.5)' },
+    { id: 'cosmic', name: {ru:'Космос',en:'Cosmic'}, rarity: 'legendary', price: 1000, color: 'rgba(150,100,255,0.4)' },
+    { id: 'diamond_trail', name: {ru:'Алмаз',en:'Diamond'}, rarity: 'legendary', price: 1000, color: 'rgba(200,240,255,0.45)' }
+];
+
+const RARITY_ORDER = { common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4 };
+const RARITY_COLORS = { common: '#a0a0a0', uncommon: '#4caf50', rare: '#2196f3', epic: '#9c27b0', legendary: '#ff9800' };
+
+// ==================== LEVELS DATA ====================
+const LEVELS_DATA = [
+    { // Level 1 - Tutorial
+        length: 1500,
+        obstacles: [
+            {type:'ice',x:0.3,y:-300},{type:'ice',x:0.7,y:-600},
+            {type:'lemon',x:0.5,y:-900},{type:'ice',x:0.2,y:-1200}
+        ],
+        coins: [{x:0.5,y:-450},{x:0.5,y:-750},{x:0.5,y:-1350}]
+    },
+    { // Level 2
+        length: 2000,
+        obstacles: [
+            {type:'ice',x:0.2,y:-250},{type:'ice',x:0.8,y:-500},
+            {type:'lemon',x:0.5,y:-700},{type:'mint',x:0.3,y:-950},
+            {type:'ice',x:0.7,y:-1200},{type:'lemon',x:0.5,y:-1500},
+            {type:'mint',x:0.2,y:-1750}
+        ],
+        coins: [{x:0.5,y:-400},{x:0.5,y:-850},{x:0.5,y:-1400},{x:0.5,y:-1900}]
+    },
+    { // Level 3
+        length: 2500,
+        obstacles: [
+            {type:'straw',x:0.5,y:-200,rot:0.3},{type:'ice',x:0.3,y:-450},
+            {type:'lemon',x:0.7,y:-650},{type:'mint',x:0.5,y:-850},
+            {type:'straw',x:0.3,y:-1100,rot:-0.2},{type:'ice',x:0.7,y:-1350},
+            {type:'lemon',x:0.5,y:-1600},{type:'mint',x:0.2,y:-1850},
+            {type:'straw',x:0.8,y:-2100,rot:0.4}
+        ],
+        coins: [{x:0.5,y:-350},{x:0.5,y:-1000},{x:0.5,y:-1750},{x:0.5,y:-2300}]
+    },
+    { // Level 4
+        length: 3000,
+        obstacles: [
+            {type:'berry',x:0.4,y:-250},{type:'lime',x:0.6,y:-500},
+            {type:'ice',x:0.2,y:-750},{type:'lemon',x:0.8,y:-950},
+            {type:'mint',x:0.5,y:-1200},{type:'straw',x:0.3,y:-1450,rot:0.2},
+            {type:'berry',x:0.7,y:-1700},{type:'lime',x:0.5,y:-1950},
+            {type:'cherry',x:0.2,y:-2200},{type:'ice',x:0.8,y:-2450}
+        ],
+        coins: [{x:0.5,y:-400},{x:0.5,y:-1100},{x:0.5,y:-1800},{x:0.5,y:-2600}]
+    },
+    { // Level 5
+        length: 3500,
+        obstacles: [
+            {type:'straw',x:0.5,y:-200,rot:0.5},{type:'berry',x:0.3,y:-400},
+            {type:'lime',x:0.7,y:-600},{type:'mint',x:0.5,y:-850},
+            {type:'cherry',x:0.2,y:-1100},{type:'cherry',x:0.8,y:-1100},
+            {type:'ice',x:0.5,y:-1400},{type:'lemon',x:0.3,y:-1650},
+            {type:'straw',x:0.7,y:-1900,rot:-0.3},{type:'berry',x:0.5,y:-2200},
+            {type:'lime',x:0.2,y:-2500},{type:'mint',x:0.8,y:-2750}
+        ],
+        coins: [{x:0.5,y:-350},{x:0.5,y:-950},{x:0.5,y:-1550},{x:0.5,y:-2150},{x:0.5,y:-3000}]
+    },
+    { // Level 6
+        length: 4000,
+        obstacles: [
+            {type:'ice',x:0.2,y:-200},{type:'ice',x:0.8,y:-350},
+            {type:'lemon',x:0.5,y:-550},{type:'straw',x:0.3,y:-800,rot:0.4},
+            {type:'straw',x:0.7,y:-800,rot:-0.4},{type:'mint',x:0.5,y:-1100},
+            {type:'berry',x:0.2,y:-1350},{type:'cherry',x:0.8,y:-1350},
+            {type:'lime',x:0.5,y:-1600},{type:'ice',x:0.3,y:-1900},
+            {type:'lemon',x:0.7,y:-2150},{type:'straw',x:0.5,y:-2450,rot:0.6},
+            {type:'mint',x:0.2,y:-2750},{type:'berry',x:0.8,y:-3000}
+        ],
+        coins: [{x:0.5,y:-450},{x:0.5,y:-1000},{x:0.5,y:-1750},{x:0.5,y:-2300},{x:0.5,y:-3300}]
+    },
+    { // Level 7
+        length: 4500,
+        obstacles: [
+            {type:'cherry',x:0.3,y:-200},{type:'cherry',x:0.7,y:-350},
+            {type:'lime',x:0.5,y:-550},{type:'straw',x:0.2,y:-800,rot:0.3},
+            {type:'straw',x:0.8,y:-800,rot:-0.3},{type:'berry',x:0.5,y:-1050},
+            {type:'ice',x:0.3,y:-1300},{type:'lemon',x:0.7,y:-1550},
+            {type:'mint',x:0.5,y:-1800},{type:'cherry',x:0.2,y:-2100},
+            {type:'lime',x:0.8,y:-2350},{type:'straw',x:0.5,y:-2650,rot:0.7},
+            {type:'berry',x:0.3,y:-2950},{type:'ice',x:0.7,y:-3200},
+            {type:'lemon',x:0.5,y:-3500}
+        ],
+        coins: [{x:0.5,y:-400},{x:0.5,y:-1200},{x:0.5,y:-1950},{x:0.5,y:-2800},{x:0.5,y:-3800}]
+    },
+    { // Level 8
+        length: 5000,
+        obstacles: [
+            {type:'straw',x:0.5,y:-200,rot:0.8},{type:'mint',x:0.3,y:-450},
+            {type:'mint',x:0.7,y:-450},{type:'berry',x:0.5,y:-700},
+            {type:'ice',x:0.2,y:-950},{type:'lemon',x:0.8,y:-950},
+            {type:'cherry',x:0.5,y:-1200},{type:'lime',x:0.3,y:-1500},
+            {type:'lime',x:0.7,y:-1500},{type:'straw',x:0.5,y:-1800,rot:-0.5},
+            {type:'ice',x:0.2,y:-2100},{type:'lemon',x:0.8,y:-2100},
+            {type:'mint',x:0.5,y:-2400},{type:'berry',x:0.3,y:-2700},
+            {type:'cherry',x:0.7,y:-2700},{type:'straw',x:0.5,y:-3000,rot:0.9},
+            {type:'ice',x:0.5,y:-3400},{type:'lemon',x:0.2,y:-3700},
+            {type:'lime',x:0.8,y:-3700}
+        ],
+        coins: [{x:0.5,y:-350},{x:0.5,y:-1050},{x:0.5,y:-1950},{x:0.5,y:-2850},{x:0.5,y:-4000}]
+    },
+    { // Level 9
+        length: 5500,
+        obstacles: [
+            {type:'ice',x:0.2,y:-200},{type:'lemon',x:0.8,y:-300},
+            {type:'mint',x:0.5,y:-500},{type:'straw',x:0.3,y:-750,rot:0.4},
+            {type:'straw',x:0.7,y:-750,rot:-0.4},{type:'berry',x:0.5,y:-1000},
+            {type:'cherry',x:0.2,y:-1250},{type:'cherry',x:0.8,y:-1250},
+            {type:'lime',x:0.5,y:-1500},{type:'ice',x:0.3,y:-1800},
+            {type:'lemon',x:0.7,y:-2000},{type:'mint',x:0.5,y:-2300},
+            {type:'straw',x:0.2,y:-2600,rot:0.6},{type:'straw',x:0.8,y:-2600,rot:-0.6},
+            {type:'berry',x:0.5,y:-2900},{type:'ice',x:0.3,y:-3200},
+            {type:'lemon',x:0.7,y:-3500},{type:'cherry',x:0.5,y:-3800},
+            {type:'lime',x:0.2,y:-4100},{type:'mint',x:0.8,y:-4100}
+        ],
+        coins: [{x:0.5,y:-400},{x:0.5,y:-1150},{x:0.5,y:-2100},{x:0.5,y:-3100},{x:0.5,y:-4300}]
+    },
+    { // Level 10 - Hearts
+        length: 6000,
+        obstacles: [
+            {type:'ice',x:0.3,y:-200},{type:'lemon',x:0.7,y:-350},
+            {type:'mint',x:0.5,y:-550},{type:'straw',x:0.2,y:-800,rot:0.3},
+            {type:'straw',x:0.8,y:-800,rot:-0.3},{type:'berry',x:0.5,y:-1050},
+            {type:'cherry',x:0.3,y:-1300},{type:'lime',x:0.7,y:-1300},
+            {type:'ice',x:0.5,y:-1600},{type:'lemon',x:0.2,y:-1850},
+            {type:'mint',x:0.8,y:-1850},{type:'straw',x:0.5,y:-2150,rot:0.5},
+            {type:'berry',x:0.3,y:-2450},{type:'cherry',x:0.7,y:-2450},
+            {type:'lime',x:0.5,y:-2750},{type:'ice',x:0.2,y:-3050},
+            {type:'lemon',x:0.8,y:-3050},{type:'mint',x:0.5,y:-3350},
+            {type:'straw',x:0.3,y:-3650,rot:-0.4},{type:'straw',x:0.7,y:-3650,rot:0.4},
+            {type:'berry',x:0.5,y:-3950},{type:'cherry',x:0.2,y:-4250},
+            {type:'lime',x:0.8,y:-4250},{type:'ice',x:0.5,y:-4550},
+            {type:'lemon',x:0.3,y:-4850},{type:'mint',x:0.7,y:-4850}
+        ],
+        coins: [{x:0.5,y:-350},{x:0.5,y:-1100},{x:0.5,y:-2200},{x:0.5,y:-3400},{x:0.5,y:-4600}],
+        hearts: [{x:0.5,y:-1500},{x:0.5,y:-3000},{x:0.5,y:-5000}]
+    }
+];
+
+class Coin {
+    constructor(x, y) {
+        this.x = x; this.y = y; this.radius = 13;
+        this.collected = false; this.scale = 1; this.alpha = 1;
+        this.floatPhase = Math.random() * Math.PI * 2;
+        this.sparklePhase = Math.random() * Math.PI * 2;
+    }
+    update(dt) {
+        this.floatPhase += dt * 2.5;
+        this.sparklePhase += dt * 4;
+        this.y += Math.sin(this.floatPhase) * 4 * dt;
+        if (this.collected) {
+            this.scale += dt * 5;
+            this.alpha -= dt * 4;
+        }
+    }
+    render(ctx) {
+        if (this.alpha <= 0) return;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.scale(this.scale, this.scale);
+        ctx.globalAlpha = this.alpha;
+        const r = this.radius;
+        ctx.beginPath(); ctx.arc(1, 2, r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fill();
+        const g = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
+        g.addColorStop(0, '#fff8c8'); g.addColorStop(0.35, '#ffd700'); g.addColorStop(0.75, '#daa520'); g.addColorStop(1, '#b8860b');
+        ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+        ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 1.0;
+        ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,220,0.35)'; ctx.lineWidth = 0.7;
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.82, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = 'rgba(140,100,0,0.55)'; ctx.font = `bold ${Math.floor(r * 1.2)}px sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('$', 0, r * 0.05);
+        ctx.beginPath(); ctx.ellipse(-r * 0.35, -r * 0.35, r * 0.22, r * 0.11, -0.55, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.65)'; ctx.fill();
+        if (Math.sin(this.sparklePhase) > 0.75) {
+            ctx.beginPath(); ctx.arc(r * 0.45, -r * 0.45, 1.8, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fill();
+        }
+        ctx.restore();
+    }
+    checkCollision(bubble) {
+        const dx = bubble.x - this.x, dy = bubble.y - this.y;
+        return Math.sqrt(dx * dx + dy * dy) < this.radius + bubble.radius * 0.85;
+    }
+}
+
+// ==================== NEW OBSTACLES ====================
+class Berry extends Obstacle {
+    constructor(x, y) { super(x, y); this.radius = 16 + Math.random() * 8; this.rotSpeed = (Math.random() - 0.5) * 1.5; this.pulsePhase = Math.random() * Math.PI * 2; }
+    update(dt) { super.update(dt); this.pulsePhase += dt * 2.5; }
+    render(ctx) {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+        const r = this.radius, p = 1 + Math.sin(this.pulsePhase) * 0.03;
+        ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.beginPath(); ctx.arc(2, 3, r * p, 0, Math.PI * 2); ctx.fill();
+        const g = ctx.createRadialGradient(-r * 0.2, -r * 0.2, r * 0.1, 0, 0, r);
+        const oc = this.getColor(); g.addColorStop(0, this.lighten(oc, 40)); g.addColorStop(0.5, oc); g.addColorStop(1, this.darken(oc, 30));
+        ctx.beginPath(); ctx.arc(0, 0, r * p, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+        ctx.strokeStyle = this.darken(oc, 50); ctx.lineWidth = 0.8; ctx.stroke();
+        // Seeds
+        for (let i = 0; i < 5; i++) { const a = (Math.PI * 2 / 5) * i + 0.5; ctx.beginPath(); ctx.ellipse(Math.cos(a) * r * 0.35, Math.sin(a) * r * 0.35, 1.5, 2.5, a, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fill(); }
+        // Leaf
+        ctx.beginPath(); ctx.ellipse(0, -r * 0.9, r * 0.25, r * 0.4, 0, 0, Math.PI * 2); ctx.fillStyle = '#4caf50'; ctx.fill();
+        // Shine
+        ctx.beginPath(); ctx.ellipse(-r * 0.3, -r * 0.3, r * 0.12, r * 0.22, -0.5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.fill();
+        ctx.restore();
+    }
+    getColor() { return Game.currentSkinObj ? (Game.currentSkinObj.obstacles.berry || '#e91e63') : '#e91e63'; }
+    lighten(c, p) { return c; } // simplified
+    darken(c, p) { return c; }
+    checkCollision(bubble) { const dx = bubble.x - this.x, dy = bubble.y - this.y; return Math.sqrt(dx * dx + dy * dy) < this.radius + bubble.radius * 0.8; }
+}
+
+class LimeSlice extends Obstacle {
+    constructor(x, y) { super(x, y); this.radius = 22 + Math.random() * 10; this.rotSpeed = (Math.random() - 0.5) * 2; this.pulsePhase = Math.random() * Math.PI * 2; }
+    update(dt) { super.update(dt); this.pulsePhase += dt * 2.2; }
+    render(ctx) {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+        const r = this.radius, p = 1 + Math.sin(this.pulsePhase) * 0.025;
+        const oc = this.getColor();
+        ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.beginPath(); ctx.arc(2, 3, r * p, 0, Math.PI * 2); ctx.fill();
+        const peelGrad = ctx.createRadialGradient(-r * 0.25, -r * 0.25, r * 0.1, 0, 0, r);
+        peelGrad.addColorStop(0, '#aed581'); peelGrad.addColorStop(0.6, '#7cb342'); peelGrad.addColorStop(1, '#558b2f');
+        ctx.beginPath(); ctx.arc(0, 0, r * p, 0, Math.PI * 2); ctx.fillStyle = peelGrad; ctx.fill();
+        ctx.strokeStyle = '#33691e'; ctx.lineWidth = 1; ctx.stroke();
+        const albGrad = ctx.createRadialGradient(-r * 0.15, -r * 0.15, r * 0.05, 0, 0, r * 0.86);
+        albGrad.addColorStop(0, '#f1f8e9'); albGrad.addColorStop(1, '#dcedc8');
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.90 * p, 0, Math.PI * 2); ctx.fillStyle = albGrad; ctx.fill();
+        const pulpGrad = ctx.createRadialGradient(-r * 0.2, -r * 0.2, r * 0.05, 0, 0, r * 0.76);
+        pulpGrad.addColorStop(0, '#c5e1a5'); pulpGrad.addColorStop(0.5, '#aed581'); pulpGrad.addColorStop(1, '#9ccc65');
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.82 * p, 0, Math.PI * 2); ctx.fillStyle = pulpGrad; ctx.fill();
+        const segs = 8; ctx.strokeStyle = 'rgba(124,179,66,0.4)'; ctx.lineWidth = 1;
+        for (let i = 0; i < segs; i++) { const a = (Math.PI * 2 / segs) * i; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * r * 0.78, Math.sin(a) * r * 0.78); ctx.stroke(); }
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.09, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fill();
+        ctx.beginPath(); ctx.ellipse(-r * 0.32, -r * 0.32, r * 0.14, r * 0.28, -0.6, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fill();
+        ctx.restore();
+    }
+    getColor() { return Game.currentSkinObj ? (Game.currentSkinObj.obstacles.lime || '#cddc39') : '#cddc39'; }
+    checkCollision(bubble) { const dx = bubble.x - this.x, dy = bubble.y - this.y; return Math.sqrt(dx * dx + dy * dy) < this.radius + bubble.radius * 0.8; }
+}
+
+class Cherry extends Obstacle {
+    constructor(x, y) { super(x, y); this.radius = 14 + Math.random() * 6; this.rotSpeed = (Math.random() - 0.5) * 1.8; this.pulsePhase = Math.random() * Math.PI * 2; this.swayPhase = Math.random() * Math.PI * 2; }
+    update(dt) { super.update(dt); this.pulsePhase += dt * 2.8; this.swayPhase += dt * 1.5; this.x += Math.sin(this.swayPhase) * 6 * dt; const g = Game.glass, m = this.radius * 2; if (this.x < g.leftX + m) this.x = g.leftX + m; if (this.x > g.rightX - m) this.x = g.rightX - m; }
+    render(ctx) {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+        const r = this.radius, p = 1 + Math.sin(this.pulsePhase) * 0.04;
+        const oc = this.getColor();
+        // Two cherries
+        const positions = [{x:-r*0.6,y:r*0.2},{x:r*0.6,y:r*0.2}];
+        positions.forEach(pos => {
+            ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.beginPath(); ctx.arc(pos.x+1, pos.y+2, r*p, 0, Math.PI*2); ctx.fill();
+            const g = ctx.createRadialGradient(pos.x-r*0.2, pos.y-r*0.2, r*0.1, pos.x, pos.y, r);
+            g.addColorStop(0, '#ef5350'); g.addColorStop(0.5, '#d32f2f'); g.addColorStop(1, '#b71c1c');
+            ctx.beginPath(); ctx.arc(pos.x, pos.y, r*p, 0, Math.PI*2); ctx.fillStyle = g; ctx.fill();
+            ctx.strokeStyle = '#8b0000'; ctx.lineWidth = 0.6; ctx.stroke();
+            ctx.beginPath(); ctx.arc(pos.x-r*0.25, pos.y-r*0.25, r*0.15, 0, Math.PI*2); ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.fill();
+        });
+        // Stem
+        ctx.beginPath(); ctx.moveTo(0, -r*0.5); ctx.quadraticCurveTo(-r*0.3, -r*1.5, -r*0.6, -r*0.3); ctx.strokeStyle = '#5d4037'; ctx.lineWidth = 1.2; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, -r*0.5); ctx.quadraticCurveTo(r*0.3, -r*1.5, r*0.6, -r*0.3); ctx.stroke();
+        ctx.restore();
+    }
+    getColor() { return Game.currentSkinObj ? (Game.currentSkinObj.obstacles.cherry || '#d32f2f') : '#d32f2f'; }
+    checkCollision(bubble) { const dx = bubble.x - this.x, dy = bubble.y - this.y; return Math.sqrt(dx * dx + dy * dy) < this.radius * 1.4 + bubble.radius * 0.8; }
+}
+
+// ==================== HEART ====================
+class Heart {
+    constructor(x, y) {
+        this.x = x; this.y = y; this.collected = false; this.scale = 1; this.alpha = 1;
+        this.floatPhase = Math.random() * Math.PI * 2; this.sparklePhase = Math.random() * Math.PI * 2;
+    }
+    update(dt) {
+        this.floatPhase += dt * 2.5; this.sparklePhase += dt * 4;
+        this.y += Math.sin(this.floatPhase) * 3 * dt;
+        if (this.collected) { this.scale += dt * 5; this.alpha -= dt * 4; }
+    }
+    render(ctx) {
+        if (this.alpha <= 0) return; ctx.save(); ctx.translate(this.x, this.y); ctx.scale(this.scale, this.scale); ctx.globalAlpha = this.alpha;
+        const s = 12;
+        ctx.fillStyle = '#ff4444'; ctx.beginPath();
+        ctx.moveTo(0, s * 0.3); ctx.bezierCurveTo(-s, -s * 0.5, -s, -s * 1.2, 0, -s * 0.5); ctx.bezierCurveTo(s, -s * 1.2, s, -s * 0.5, 0, s * 0.3); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.beginPath(); ctx.arc(-s * 0.2, -s * 0.6, s * 0.15, 0, Math.PI * 2); ctx.fill();
+        if (Math.sin(this.sparklePhase) > 0.75) { ctx.beginPath(); ctx.arc(s * 0.4, -s * 0.7, 1.5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fill(); }
+        ctx.restore();
+    }
+    checkCollision(bubble) { const dx = bubble.x - this.x, dy = bubble.y - this.y; return Math.sqrt(dx * dx + dy * dy) < 15 + bubble.radius * 0.85; }
+}
+
+// ==================== BONUS ====================
+class Bonus {
+    constructor(x, y, type) {
+        this.x = x; this.y = y; this.type = type; this.radius = 16;
+        this.collected = false; this.scale = 1; this.alpha = 1;
+        this.floatPhase = Math.random() * Math.PI * 2; this.sparklePhase = 0;
+        this.pulsePhase = Math.random() * Math.PI * 2;
+    }
+    update(dt) {
+        this.floatPhase += dt * 2.5; this.sparklePhase += dt * 5; this.pulsePhase += dt * 3;
+        this.y += Math.sin(this.floatPhase) * 3 * dt;
+        if (this.collected) { this.scale += dt * 5; this.alpha -= dt * 4; }
+    }
+    render(ctx) {
+        if (this.alpha <= 0) return; ctx.save(); ctx.translate(this.x, this.y); ctx.scale(this.scale * (1 + Math.sin(this.pulsePhase) * 0.08), this.scale * (1 + Math.sin(this.pulsePhase) * 0.08)); ctx.globalAlpha = this.alpha;
+        const r = this.radius;
+        const colors = { shield: '#2196f3', slow: '#9c27b0', coin2x: '#ffd700', mini: '#4caf50' };
+        const icons = { shield: '🛡', slow: '⏱', coin2x: '×2', mini: '🔍' };
+        const c = colors[this.type] || '#fff';
+        ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.beginPath(); ctx.arc(1, 2, r, 0, Math.PI * 2); ctx.fill();
+        const g = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
+        g.addColorStop(0, '#fff'); g.addColorStop(0.4, c); g.addColorStop(1, this.darkenColor(c, 40));
+        ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 1.2; ctx.stroke();
+        ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.floor(r * 0.9)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(icons[this.type] || '?', 0, 1);
+        if (Math.sin(this.sparklePhase) > 0.8) { ctx.beginPath(); ctx.arc(r * 0.5, -r * 0.5, 2, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.fill(); }
+        ctx.restore();
+    }
+    darkenColor(hex, percent) { return hex; } // simplified
+    checkCollision(bubble) { const dx = bubble.x - this.x, dy = bubble.y - this.y; return Math.sqrt(dx * dx + dy * dy) < this.radius + bubble.radius * 0.85; }
+}
+
+// ==================== BUBBLE (enhanced) ====================
+class Bubble {
+    constructor() {
+        this.radius = 18; this.baseRadius = 18; this.x = 0; this.y = 0; this.vx = 0; this.vy = 0;
+        this.state = 'floating'; this.dead = false;
+        this.wobblePhase = 0; this.baseSpeed = 120; this.maxSpeed = 350;
+        this.glowIntensity = 0; this.impactSquash = 0; this.resize();
+        // Bonuses
+        this.shieldActive = false; this.shieldTimer = 0; this.shieldFlash = false;
+        this.miniActive = false; this.miniTimer = 0; this.miniFlash = false;
+        this.slowActive = false; this.slowTimer = 0; this.slowRecoverTimer = 0;
+        this.coin2xActive = false; this.coin2xTimer = 0;
+    }
+    resize() { if (Game.state !== 'playing') { this.x = Game.width / 2; this.y = Game.height * 0.7; } }
+    reset() {
+        this.x = Game.width / 2; this.y = 0; this.vx = 0; this.vy = 0;
+        this.state = 'floating'; this.dead = false;
+        this.wobblePhase = 0; this.glowIntensity = 0; this.impactSquash = 0;
+        this.radius = this.baseRadius; this.shieldActive = false; this.miniActive = false;
+        this.slowActive = false; this.slowRecoverTimer = 0; this.coin2xActive = false;
+    }
+    clickSide(side) {
+        if (this.dead || Game.paused) return;
+        this.state = 'moving_to_wall'; this.targetSide = side;
+        const dir = side === 'left' ? -1 : 1;
+        const speedMult = this.slowActive ? 0.67 : (this.slowRecoverTimer > 0 ? 0.67 + (1 - 0.67) * (1 - this.slowRecoverTimer / 3) : 1);
+        this.vx = dir * 420 * speedMult;
+        this.glowIntensity = 1.3; this.impactSquash = 1.0;
+        if (Game.settings.vibration && navigator.vibrate) navigator.vibrate(10);
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+    }
+    update(dt) {
+        if (this.dead) return;
+        this.wobblePhase += dt * 3;
+        if (this.glowIntensity > 0) { this.glowIntensity -= dt * 4.5; if (this.glowIntensity < 0) this.glowIntensity = 0; }
+        if (this.impactSquash > 0) { this.impactSquash -= dt * 12; if (this.impactSquash < 0) this.impactSquash = 0; }
+
+        // Bonus timers
+        const updateBonus = (timer, flash, duration, flashStart) => {
+            if (timer > 0) {
+                timer -= dt;
+                if (timer <= flashStart && timer > 0) flash = Math.floor(timer * 4) % 2 === 0;
+                else if (timer <= 0) { timer = 0; flash = false; }
+            }
+            return { timer, flash };
+        };
+        if (this.shieldActive) {
+            const r = updateBonus(this.shieldTimer, this.shieldFlash, 10, 3);
+            this.shieldTimer = r.timer; this.shieldFlash = r.flash;
+            if (this.shieldTimer <= 0) this.shieldActive = false;
+        }
+        if (this.miniActive) {
+            const r = updateBonus(this.miniTimer, this.miniFlash, 10, 3);
+            this.miniTimer = r.timer; this.miniFlash = r.flash;
+            if (this.miniTimer <= 0) { this.miniActive = false; this.radius = this.baseRadius; }
+            else this.radius = this.baseRadius * 0.5;
+        }
+        if (this.coin2xActive) {
+            this.coin2xTimer -= dt; if (this.coin2xTimer <= 0) { this.coin2xTimer = 0; this.coin2xActive = false; }
+        }
+        if (this.slowActive) {
+            this.slowTimer -= dt;
+            if (this.slowTimer <= 3 && this.slowTimer > 0) this.slowRecoverTimer = 3 - this.slowTimer;
+            else if (this.slowTimer <= 0) { this.slowActive = false; this.slowRecoverTimer = 3; }
+        }
+        if (this.slowRecoverTimer > 0 && !this.slowActive) {
+            this.slowRecoverTimer -= dt; if (this.slowRecoverTimer < 0) this.slowRecoverTimer = 0;
+        }
+
+        const glass = Game.glass;
+        const slowMult = this.slowActive ? 0.5 : (this.slowRecoverTimer > 0 ? 0.5 + 0.5 * (1 - this.slowRecoverTimer / 3) : 1);
+        const speed = Math.min(this.baseSpeed + Game.score * 1.2, this.maxSpeed) * slowMult * Game.speedMult;
+        const margin = this.radius + 4;
+
+        if (this.state === 'floating') {
+            this.vy = -speed; this.vx *= Math.pow(0.08, dt); this.vx += Math.sin(this.wobblePhase) * 6 * dt;
+            this.x += this.vx * dt; this.y += this.vy * dt;
+        } else if (this.state === 'moving_to_wall') {
+            this.vy = -speed; this.vx *= Math.pow(0.22, dt); this.x += this.vx * dt; this.y += this.vy * dt;
+            if (Math.abs(this.vx) < 25) this.state = 'floating';
+        }
+
+        if (this.x - margin < glass.leftX) {
+            this.x = glass.leftX + margin;
+            if (this.vx < 0) { this.vx = Math.abs(this.vx) * 0.35; this.impactSquash = 1.0; this.state = 'floating'; if (Game.world) Game.world.createStickEffect(this.x, this.y, 'left'); if (AudioEngine && AudioEngine.ctx) AudioEngine.play('release'); }
+        }
+        if (this.x + margin > glass.rightX) {
+            this.x = glass.rightX - margin;
+            if (this.vx > 0) { this.vx = -Math.abs(this.vx) * 0.35; this.impactSquash = 1.0; this.state = 'floating'; if (Game.world) Game.world.createStickEffect(this.x, this.y, 'right'); if (AudioEngine && AudioEngine.ctx) AudioEngine.play('release'); }
+        }
+        if (this.y > 200) this.y = 200;
+    }
+    render(ctx) {
+        if (this.dead) return;
+        const x = this.x, y = this.y, r = this.radius;
+        let sx = 1, sy = 1;
+        if (this.impactSquash > 0) { const s = this.impactSquash * 0.32; sx = 1 - s; sy = 1 + s * 0.55; }
+        ctx.save(); ctx.translate(x, y); ctx.scale(sx, sy);
+
+        // Shield glow
+        if (this.shieldActive && !this.shieldFlash) {
+            const gr = r + 8; const gg = ctx.createRadialGradient(0, 0, r, 0, 0, gr);
+            gg.addColorStop(0, 'rgba(33,150,243,0.3)'); gg.addColorStop(1, 'rgba(33,150,243,0)');
+            ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(0, 0, gr, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = 'rgba(33,150,243,0.4)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, 0, r + 4, 0, Math.PI * 2); ctx.stroke();
+        }
+
+        if (this.glowIntensity > 0) {
+            const gr = r + 4 + this.glowIntensity * 8;
+            const gg = ctx.createRadialGradient(0, 0, r, 0, 0, gr);
+            const sk = SkinManager.getSkinColors();
+            gg.addColorStop(0, sk.glow || 'rgba(100,200,255,0.25)'); gg.addColorStop(1, 'rgba(100,200,255,0)');
+            ctx.globalAlpha = Math.min(1, this.glowIntensity * 0.75);
+            ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(0, 0, gr, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+        }
+        ctx.beginPath(); ctx.arc(0, 0, r + 1.5, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(200,230,255,0.12)'; ctx.lineWidth = 1; ctx.stroke();
+        const skin = SkinManager.getSkinColors();
+        const grad = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
+        grad.addColorStop(0, skin.highlight); grad.addColorStop(0.3, skin.main); grad.addColorStop(0.8, skin.shadow); grad.addColorStop(1, skin.edge);
+        ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = grad; ctx.fill();
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.7, 0, Math.PI * 2); ctx.fillStyle = skin.innerGlow; ctx.fill();
+        ctx.beginPath(); ctx.ellipse(-r * 0.35, -r * 0.35, r * 0.25, r * 0.18, -0.5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(r * 0.3, r * 0.4, r * 0.08, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 0.5; ctx.stroke();
+        ctx.restore();
+    }
+}
+
+// ==================== GLASS (enhanced) ====================
+class Glass {
+    constructor() { this.leftX = 0; this.rightX = 0; this.width = 0; this.wallThickness = 8; this.resize(); }
+    resize() { this.width = Math.min(Game.width * 0.78, 340); this.leftX = (Game.width - this.width) / 2; this.rightX = this.leftX + this.width; }
+    renderBack(ctx, cy) {
+        const h = Game.height + 200, ty = cy - 100, by = cy + h + 100;
+        ctx.fillStyle = 'rgba(25,20,10,0.25)';
+        ctx.fillRect(this.leftX, ty, this.width, by - ty);
+        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+        ctx.fillRect(this.leftX - this.wallThickness / 2, ty, this.wallThickness, by - ty);
+        ctx.fillRect(this.rightX - this.wallThickness / 2, ty, this.wallThickness, by - ty);
+        ctx.beginPath(); ctx.moveTo(this.leftX, by - 30); ctx.quadraticCurveTo(this.leftX + this.width / 2, by + 30, this.rightX, by - 30);
+        ctx.lineTo(this.rightX, by - 50); ctx.lineTo(this.leftX, by - 50); ctx.closePath(); ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fill();
+    }
+    renderFront(ctx, cy) {
+        const h = Game.height + 200, ty = cy - 100, by = cy + h + 100;
+        const tm = Date.now() * 0.001;
+        const ls = Math.sin(tm * 0.7) * 0.5 + 0.5;
+        ctx.fillStyle = `rgba(255,255,255,${0.06 * ls})`; ctx.fillRect(this.leftX + 2, ty, 3, by - ty);
+        const rs = Math.sin(tm * 0.7 + 1.5) * 0.5 + 0.5;
+        ctx.fillStyle = `rgba(255,255,255,${0.04 * rs})`; ctx.fillRect(this.rightX - 5, ty, 2, by - ty);
+        ctx.beginPath(); ctx.ellipse(this.leftX + this.width / 2, ty, this.width / 2 + 2, 6, 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(this.leftX, ty); ctx.lineTo(this.leftX, by - 30); ctx.quadraticCurveTo(this.leftX, by, this.leftX + 15, by);
+        ctx.moveTo(this.rightX, ty); ctx.lineTo(this.rightX, by - 30); ctx.quadraticCurveTo(this.rightX, by, this.rightX - 15, by);
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+}
+
+// ==================== CAMERA ====================
+class Camera {
+    constructor() { this.y = 0; this.targetY = 0; this.shake = 0; this.shakeDecay = 5; }
+    reset() { this.y = 0; this.targetY = 0; this.shake = 0; }
+    update(dt, by) {
+        const t = by - Game.height * 0.6;
+        this.targetY = Math.min(0, t);
+        this.y += (this.targetY - this.y) * 3 * dt;
+        if (this.shake > 0) { this.shake -= this.shakeDecay * dt; if (this.shake < 0) this.shake = 0; }
+        if (this.shake > 0) this.y += (Math.random() - 0.5) * this.shake;
+    }
+    addShake(a) { this.shake = Math.max(this.shake, a); }
+}
+
+// ==================== WORLD (enhanced) ====================
+class World {
+    constructor() { this.obstacles = []; this.particles = []; this.coins = []; this.bonuses = []; this.hearts = []; this.lastSpawnY = -200; this.spawnDistance = 250; this.finishWall = null; }
+    reset() { this.obstacles = []; this.particles = []; this.coins = []; this.bonuses = []; this.hearts = []; this.lastSpawnY = -200; this.spawnDistance = 250; this.finishWall = null; }
+
+    loadLevel(levelIndex) {
+        this.reset();
+        const lvl = LEVELS_DATA[levelIndex];
+        if (!lvl) return;
+        const glass = Game.glass;
+        const xFromRel = (rel) => glass.leftX + rel * glass.width;
+
+        // Load obstacles
+        (lvl.obstacles || []).forEach(o => {
+            const x = xFromRel(o.x);
+            const y = -o.y;
+            let obs;
+            switch(o.type) {
+                case 'ice': obs = new IceCube(x, y); break;
+                case 'lemon': obs = new LemonSlice(x, y); break;
+                case 'straw': obs = new Straw(x, y); if (o.rot) obs.rotation = o.rot; break;
+                case 'mint': obs = new MintLeaf(x, y); break;
+                case 'berry': obs = new Berry(x, y); break;
+                case 'lime': obs = new LimeSlice(x, y); break;
+                case 'cherry': obs = new Cherry(x, y); break;
+            }
+            if (obs) this.obstacles.push(obs);
+        });
+
+        // Load coins
+        (lvl.coins || []).forEach(c => this.coins.push(new Coin(xFromRel(c.x), -c.y)));
+
+        // Load hearts
+        (lvl.hearts || []).forEach(h => this.hearts.push(new Heart(xFromRel(h.x), -h.y)));
+
+        // Finish wall
+        this.finishWall = { y: -lvl.length, width: glass.width, height: 60, heartsRequired: (lvl.hearts || []).length };
+    }
+
+    update(dt, bubble, cameraY) {
+        if (Game.gameMode === 'endless') {
+            const spawnY = cameraY - Game.height * 0.5;
+            if (spawnY < this.lastSpawnY - this.spawnDistance) {
+                this.spawnObstacle(spawnY); this.lastSpawnY = spawnY;
+                this.spawnDistance = Math.max(120, 250 - Game.score * 0.35);
+                const coinChance = bubble.coin2xActive ? 0.5 : 0.22;
+                if (Math.random() < coinChance) this.spawnCoin(spawnY + this.spawnDistance * 0.5);
+                if (Math.random() < 0.08) this.spawnBonus(spawnY + this.spawnDistance * 0.5);
+            }
+        }
+
+        this.obstacles.forEach(o => o.update(dt));
+        this.obstacles = this.obstacles.filter(o => o.y < cameraY + Game.height + 200);
+
+        // Collision with obstacles
+        for (const o of this.obstacles) {
+            if (o.checkCollision(bubble)) {
+                if (bubble.shieldActive) {
+                    // Shield destroys obstacle
+                    this.createShieldDestroyEffect(o.x, o.y);
+                    this.obstacles = this.obstacles.filter(ob => ob !== o);
+                    if (AudioEngine && AudioEngine.ctx) AudioEngine.play('shield');
+                    break;
+                } else {
+                    bubble.dead = true; Game.camera.addShake(8);
+                    if (AudioEngine && AudioEngine.ctx) AudioEngine.play('pop');
+                    break;
+                }
+            }
+        }
+
+        // Coins
+        this.coins.forEach(c => c.update(dt));
+        for (const c of this.coins) {
+            if (!c.collected && c.checkCollision(bubble)) {
+                c.collected = true;
+                const add = bubble.coin2xActive ? 2 : 1;
+                Game.coins += add; Game.updateHUD();
+                this.createCoinEffect(c.x, c.y);
+                if (AudioEngine && AudioEngine.ctx) AudioEngine.play('coin');
+            }
+        }
+        this.coins = this.coins.filter(c => c.alpha > 0 && c.y < cameraY + Game.height + 100);
+
+        // Bonuses
+        this.bonuses.forEach(b => b.update(dt));
+        for (const b of this.bonuses) {
+            if (!b.collected && b.checkCollision(bubble)) {
+                b.collected = true;
+                this.activateBonus(b.type, bubble);
+                this.createBonusEffect(b.x, b.y, b.type);
+                if (AudioEngine && AudioEngine.ctx) AudioEngine.play('combo');
+            }
+        }
+        this.bonuses = this.bonuses.filter(b => b.alpha > 0 && b.y < cameraY + Game.height + 100);
+
+        // Hearts
+        this.hearts.forEach(h => h.update(dt));
+        for (const h of this.hearts) {
+            if (!h.collected && h.checkCollision(bubble)) {
+                h.collected = true; Game.collectedHearts++;
+                this.createHeartEffect(h.x, h.y);
+                if (AudioEngine && AudioEngine.ctx) AudioEngine.play('coin');
+            }
+        }
+        this.hearts = this.hearts.filter(h => h.alpha > 0);
+
+        // Finish wall collision
+        if (this.finishWall && Game.gameMode === 'level') {
+            const wallTop = this.finishWall.y;
+            if (bubble.y - bubble.radius < wallTop && bubble.y > wallTop - 100) {
+                // Check hearts
+                const required = this.finishWall.heartsRequired;
+                if (required > 0 && Game.collectedHearts < required) {
+                    // Blocked
+                    bubble.y = wallTop + bubble.radius + 2;
+                    bubble.vy = 0;
+                    // Show message
+                    if (!Game.showedHeartMessage) {
+                        Game.showedHeartMessage = true;
+                        Game.showFloatingText(t('needHearts'), Game.width / 2, Game.height / 2);
+                    }
+                } else {
+                    // Level complete
+                    Game.levelComplete();
+                }
+            }
+        }
+
+        this.updateParticles(dt);
+        if (Game.settings.particles && bubble.state === 'floating' && !bubble.dead) {
+            if (Math.random() < 0.2) {
+                const trailColor = SkinManager.getTrailColor();
+                this.particles.push({ x: bubble.x + (Math.random() - 0.5) * 6, y: bubble.y + bubble.radius + 2, vx: (Math.random() - 0.5) * 10, vy: 6 + Math.random() * 10, life: 0.35 + Math.random() * 0.35, size: 1.2 + Math.random() * 2, color: trailColor, type: 'trail' });
+            }
+        }
+    }
+
+    activateBonus(type, bubble) {
+        switch(type) {
+            case 'shield': bubble.shieldActive = true; bubble.shieldTimer = 10; bubble.shieldFlash = false; break;
+            case 'slow': bubble.slowActive = true; bubble.slowTimer = 10; bubble.slowRecoverTimer = 0; break;
+            case 'coin2x': bubble.coin2xActive = true; bubble.coin2xTimer = 10; break;
+            case 'mini': bubble.miniActive = true; bubble.miniTimer = 10; bubble.miniFlash = false; bubble.radius = bubble.baseRadius * 0.5; break;
+        }
+        Game.updateBonusBar();
+    }
+
+    updateParticlesOnly(dt) { this.updateParticles(dt); }
+    updateParticles(dt) {
+        this.particles.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.gravity || 0) * dt; p.life -= dt; p.vx *= 0.98; });
+        this.particles = this.particles.filter(p => p.life > 0);
+    }
+
+    spawnObstacle(y) {
+        const glass = Game.glass;
+        let types = ['ice', 'lemon', 'berry', 'lime']; 
+        if (Game.score > 20) types.push('mint'); 
+        if (Game.score > 40) types.push('straw');
+        if (Game.score > 60) types.push('cherry');
+        const type = types[Math.floor(Math.random() * types.length)];
+        const x = glass.leftX + 40 + Math.random() * (glass.width - 80);
+        let obs;
+        switch(type) { case 'ice': obs = new IceCube(x, y); break; case 'lemon': obs = new LemonSlice(x, y); break; case 'straw': obs = new Straw(x, y); break; case 'mint': obs = new MintLeaf(x, y); break; case 'berry': obs = new Berry(x, y); break; case 'lime': obs = new LimeSlice(x, y); break; case 'cherry': obs = new Cherry(x, y); break; }
+        const tooClose = this.obstacles.some(o => Math.abs(o.y - y) < 80 && Math.abs(o.x - x) < 60);
+        if (!tooClose) this.obstacles.push(obs);
+    }
+    spawnCoin(y) {
+        const glass = Game.glass; const margin = 45;
+        const x = glass.leftX + margin + Math.random() * (glass.width - margin * 2);
+        const tooClose = this.obstacles.some(o => Math.abs(o.y - y) < 70 && Math.abs(o.x - x) < 55);
+        if (!tooClose) this.coins.push(new Coin(x, y));
+    }
+    spawnBonus(y) {
+        const glass = Game.glass; const margin = 50;
+        const x = glass.leftX + margin + Math.random() * (glass.width - margin * 2);
+        const types = ['shield', 'slow', 'coin2x', 'mini'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        const tooClose = this.obstacles.some(o => Math.abs(o.y - y) < 80 && Math.abs(o.x - x) < 60);
+        if (!tooClose) this.bonuses.push(new Bonus(x, y, type));
+    }
+
+    renderObstacles(ctx, cameraY) {
+        this.obstacles.forEach(o => o.render(ctx));
+        this.coins.forEach(c => c.render(ctx));
+        this.bonuses.forEach(b => b.render(ctx));
+        this.hearts.forEach(h => h.render(ctx));
+        // Render finish wall
+        if (this.finishWall && Game.gameMode === 'level') {
+            const w = this.finishWall;
+            const glass = Game.glass;
+            ctx.fillStyle = 'rgba(255,255,255,0.08)';
+            ctx.fillRect(glass.leftX, w.y, w.width, w.height);
+            ctx.strokeStyle = 'rgba(255,215,0,0.4)'; ctx.lineWidth = 2;
+            ctx.strokeRect(glass.leftX, w.y, w.width, w.height);
+            // Hearts on wall
+            const required = w.heartsRequired;
+            if (required > 0) {
+                const spacing = 30; const totalW = required * spacing; const startX = glass.leftX + (w.width - totalW) / 2 + spacing / 2;
+                for (let i = 0; i < required; i++) {
+                    const hx = startX + i * spacing; const hy = w.y + w.height / 2;
+                    ctx.fillStyle = i < Game.collectedHearts ? '#ff4444' : 'rgba(255,255,255,0.15)';
+                    ctx.beginPath(); ctx.moveTo(hx, hy + 4); ctx.bezierCurveTo(hx - 8, hy - 4, hx - 8, hy - 10, hx, hy - 6); ctx.bezierCurveTo(hx + 8, hy - 10, hx + 8, hy - 4, hx, hy + 4); ctx.fill();
+                }
+            }
+            // Finish text
+            ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('FINISH', glass.leftX + w.width / 2, w.y + w.height + 20);
+        }
+    }
+    renderParticles(ctx, cameraY) {
+        this.particles.forEach(p => {
+            const a = Math.min(1, p.life / 0.3); ctx.save(); ctx.globalAlpha = a;
+            if (p.color === 'rainbow') { ctx.fillStyle = `hsl(${(Date.now() / 10) % 360}, 80%, 60%)`; }
+            else { ctx.fillStyle = p.color; }
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size * (p.type === 'splash' ? p.life / p.maxLife : 1), 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        });
+    }
+
+    createStickEffect(x, y, side) {
+        if (!Game.settings.particles) return;
+        const dir = side === 'left' ? 1 : -1;
+        for (let i = 0; i < 5; i++) this.particles.push({ x: x + dir * 6, y: y + (Math.random() - 0.5) * 12, vx: dir * (12 + Math.random() * 22), vy: (Math.random() - 0.5) * 24, life: 0.2 + Math.random() * 0.2, maxLife: 0.4, size: 1.2 + Math.random() * 2, color: 'rgba(200,230,255,0.45)', type: 'splash' });
+    }
+    createCoinEffect(x, y) {
+        if (!Game.settings.particles) return;
+        for (let i = 0; i < 10; i++) { const ang = Math.random() * Math.PI * 2; const sp = 25 + Math.random() * 70; this.particles.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 0.25 + Math.random() * 0.25, maxLife: 0.5, size: 1.5 + Math.random() * 2.5, color: `rgba(255,${210 + Math.random() * 45},${Math.random() * 60},0.85)`, type: 'spark', gravity: 60 }); }
+        for (let i = 0; i < 4; i++) { this.particles.push({ x, y, vx: (Math.random() - 0.5) * 15, vy: -40 - Math.random() * 40, life: 0.4 + Math.random() * 0.2, maxLife: 0.6, size: 2 + Math.random() * 2, color: 'rgba(255,230,100,0.7)', type: 'spark' }); }
+    }
+    createHeartEffect(x, y) {
+        if (!Game.settings.particles) return;
+        for (let i = 0; i < 8; i++) { const ang = Math.random() * Math.PI * 2; const sp = 20 + Math.random() * 50; this.particles.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 0.3 + Math.random() * 0.3, maxLife: 0.6, size: 2 + Math.random() * 3, color: 'rgba(255,100,100,0.8)', type: 'spark' }); }
+    }
+    createBonusEffect(x, y, type) {
+        if (!Game.settings.particles) return;
+        const colors = { shield: '33,150,243', slow: '156,39,176', coin2x: '255,215,0', mini: '76,175,80' };
+        const c = colors[type] || '255,255,255';
+        for (let i = 0; i < 12; i++) { const ang = Math.random() * Math.PI * 2; const sp = 30 + Math.random() * 60; this.particles.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 0.3 + Math.random() * 0.3, maxLife: 0.6, size: 2 + Math.random() * 3, color: `rgba(${c},0.8)`, type: 'spark' }); }
+    }
+    createShieldDestroyEffect(x, y) {
+        if (!Game.settings.particles) return;
+        for (let i = 0; i < 15; i++) { const ang = Math.random() * Math.PI * 2; const sp = 40 + Math.random() * 100; this.particles.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 0.3 + Math.random() * 0.3, maxLife: 0.6, size: 2 + Math.random() * 4, color: 'rgba(33,150,243,0.7)', type: 'spark', gravity: 100 }); }
+    }
+    createDeathExplosion(x, y, r) {
+        if (!Game.settings.particles) return;
+        for (let i = 0; i < 18; i++) { const ang = (Math.PI * 2 / 18) * i + Math.random() * 0.5; const sp = 40 + Math.random() * 130; this.particles.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 0.4 + Math.random() * 0.4, maxLife: 0.8, size: 1.5 + Math.random() * 3.5, color: `rgba(255,${100 + Math.random() * 100},${Math.random() * 100},0.75)`, type: 'spark', gravity: 180 }); }
+        for (let i = 0; i < 6; i++) { const ang = Math.random() * Math.PI * 2; const sp = 25 + Math.random() * 60; this.particles.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 0.5 + Math.random() * 0.3, maxLife: 0.8, size: 2.5 + Math.random() * 4, color: 'rgba(200,230,255,0.45)', type: 'spark', gravity: 80 }); }
+    }
+}
+
+// ==================== GAME ====================
+const Game = {
+    canvas: null, ctx: null, width: 0, height: 0, dpr: 1,
+    state: 'menu', lastTime: 0, accumulator: 0, tickRate: 1 / 60,
+    bubble: null, glass: null, camera: null, world: null,
+    score: 0, bestScore: 0, coins: 0,
+    settings: { sound: true, vibration: true, particles: true },
+    currentSkin: 'water', currentTrail: 'default', isPressed: false, touchSide: null,
+    gameMode: 'endless', currentLevel: 0, levelProgress: [], collectedHearts: 0,
+    paused: false, pauseSpeedMult: 0, speedMult: 1, showedHeartMessage: false,
+    floatingTexts: [],
+
+    init() {
+        this.canvas = document.getElementById('game-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('orientationchange', () => { setTimeout(() => this.resize(), 150); });
+        this.loadSave();
+        this.glass = new Glass();
+        this.bubble = new Bubble();
+        this.camera = new Camera();
+        this.world = new World();
+        this.setupInput();
+        this.lastTime = performance.now();
+        requestAnimationFrame((t) => this.loop(t));
+    },
+
+    resize() {
+        const c = document.getElementById('game-container');
+        this.width = c.clientWidth; this.height = c.clientHeight;
+        this.canvas.width = this.width * this.dpr;
+        this.canvas.height = this.height * this.dpr;
+        this.canvas.style.width = this.width + 'px';
+        this.canvas.style.height = this.height + 'px';
+        this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+        if (this.glass) this.glass.resize();
+        if (this.bubble) this.bubble.resize();
+    },
+
+    setupInput() {
+        const c = this.canvas;
+        const getSide = (e) => {
+            const touch = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : (e.touches && e.touches[0] ? e.touches[0] : null);
+            const cx = touch ? touch.clientX : e.clientX;
+            return cx < window.innerWidth / 2 ? 'left' : 'right';
+        };
+        const down = (e) => {
+            if (this.state !== 'playing' || this.paused) return;
+            if (e.type === 'touchstart') e.preventDefault();
+            if (this.bubble) this.bubble.clickSide(getSide(e));
+        };
+        c.addEventListener('mousedown', down);
+        c.addEventListener('touchstart', down, { passive: false });
+        c.addEventListener('contextmenu', e => e.preventDefault());
+    },
+
+    start(mode, levelIndex) {
+        this.gameMode = mode || 'endless';
+        this.currentLevel = levelIndex || 0;
+        this.state = 'playing'; this.score = 0; this.paused = false;
+        this.speedMult = 1; this.pauseSpeedMult = 0; this.showedHeartMessage = false;
+        this.collectedHearts = 0;
+        this.bubble.reset(); this.camera.reset();
+        this.world.reset();
+        if (this.gameMode === 'level') {
+            this.world.loadLevel(this.currentLevel);
+        }
+        this.updateHUD();
+        this.updateBonusBar();
+        document.getElementById('game-canvas').style.filter = 'none';
+    },
+
+    pause() {
+        if (this.state !== 'playing') return;
+        this.paused = true;
+        this.pauseSpeedMult = this.speedMult;
+        showScreen('pause-screen');
+    },
+
+    resume() {
+        if (!this.paused) return;
+        this.paused = false;
+        showScreen('hud');
+        // Gradual speed recovery over 3 seconds
+        this.speedMult = 0.1;
+        const recover = () => {
+            if (this.state !== 'playing' || this.paused) return;
+            this.speedMult += 0.03; // ~3 seconds to reach 1.0
+            if (this.speedMult < 1) requestAnimationFrame(recover);
+            else this.speedMult = 1;
+        };
+        recover();
+    },
+
+    gameOver() {
+        this.state = 'gameover';
+        if (this.settings.vibration && navigator.vibrate) navigator.vibrate([50, 30, 80]);
+        if (this.score > this.bestScore) this.bestScore = this.score;
+        if (this.gameMode === 'endless') {
+            this.coins += Math.floor(this.score / 10);
+        }
+        this.save();
+        if (this.world) this.world.createDeathExplosion(this.bubble.x, this.bubble.y, this.bubble.radius);
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('pop');
+        setTimeout(() => {
+            document.getElementById('final-score').textContent = Math.floor(this.score);
+            document.getElementById('final-best').textContent = this.bestScore;
+            showScreen('game-over');
+            document.getElementById('game-canvas').style.filter = 'blur(8px) brightness(0.45)';
+        }, 400);
+    },
+
+    levelComplete() {
+        this.state = 'levelcomplete';
+        if (!this.levelProgress[this.currentLevel]) this.levelProgress[this.currentLevel] = { completed: true, stars: 1 };
+        else this.levelProgress[this.currentLevel].completed = true;
+        // Stars based on hearts
+        const lvl = LEVELS_DATA[this.currentLevel];
+        const hearts = this.collectedHearts;
+        const required = (lvl.hearts || []).length;
+        let stars = 1;
+        if (required > 0) {
+            if (hearts >= required) stars = 3;
+            else if (hearts >= required * 0.5) stars = 2;
+        } else {
+            stars = 3;
+        }
+        this.levelProgress[this.currentLevel].stars = Math.max(this.levelProgress[this.currentLevel].stars || 0, stars);
+        this.coins += 10 + this.currentLevel * 5;
+        this.save();
+        document.getElementById('complete-level').textContent = this.currentLevel + 1;
+        document.getElementById('complete-coins').textContent = 10 + this.currentLevel * 5;
+        showScreen('level-complete');
+        document.getElementById('game-canvas').style.filter = 'blur(8px) brightness(0.45)';
+    },
+
+    loop(ts) {
+        if (this.lastTime === 0) this.lastTime = ts;
+        const dt = Math.min((ts - this.lastTime) / 1000, 0.05);
+        this.lastTime = ts;
+        this.accumulator += dt;
+        while (this.accumulator >= this.tickRate) { this.update(this.tickRate); this.accumulator -= this.tickRate; }
+        this.render();
+        requestAnimationFrame((t) => this.loop(t));
+    },
+
+    update(dt) {
+        if (this.state === 'playing' && !this.paused) {
+            this.bubble.update(dt);
+            this.camera.update(dt, this.bubble.y);
+            if (this.world) this.world.update(dt, this.bubble, this.camera.y);
+            const ns = Math.max(0, Math.floor(-this.bubble.y / 100));
+            if (ns > this.score) { this.score = ns; this.updateHUD(); }
+            if (this.bubble.dead) this.gameOver();
+            this.updateFloatingTexts(dt);
+        } else if (this.state === 'gameover' && this.world) {
+            this.world.updateParticlesOnly(dt);
+        }
+    },
+
+    render() {
+        const ctx = this.ctx, w = this.width, h = this.height;
+        ctx.clearRect(0, 0, w, h);
+        this.drawBackground(ctx, w, h);
+        ctx.save(); ctx.translate(0, -this.camera.y);
+        this.glass.renderBack(ctx, this.camera.y);
+        if (this.world) this.world.renderObstacles(ctx, this.camera.y);
+        this.bubble.render(ctx);
+        if (this.world) this.world.renderParticles(ctx, this.camera.y);
+        this.glass.renderFront(ctx, this.camera.y);
+        ctx.restore();
+        this.drawVignette(ctx, w, h);
+        this.renderFloatingTexts(ctx);
+    },
+
+    drawBackground(ctx, w, h) {
+        const time = Date.now() * 0.0003;
+        const hueShift = Math.sin(time) * 8;
+        const theme = SkinManager.getTheme();
+        const g = ctx.createLinearGradient(0, 0, 0, h);
+        theme.stops.forEach((stop, i) => { g.addColorStop(i / (theme.stops.length - 1), `hsl(${stop.h + hueShift}, ${stop.s}%, ${stop.l}%)`); });
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+        for (let i = 0; i < 5; i++) {
+            const ph = time * 0.5 + i * 1.2;
+            const x = w * (0.15 + 0.7 * ((Math.sin(ph * 0.7) + 1) / 2));
+            const a = 0.012 + Math.sin(ph) * 0.006;
+            const rg = ctx.createLinearGradient(x - 30, 0, x + 30, 0);
+            rg.addColorStop(0, `rgba(${theme.ray[0]},${theme.ray[1]},${theme.ray[2]},0)`);
+            rg.addColorStop(0.5, `rgba(${theme.ray[0]},${theme.ray[1]},${theme.ray[2]},${a})`);
+            rg.addColorStop(1, `rgba(${theme.ray[0]},${theme.ray[1]},${theme.ray[2]},0)`);
+            ctx.fillStyle = rg; ctx.fillRect(x - 30, 0, 60, h);
+        }
+        for (let i = 0; i < 3; i++) {
+            const y = (time * 25 + i * h / 3) % (h + 100) - 50;
+            ctx.fillStyle = `rgba(${theme.wave[0]},${theme.wave[1]},${theme.wave[2]},${0.015 + Math.sin(time + i) * 0.008})`;
+            ctx.beginPath(); ctx.moveTo(0, y);
+            for (let x = 0; x <= w; x += 20) ctx.lineTo(x, y + Math.sin(x * 0.008 + time + i) * 12);
+            ctx.lineTo(w, y + 35); ctx.lineTo(0, y + 35); ctx.closePath(); ctx.fill();
+        }
+    },
+
+    drawVignette(ctx, w, h) {
+        const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.3, w / 2, h / 2, h * 0.85);
+        g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,0.5)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    },
+
+    updateHUD() {
+        document.getElementById('hud-score').textContent = this.score;
+        document.getElementById('menu-best').textContent = this.bestScore;
+        document.getElementById('coins-count').textContent = this.coins;
+        document.getElementById('shop-coins').textContent = this.coins;
+        const progress = this.gameMode === 'level' && LEVELS_DATA[this.currentLevel] ? Math.min((-this.bubble.y) / LEVELS_DATA[this.currentLevel].length * 100, 100) : Math.min((this.score % 50) / 50 * 100, 100);
+        document.getElementById('progress-fill').style.width = progress + '%';
+    },
+
+    updateBonusBar() {
+        const bar = document.getElementById('bonus-bar');
+        if (!this.bubble || !bar) return;
+        const b = this.bubble;
+        let html = '';
+        const bonuses = [
+            { active: b.shieldActive, timer: b.shieldTimer, icon: '🛡', name: 'shield', flash: b.shieldFlash },
+            { active: b.slowActive, timer: b.slowTimer, icon: '⏱', name: 'slow', flash: false },
+            { active: b.coin2xActive, timer: b.coin2xTimer, icon: '×2', name: 'coin2x', flash: false },
+            { active: b.miniActive, timer: b.miniTimer, icon: '🔍', name: 'mini', flash: b.miniFlash }
+        ];
+        bonuses.forEach(bn => {
+            if (bn.active) {
+                html += `<div class="bonus-icon ${bn.flash ? 'flash' : ''}">${bn.icon}<span class="bonus-timer">${Math.ceil(bn.timer)}</span></div>`;
+            }
+        });
+        bar.innerHTML = html;
+    },
+
+    showFloatingText(text, x, y) {
+        this.floatingTexts.push({ text, x, y, life: 2, alpha: 1 });
+    },
+    updateFloatingTexts(dt) {
+        this.floatingTexts.forEach(t => { t.life -= dt; t.y -= 30 * dt; t.alpha = Math.min(1, t.life); });
+        this.floatingTexts = this.floatingTexts.filter(t => t.life > 0);
+    },
+    renderFloatingTexts(ctx) {
+        this.floatingTexts.forEach(t => {
+            ctx.save(); ctx.globalAlpha = t.alpha;
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 8;
+            ctx.fillText(t.text, t.x, t.y);
+            ctx.restore();
+        });
+    },
+
+    loadSave() {
+        try {
+            const s = JSON.parse(localStorage.getItem('bubble_save_v2') || '{}');
+            this.bestScore = s.best || 0; this.coins = s.coins || 0;
+            this.currentSkin = s.skin || 'water';
+            this.currentTrail = s.trail || 'default';
+            this.settings = { ...this.settings, ...(s.settings || {}) };
+            this.levelProgress = s.levels || [];
+            currentLang = s.lang || 'ru';
+            SkinManager.unlockedSkins = s.unlockedSkins || ['water'];
+            SkinManager.unlockedTrails = s.unlockedTrails || ['default'];
+        } catch (e) { 
+            SkinManager.unlockedSkins = ['water']; 
+            SkinManager.unlockedTrails = ['default'];
+        }
+    },
+
+    save() {
+        localStorage.setItem('bubble_save_v2', JSON.stringify({
+            best: this.bestScore, coins: this.coins, skin: this.currentSkin, trail: this.currentTrail,
+            settings: this.settings, levels: this.levelProgress, lang: currentLang,
+            unlockedSkins: SkinManager.unlockedSkins, unlockedTrails: SkinManager.unlockedTrails,
+            version: 2
+        }));
+    },
+
+    get currentSkinObj() { return SKINS_DATA.find(s => s.id === this.currentSkin) || SKINS_DATA[0]; }
+};
+
+// ==================== AUDIO ENGINE ====================
+const AudioEngine = {
+    ctx: null, enabled: true,
+    init() { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} },
+    play(type) { if (!this.ctx || !this.enabled || !Game.settings.sound) return; if (this.ctx.state === 'suspended') this.ctx.resume(); switch(type) { case 'stick': this.playStick(); break; case 'release': this.playRelease(); break; case 'pop': this.playPop(); break; case 'combo': this.playCombo(); break; case 'coin': this.playCoin(); break; case 'shield': this.playShield(); break; } },
+
+    playStick() {
+        const t = this.ctx.currentTime;
+        const o = this.ctx.createOscillator(), g = this.ctx.createGain(), f = this.ctx.createBiquadFilter();
+        o.type = 'sine'; o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(50, t + 0.12);
+        f.type = 'lowpass'; f.frequency.setValueAtTime(500, t); f.frequency.exponentialRampToValueAtTime(120, t + 0.1); f.Q.setValueAtTime(2, t);
+        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.06, t + 0.02); g.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
+        o.connect(f); f.connect(g); g.connect(this.ctx.destination); o.start(t); o.stop(t + 0.18);
+        const o2 = this.ctx.createOscillator(), g2 = this.ctx.createGain();
+        o2.type = 'sine'; o2.frequency.setValueAtTime(300, t + 0.03); o2.frequency.exponentialRampToValueAtTime(100, t + 0.1);
+        g2.gain.setValueAtTime(0, t + 0.03); g2.gain.linearRampToValueAtTime(0.02, t + 0.05); g2.gain.exponentialRampToValueAtTime(0.01, t + 0.13);
+        o2.connect(g2); g2.connect(this.ctx.destination); o2.start(t + 0.03); o2.stop(t + 0.15);
+    },
+
+    playRelease() {
+        const t = this.ctx.currentTime;
+        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(250, t); o.frequency.exponentialRampToValueAtTime(450, t + 0.06);
+        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.04, t + 0.015); g.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
+        o.connect(g); g.connect(this.ctx.destination); o.start(t); o.stop(t + 0.12);
+        setTimeout(() => { if (!this.ctx) return; const t2 = this.ctx.currentTime; const o2 = this.ctx.createOscillator(), g2 = this.ctx.createGain(); o2.type = 'sine'; o2.frequency.setValueAtTime(380, t2); o2.frequency.exponentialRampToValueAtTime(580, t2 + 0.04); g2.gain.setValueAtTime(0, t2); g2.gain.linearRampToValueAtTime(0.02, t2 + 0.01); g2.gain.exponentialRampToValueAtTime(0.01, t2 + 0.07); o2.connect(g2); g2.connect(this.ctx.destination); o2.start(t2); o2.stop(t2 + 0.1); }, 50);
+    },
+
+    playPop() {
+        const t = this.ctx.currentTime;
+        const bs = this.ctx.sampleRate * 0.06, b = this.ctx.createBuffer(1, bs, this.ctx.sampleRate), d = b.getChannelData(0);
+        for (let i = 0; i < bs; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bs, 2.5);
+        const n = this.ctx.createBufferSource(); n.buffer = b;
+        const f = this.ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(2000, t); f.frequency.exponentialRampToValueAtTime(400, t + 0.06); f.Q.setValueAtTime(0.6, t);
+        const g = this.ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.35, t + 0.003); g.gain.exponentialRampToValueAtTime(0.01, t + 0.08);
+        n.connect(f); f.connect(g); g.connect(this.ctx.destination); n.start(t);
+        const o = this.ctx.createOscillator(), og = this.ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(30, t + 0.1);
+        og.gain.setValueAtTime(0, t); og.gain.linearRampToValueAtTime(0.3, t + 0.004); og.gain.exponentialRampToValueAtTime(0.01, t + 0.12);
+        o.connect(og); og.connect(this.ctx.destination); o.start(t); o.stop(t + 0.15);
+        const o2 = this.ctx.createOscillator(), g2 = this.ctx.createGain();
+        o2.type = 'triangle'; o2.frequency.setValueAtTime(800, t); o2.frequency.exponentialRampToValueAtTime(200, t + 0.04);
+        g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(0.1, t + 0.002); g2.gain.exponentialRampToValueAtTime(0.01, t + 0.05);
+        o2.connect(g2); g2.connect(this.ctx.destination); o2.start(t); o2.stop(t + 0.06);
+    },
+
+    playCombo() {
+        const t = this.ctx.currentTime, notes = [523, 659, 784, 1047];
+        notes.forEach((fr, i) => { const o = this.ctx.createOscillator(), g = this.ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(fr, t + i * 0.08); g.gain.setValueAtTime(0, t + i * 0.08); g.gain.linearRampToValueAtTime(0.12, t + i * 0.08 + 0.02); g.gain.exponentialRampToValueAtTime(0.01, t + i * 0.08 + 0.25); o.connect(g); g.connect(this.ctx.destination); o.start(t + i * 0.08); o.stop(t + i * 0.08 + 0.3); });
+    },
+    playCoin() {
+        const t = this.ctx.currentTime;
+        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(1200, t); o.frequency.exponentialRampToValueAtTime(1800, t + 0.03);
+        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.07, t + 0.008); g.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
+        o.connect(g); g.connect(this.ctx.destination); o.start(t); o.stop(t + 0.12);
+        const o2 = this.ctx.createOscillator(), g2 = this.ctx.createGain();
+        o2.type = 'sine'; o2.frequency.setValueAtTime(2400, t + 0.01); o2.frequency.exponentialRampToValueAtTime(3000, t + 0.04);
+        g2.gain.setValueAtTime(0, t + 0.01); g2.gain.linearRampToValueAtTime(0.03, t + 0.02); g2.gain.exponentialRampToValueAtTime(0.01, t + 0.08);
+        o2.connect(g2); g2.connect(this.ctx.destination); o2.start(t + 0.01); o2.stop(t + 0.1);
+        const o3 = this.ctx.createOscillator(), g3 = this.ctx.createGain();
+        o3.type = 'triangle'; o3.frequency.setValueAtTime(3600, t + 0.02); o3.frequency.exponentialRampToValueAtTime(4500, t + 0.03);
+        g3.gain.setValueAtTime(0, t + 0.02); g3.gain.linearRampToValueAtTime(0.015, t + 0.025); g3.gain.exponentialRampToValueAtTime(0.01, t + 0.06);
+        o3.connect(g3); g3.connect(this.ctx.destination); o3.start(t + 0.02); o3.stop(t + 0.08);
+    },
+    playShield() {
+        const t = this.ctx.currentTime;
+        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(600, t); o.frequency.exponentialRampToValueAtTime(1200, t + 0.1);
+        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.1, t + 0.02); g.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+        o.connect(g); g.connect(this.ctx.destination); o.start(t); o.stop(t + 0.25);
+        const o2 = this.ctx.createOscillator(), g2 = this.ctx.createGain();
+        o2.type = 'square'; o2.frequency.setValueAtTime(800, t + 0.05); o2.frequency.exponentialRampToValueAtTime(1600, t + 0.15);
+        g2.gain.setValueAtTime(0, t + 0.05); g2.gain.linearRampToValueAtTime(0.03, t + 0.08); g2.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+        o2.connect(g2); g2.connect(this.ctx.destination); o2.start(t + 0.05); o2.stop(t + 0.25);
+    }
+};
+
+// ==================== SKIN MANAGER ====================
+const SkinManager = {
+    unlockedSkins: ['water'], unlockedTrails: ['default'],
+    getSkinColors() { return (SKINS_DATA.find(s => s.id === Game.currentSkin) || SKINS_DATA[0]).colors; },
+    getTheme() { return (SKINS_DATA.find(s => s.id === Game.currentSkin) || SKINS_DATA[0]).theme; },
+    getTrailColor() {
+        const trail = TRAILS_DATA.find(t => t.id === Game.currentTrail) || TRAILS_DATA[0];
+        if (trail.color === 'rainbow') return `hsl(${(Date.now() / 10) % 360}, 80%, 60%)`;
+        return trail.color;
+    },
+    isSkinUnlocked(id) { return this.unlockedSkins.includes(id); },
+    isTrailUnlocked(id) { return this.unlockedTrails.includes(id); },
+    unlockSkin(id) { if (!this.unlockedSkins.includes(id)) this.unlockedSkins.push(id); },
+    unlockTrail(id) { if (!this.unlockedTrails.includes(id)) this.unlockedTrails.push(id); },
+
+    updateMenuBubble() {
+        const skin = SKINS_DATA.find(s => s.id === Game.currentSkin) || SKINS_DATA[0];
+        const c = skin.colors;
+        const el = document.getElementById('menu-bubble');
+        if (el) {
+            el.style.background = `radial-gradient(circle at 30% 30%, ${c.highlight}, ${c.main}, ${c.shadow})`;
+            const glowStrong = c.glow.replace(/,[\d.]+\)$/, ',0.55)');
+            const glowSoft = c.glow.replace(/,[\d.]+\)$/, ',0.2)');
+            el.style.boxShadow = `0 0 16px ${glowStrong}, 0 0 32px ${glowSoft}, inset 0 0 20px rgba(255,255,255,0.12)`;
+        }
+    },
+
+    renderShop(tab) {
+        const content = document.getElementById('shop-content');
+        content.innerHTML = '';
+        if (tab === 'skins') this.renderSkinsGrid(content);
+        else if (tab === 'trails') this.renderTrailsGrid(content);
+        else if (tab === 'cases') this.renderCases(content);
+    },
+
+    renderSkinsGrid(container) {
+        const grid = document.createElement('div'); grid.className = 'skins-grid';
+        SKINS_DATA.forEach(skin => {
+            const active = Game.currentSkin === skin.id;
+            const unlocked = this.isSkinUnlocked(skin.id);
+            const affordable = Game.coins >= skin.price;
+            const c = skin.colors;
+            const card = document.createElement('div');
+            card.className = `skin-card ${active ? 'active' : ''} ${!unlocked ? 'locked' : ''} ${!unlocked && affordable ? 'affordable' : ''}`;
+            card.innerHTML = `
+                <div class="rarity-badge rarity-${skin.rarity}"></div>
+                <div class="skin-preview" style="background: radial-gradient(circle at 30% 30%, ${c.highlight}, ${c.main}, ${c.shadow}); box-shadow: 0 0 12px ${c.glow.replace(')', ',0.4)')}, inset 0 0 10px rgba(255,255,255,0.15); border: 1px solid ${c.edge};"></div>
+                <div class="skin-name">${skin.name[currentLang]}</div>
+                ${!unlocked ? `<div class="skin-price"><span class="coin-icon coin-small"></span> ${skin.price}</div>` : ''}
+                ${active ? '<div class="skin-check">✓</div>' : ''}
+            `;
+            card.addEventListener('click', () => {
+                if (active) return;
+                if (unlocked) { Game.currentSkin = skin.id; Game.save(); this.renderShop('skins'); this.updateMenuBubble(); if (AudioEngine && AudioEngine.ctx) AudioEngine.play('combo'); }
+                else if (affordable) { Game.coins -= skin.price; this.unlockSkin(skin.id); Game.currentSkin = skin.id; Game.save(); this.renderShop('skins'); this.updateMenuBubble(); Game.updateHUD(); if (AudioEngine && AudioEngine.ctx) AudioEngine.play('combo'); }
+                else { card.style.animation = 'shake 0.3s ease'; setTimeout(() => card.style.animation = '', 300); }
+            });
+            grid.appendChild(card);
+        });
+        container.appendChild(grid);
+    },
+
+    renderTrailsGrid(container) {
+        const grid = document.createElement('div'); grid.className = 'skins-grid';
+        TRAILS_DATA.forEach(trail => {
+            const active = Game.currentTrail === trail.id;
+            const unlocked = this.isTrailUnlocked(trail.id);
+            const affordable = Game.coins >= trail.price;
+            const card = document.createElement('div');
+            card.className = `skin-card ${active ? 'active' : ''} ${!unlocked ? 'locked' : ''} ${!unlocked && affordable ? 'affordable' : ''}`;
+            const color = trail.color === 'rainbow' ? 'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)' : trail.color;
+            card.innerHTML = `
+                <div class="rarity-badge rarity-${trail.rarity}"></div>
+                <div class="trail-preview" style="background:rgba(0,0,0,0.3);">
+                    <div style="position:absolute;top:30%;left:20%;width:6px;height:6px;border-radius:50%;background:${trail.color === 'rainbow' ? '#f00' : trail.color};opacity:0.8;"></div>
+                    <div style="position:absolute;top:50%;left:40%;width:5px;height:5px;border-radius:50%;background:${trail.color === 'rainbow' ? '#ff0' : trail.color};opacity:0.6;"></div>
+                    <div style="position:absolute;top:70%;left:60%;width:4px;height:4px;border-radius:50%;background:${trail.color === 'rainbow' ? '#0f0' : trail.color};opacity:0.4;"></div>
+                </div>
+                <div class="skin-name">${trail.name[currentLang]}</div>
+                ${!unlocked ? `<div class="skin-price"><span class="coin-icon coin-small"></span> ${trail.price}</div>` : ''}
+                ${active ? '<div class="skin-check">✓</div>' : ''}
+            `;
+            card.addEventListener('click', () => {
+                if (active) return;
+                if (unlocked) { Game.currentTrail = trail.id; Game.save(); this.renderShop('trails'); if (AudioEngine && AudioEngine.ctx) AudioEngine.play('combo'); }
+                else if (affordable) { Game.coins -= trail.price; this.unlockTrail(trail.id); Game.currentTrail = trail.id; Game.save(); this.renderShop('trails'); Game.updateHUD(); if (AudioEngine && AudioEngine.ctx) AudioEngine.play('combo'); }
+                else { card.style.animation = 'shake 0.3s ease'; setTimeout(() => card.style.animation = '', 300); }
+            });
+            grid.appendChild(card);
+        });
+        container.appendChild(grid);
+    },
+
+    renderCases(container) {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = `
+            <div style="margin-bottom:16px;">
+                <div style="font-size:16px;font-weight:700;margin-bottom:8px;color:#fff;">${t('caseSkin')}</div>
+                <button class="btn btn-primary" id="btn-case-skin" style="margin:0;"><span class="coin-icon"></span> 500 — ${t('openCase')}</button>
+            </div>
+            <div style="margin-bottom:16px;">
+                <div style="font-size:16px;font-weight:700;margin-bottom:8px;color:#fff;">${t('caseTrail')}</div>
+                <button class="btn btn-primary" id="btn-case-trail" style="margin:0;"><span class="coin-icon"></span> 500 — ${t('openCase')}</button>
+            </div>
+            <div id="case-result" style="margin-top:16px;min-height:80px;"></div>
+        `;
+        container.appendChild(wrapper);
+
+        document.getElementById('btn-case-skin').addEventListener('click', () => this.openCase('skin'));
+        document.getElementById('btn-case-trail').addEventListener('click', () => this.openCase('trail'));
+    },
+
+    openCase(type) {
+        if (Game.coins < 500) {
+            const res = document.getElementById('case-result');
+            res.innerHTML = `<div style="color:#ff4444;font-weight:700;">${t('insufficient')}</div>`;
+            return;
+        }
+        Game.coins -= 500; Game.updateHUD(); Game.save();
+
+        const pool = type === 'skin' 
+            ? SKINS_DATA.filter(s => !this.isSkinUnlocked(s.id))
+            : TRAILS_DATA.filter(t => !this.isTrailUnlocked(t.id));
+
+        if (pool.length === 0) {
+            const res = document.getElementById('case-result');
+            res.innerHTML = `<div style="color:#4caf50;font-weight:700;">Все предметы уже получены!</div>`;
+            Game.coins += 500; Game.updateHUD(); Game.save();
+            return;
+        }
+
+        // Animation
+        const res = document.getElementById('case-result');
+        res.innerHTML = `
+            <div class="case-container">
+                <div class="case-selector"></div>
+                <div class="case-glow"></div>
+                <div class="case-strip" id="case-strip"></div>
+            </div>
+        `;
+
+        const strip = document.getElementById('case-strip');
+        const items = [];
+        for (let i = 0; i < 30; i++) {
+            const item = pool[Math.floor(Math.random() * pool.length)];
+            items.push(item);
+        }
+        const winner = pool[Math.floor(Math.random() * pool.length)];
+        items[25] = winner;
+
+        items.forEach(item => {
+            const div = document.createElement('div'); div.className = 'case-item';
+            const isSkin = type === 'skin';
+            const color = isSkin ? item.colors.main : (item.color === 'rainbow' ? '#f0f' : item.color);
+            div.innerHTML = `<div style="width:40px;height:40px;border-radius:50%;background:${isSkin ? `radial-gradient(circle at 30% 30%, ${item.colors.highlight}, ${item.colors.main}, ${item.colors.shadow})` : color};margin-bottom:4px;"></div><div style="font-size:9px;color:rgba(255,255,255,0.6);">${item.name[currentLang]}</div>`;
+            strip.appendChild(div);
+        });
+
+        let pos = 0;
+        const target = -(25 * 92) + 120;
+        const animate = () => {
+            const diff = target - pos;
+            pos += diff * 0.08;
+            strip.style.transform = `translate(${pos}px, -50%)`;
+            if (Math.abs(diff) > 1) requestAnimationFrame(animate);
+            else {
+                // Reveal
+                if (type === 'skin') this.unlockSkin(winner.id);
+                else this.unlockTrail(winner.id);
+                Game.save();
+                setTimeout(() => {
+                    res.innerHTML = `
+                        <div style="text-align:center;animation:glassIn 0.5s ease;">
+                            <div style="font-size:18px;font-weight:700;color:#ffd700;margin-bottom:8px;">${t('caseResult')}</div>
+                            <div style="width:80px;height:80px;border-radius:50%;margin:0 auto 8px;background:${type === 'skin' ? `radial-gradient(circle at 30% 30%, ${winner.colors.highlight}, ${winner.colors.main}, ${winner.colors.shadow})` : (winner.color === 'rainbow' ? 'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)' : winner.color)};box-shadow:0 0 20px rgba(255,215,0,0.3);"></div>
+                            <div style="font-size:16px;font-weight:700;color:#fff;">${winner.name[currentLang]}</div>
+                            <div style="font-size:12px;color:${RARITY_COLORS[winner.rarity]};text-transform:uppercase;letter-spacing:2px;">${winner.rarity}</div>
+                        </div>
+                    `;
+                    if (AudioEngine && AudioEngine.ctx) AudioEngine.play('combo');
+                }, 500);
+            }
+        };
+        animate();
+    }
+};
+
+// ==================== OBSTACLE CLASSES (with skin colors) ====================
+class Obstacle {
+    constructor(x, y) { this.x = x; this.y = y; this.rotation = 0; this.rotSpeed = (Math.random() - 0.5) * 2; }
+    update(dt) { this.rotation += this.rotSpeed * dt; }
+    render(ctx) { }
+    checkCollision(bubble) { return false; }
+    getObsColor(type, fallback) {
+        const skin = Game.currentSkinObj;
+        return skin && skin.obstacles[type] ? skin.obstacles[type] : fallback;
+    }
+}
+
+class IceCube extends Obstacle {
+    constructor(x, y) {
+        super(x, y); this.size = 28 + Math.random() * 14; this.rotSpeed = (Math.random() - 0.5) * 0.6;
+        this.floatPhase = Math.random() * Math.PI * 2; this.bubbles = [];
+        for (let i = 0; i < 3; i++) this.bubbles.push({ bx: (Math.random() - 0.5) * 0.7, by: (Math.random() - 0.5) * 0.7, br: 0.05 + Math.random() * 0.12 });
+    }
+    update(dt) { super.update(dt); this.floatPhase += dt * 1.4; this.y += Math.sin(this.floatPhase) * 5 * dt; }
+    render(ctx) {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+        const s = this.size, h = s / 2, r = s * 0.12;
+        const baseColor = this.getObsColor('ice', '#c8e6f5');
+        ctx.fillStyle = 'rgba(80,130,180,0.12)'; ctx.beginPath(); ctx.roundRect(-h - 2, -h - 2 + s * 0.08, s + 4, s + 4, r); ctx.fill();
+        const backGrad = ctx.createLinearGradient(-h * 0.3, -h * 0.3, h * 0.8, h * 0.8);
+        backGrad.addColorStop(0, this.lighten(baseColor, 30)); backGrad.addColorStop(0.5, baseColor); backGrad.addColorStop(1, this.darken(baseColor, 20));
+        ctx.fillStyle = backGrad; ctx.beginPath(); ctx.roundRect(-h, -h, s, s, r); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 1.0; ctx.beginPath(); ctx.roundRect(-h, -h, s, s, r); ctx.stroke();
+        const depth = ctx.createRadialGradient(-h * 0.25, -h * 0.25, s * 0.1, 0, 0, h * 0.9);
+        depth.addColorStop(0, 'rgba(255,255,255,0.25)'); depth.addColorStop(0.4, 'rgba(210,240,255,0.12)'); depth.addColorStop(1, 'rgba(120,180,220,0.08)');
+        ctx.fillStyle = depth; ctx.beginPath(); ctx.roundRect(-h + 2, -h + 2, s - 4, s - 4, r * 0.7); ctx.fill();
+        this.bubbles.forEach(b => {
+            const bx = b.bx * s * 0.7, by = b.by * s * 0.7, br = b.br * s;
+            ctx.beginPath(); ctx.arc(bx + 1, by + 1, br, 0, Math.PI * 2); ctx.fillStyle = 'rgba(100,160,200,0.15)'; ctx.fill();
+            ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.65)'; ctx.lineWidth = 0.5; ctx.stroke();
+            ctx.beginPath(); ctx.arc(bx - br * 0.3, by - br * 0.3, br * 0.35, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.fill();
+        });
+        const topShine = ctx.createLinearGradient(-h, -h, -h, -h + s * 0.45);
+        topShine.addColorStop(0, 'rgba(255,255,255,0.55)'); topShine.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = topShine; ctx.beginPath(); ctx.roundRect(-h + 3, -h + 2, s - 6, s * 0.35, r * 0.5); ctx.fill();
+        const sideShine = ctx.createLinearGradient(-h, -h, -h + s * 0.25, -h);
+        sideShine.addColorStop(0, 'rgba(255,255,255,0.40)'); sideShine.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = sideShine; ctx.beginPath(); ctx.roundRect(-h + 2, -h + 3, s * 0.22, s - 6, r * 0.4); ctx.fill();
+        const bottomShadow = ctx.createLinearGradient(0, h - s * 0.3, 0, h);
+        bottomShadow.addColorStop(0, 'rgba(80,140,190,0)'); bottomShadow.addColorStop(1, 'rgba(80,140,190,0.18)');
+        ctx.fillStyle = bottomShadow; ctx.beginPath(); ctx.roundRect(-h + 2, h - s * 0.3, s - 4, s * 0.3, r * 0.5); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 0.6; ctx.beginPath(); ctx.roundRect(-h + 1.5, -h + 1.5, s - 3, s - 3, r * 0.8); ctx.stroke();
+        ctx.restore();
+    }
+    lighten(c, p) { return c; }
+    darken(c, p) { return c; }
+    checkCollision(bubble) {
+        const s = this.size / 2, c = Math.cos(-this.rotation), si = Math.sin(-this.rotation);
+        const dx = bubble.x - this.x, dy = bubble.y - this.y;
+        const lx = dx * c - dy * si, ly = dx * si + dy * c;
+        const cx = Math.max(-s, Math.min(s, lx)), cy = Math.max(-s, Math.min(s, ly));
+        return (lx - cx) ** 2 + (ly - cy) ** 2 < bubble.radius ** 2;
+    }
+}
+
+class LemonSlice extends Obstacle {
+    constructor(x, y) { super(x, y); this.radius = 24 + Math.random() * 10; this.rotSpeed = (Math.random() - 0.5) * 2.2; this.pulsePhase = Math.random() * Math.PI * 2; }
+    update(dt) { super.update(dt); this.pulsePhase += dt * 2.2; }
+    render(ctx) {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+        const r = this.radius, p = 1 + Math.sin(this.pulsePhase) * 0.025;
+        const baseColor = this.getObsColor('lemon', '#f0e060');
+        ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.beginPath(); ctx.arc(2, 3, r * p, 0, Math.PI * 2); ctx.fill();
+        const peelGrad = ctx.createRadialGradient(-r * 0.25, -r * 0.25, r * 0.1, 0, 0, r);
+        peelGrad.addColorStop(0, '#d4b83a'); peelGrad.addColorStop(0.6, '#b8a020'); peelGrad.addColorStop(1, '#9a7b18');
+        ctx.beginPath(); ctx.arc(0, 0, r * p, 0, Math.PI * 2); ctx.fillStyle = peelGrad; ctx.fill();
+        ctx.strokeStyle = '#8a6e15'; ctx.lineWidth = 1.0; ctx.stroke();
+        const albGrad = ctx.createRadialGradient(-r * 0.15, -r * 0.15, r * 0.05, 0, 0, r * 0.86);
+        albGrad.addColorStop(0, '#faf6e6'); albGrad.addColorStop(1, '#e8e2c8');
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.90 * p, 0, Math.PI * 2); ctx.fillStyle = albGrad; ctx.fill();
+        const pulpGrad = ctx.createRadialGradient(-r * 0.2, -r * 0.2, r * 0.05, 0, 0, r * 0.76);
+        pulpGrad.addColorStop(0, baseColor); pulpGrad.addColorStop(0.5, this.darken(baseColor, 15)); pulpGrad.addColorStop(1, this.darken(baseColor, 30));
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.82 * p, 0, Math.PI * 2); ctx.fillStyle = pulpGrad; ctx.fill();
+        const segs = 9; ctx.strokeStyle = 'rgba(200,185,120,0.45)'; ctx.lineWidth = 1.1;
+        for (let i = 0; i < segs; i++) { const a = (Math.PI * 2 / segs) * i; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * r * 0.78, Math.sin(a) * r * 0.78); ctx.stroke(); }
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.09, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fill();
+        ctx.beginPath(); ctx.ellipse(-r * 0.32, -r * 0.32, r * 0.14, r * 0.28, -0.6, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fill();
+        ctx.beginPath(); ctx.ellipse(r * 0.28, r * 0.2, r * 0.08, r * 0.18, 0.4, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fill();
+        ctx.restore();
+    }
+    darken(c, p) { return c; }
+    checkCollision(bubble) { const dx = bubble.x - this.x, dy = bubble.y - this.y; return Math.sqrt(dx * dx + dy * dy) < this.radius + bubble.radius * 0.8; }
+}
+
+class Straw extends Obstacle {
+    constructor(x, y) { super(x, y); this.width = 10; this.height = 70 + Math.random() * 30; this.rotSpeed = (Math.random() - 0.5) * 0.7; this.tiltPhase = Math.random() * Math.PI * 2; }
+    update(dt) { this.tiltPhase += dt * 1.2; this.rotation += this.rotSpeed * dt + Math.sin(this.tiltPhase) * 0.35 * dt; }
+    render(ctx) {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+        const w = this.width, h = this.height;
+        const baseColor = this.getObsColor('straw', '#ff5555');
+        ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fillRect(-w / 2 + 2, -h / 2 + 2, w, h);
+        const sc = Math.floor(h / 8);
+        for (let i = 0; i < sc; i++) { ctx.fillStyle = i % 2 === 0 ? baseColor : '#ffffff'; ctx.fillRect(-w / 2, -h / 2 + i * 8, w, 8); }
+        ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1; ctx.strokeRect(-w / 2, -h / 2, w, h);
+        ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.fillRect(-w / 2 + 1.5, -h / 2, 2.5, h);
+        ctx.beginPath(); ctx.ellipse(0, -h / 2, w / 2, 3, 0, 0, Math.PI * 2); ctx.fillStyle = baseColor; ctx.fill();
+        ctx.restore();
+    }
+    checkCollision(bubble) {
+        const c = Math.cos(-this.rotation), s = Math.sin(-this.rotation);
+        const dx = bubble.x - this.x, dy = bubble.y - this.y;
+        const lx = dx * c - dy * s, ly = dx * s + dy * c;
+        return Math.abs(lx) < this.width / 2 + bubble.radius * 0.5 && Math.abs(ly) < this.height / 2 + bubble.radius * 0.5;
+    }
+}
+
+class MintLeaf extends Obstacle {
+    constructor(x, y) { super(x, y); this.size = 24 + Math.random() * 10; this.rotSpeed = (Math.random() - 0.5) * 1.2; this.swayPhase = Math.random() * Math.PI * 2; }
+    update(dt) { super.update(dt); this.swayPhase += dt * 1.6; this.x += Math.sin(this.swayPhase) * 8 * dt; const g = Game.glass, m = this.size; if (this.x < g.leftX + m) this.x = g.leftX + m; if (this.x > g.rightX - m) this.x = g.rightX - m; }
+    render(ctx) {
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation + Math.sin(this.swayPhase) * 0.18);
+        const s = this.size;
+        const baseColor = this.getObsColor('mint', '#7cb342');
+        ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.beginPath(); ctx.ellipse(2, 3, s * 0.5, s * 0.85, 0, 0, Math.PI * 2); ctx.fill();
+        const lg = ctx.createLinearGradient(-s * 0.35, -s * 0.9, s * 0.35, s * 0.9);
+        lg.addColorStop(0, baseColor); lg.addColorStop(0.45, this.darken(baseColor, 15)); lg.addColorStop(1, this.darken(baseColor, 30));
+        ctx.beginPath(); ctx.ellipse(0, 0, s * 0.5, s * 0.88, 0, 0, Math.PI * 2); ctx.fillStyle = lg; ctx.fill();
+        ctx.strokeStyle = this.darken(baseColor, 40); ctx.lineWidth = 1.3; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, -s * 0.82); ctx.lineTo(0, s * 0.82); ctx.strokeStyle = this.darken(baseColor, 20); ctx.lineWidth = 1.2; ctx.stroke();
+        for (let i = -0.65; i <= 0.65; i += 0.325) {
+            const yy = i * s;
+            ctx.beginPath(); ctx.moveTo(0, yy); ctx.quadraticCurveTo(s * 0.18, yy + s * 0.1, s * 0.34, yy + s * 0.18); ctx.strokeStyle = 'rgba(46,92,30,0.3)'; ctx.lineWidth = 0.5; ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, yy); ctx.quadraticCurveTo(-s * 0.18, yy + s * 0.1, -s * 0.34, yy + s * 0.18); ctx.stroke();
+        }
+        ctx.beginPath(); ctx.ellipse(-s * 0.12, -s * 0.38, s * 0.1, s * 0.38, -0.35, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.fill();
+        ctx.beginPath(); ctx.ellipse(s * 0.18, s * 0.25, s * 0.06, s * 0.22, 0.25, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fill();
+        ctx.beginPath(); ctx.ellipse(0, 0, s * 0.46, s * 0.84, 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 0.8; ctx.stroke();
+        ctx.restore();
+    }
+    darken(c, p) { return c; }
+    checkCollision(bubble) { const dx = bubble.x - this.x, dy = bubble.y - this.y; return Math.sqrt(dx * dx + dy * dy) < this.size * 0.7 + bubble.radius * 0.8; }
+}
+
+// ==================== UI FUNCTIONS ====================
+function showScreen(name) {
+    document.querySelectorAll('#ui-layer .screen').forEach(s => s.classList.remove('active'));
+    const t = document.getElementById(name);
+    if (t) { t.classList.add('active'); }
+    const canvas = document.getElementById('game-canvas');
+    if (name === 'main-menu' || name === 'shop-screen' || name === 'settings-screen' || name === 'levels-screen') {
+        canvas.style.filter = 'blur(10px) brightness(0.55)';
+    } else if (name === 'hud') {
+        canvas.style.filter = 'none';
+    } else if (name === 'game-over' || name === 'level-complete' || name === 'pause-screen') {
+        canvas.style.filter = 'blur(6px) brightness(0.45)';
+    }
+}
+function hideAllScreens() { document.querySelectorAll('#ui-layer .screen').forEach(s => s.classList.remove('active')); }
+
+function renderLevels() {
+    const grid = document.getElementById('levels-grid'); grid.innerHTML = '';
+    LEVELS_DATA.forEach((lvl, i) => {
+        const progress = Game.levelProgress[i] || {};
+        const completed = progress.completed || false;
+        const stars = progress.stars || 0;
+        const prevCompleted = i === 0 || (Game.levelProgress[i-1] && Game.levelProgress[i-1].completed);
+        const card = document.createElement('div');
+        card.className = `level-card ${completed ? 'completed' : ''} ${!prevCompleted ? 'locked' : ''}`;
+        card.innerHTML = `
+            <div class="level-num">${i + 1}</div>
+            ${completed ? `<div class="level-stars">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>` : ''}
+            ${lvl.hearts ? `<div class="level-hearts">♥ ${lvl.hearts.length}</div>` : ''}
+        `;
+        card.addEventListener('click', () => {
+            if (!prevCompleted) return;
+            if (AudioEngine && AudioEngine.ctx) AudioEngine.play('release');
+            hideAllScreens(); showScreen('hud'); Game.start('level', i);
+        });
+        grid.appendChild(card);
+    });
+}
+
+// ==================== EVENT LISTENERS ====================
+document.addEventListener('DOMContentLoaded', () => {
+    AudioEngine.init(); Game.init();
+    updateLanguage(currentLang);
+    showScreen('main-menu'); Game.updateHUD(); SkinManager.updateMenuBubble();
+
+    document.getElementById('btn-play').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('release');
+        hideAllScreens(); showScreen('hud'); Game.start('endless');
+    });
+    document.getElementById('btn-levels').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        renderLevels(); showScreen('levels-screen');
+    });
+    document.getElementById('btn-shop').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        SkinManager.renderShop('skins'); showScreen('shop-screen');
+    });
+    document.getElementById('btn-settings').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        updateSettingsUI(); showScreen('settings-screen');
+    });
+
+    document.getElementById('btn-restart').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('release');
+        hideAllScreens(); showScreen('hud'); Game.start(Game.gameMode, Game.currentLevel);
+    });
+    document.getElementById('btn-menu').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        showScreen('main-menu'); Game.updateHUD(); SkinManager.updateMenuBubble();
+    });
+    document.getElementById('btn-skins-back').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        showScreen('main-menu');
+    });
+    document.getElementById('btn-shop-back').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        showScreen('main-menu');
+    });
+    document.getElementById('btn-levels-back').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        showScreen('main-menu');
+    });
+    document.getElementById('btn-settings-back').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        Game.save(); showScreen('main-menu');
+    });
+
+    // Pause
+    document.getElementById('btn-pause').addEventListener('click', () => Game.pause());
+    document.getElementById('btn-resume').addEventListener('click', () => Game.resume());
+    document.getElementById('btn-pause-restart').addEventListener('click', () => {
+        Game.paused = false;
+        hideAllScreens(); showScreen('hud'); Game.start(Game.gameMode, Game.currentLevel);
+    });
+    document.getElementById('btn-pause-menu').addEventListener('click', () => {
+        Game.paused = false;
+        showScreen('main-menu'); Game.updateHUD(); SkinManager.updateMenuBubble();
+    });
+
+    // Level complete
+    document.getElementById('btn-next-level').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('release');
+        const next = Game.currentLevel + 1;
+        if (next < LEVELS_DATA.length) {
+            hideAllScreens(); showScreen('hud'); Game.start('level', next);
+        } else {
+            showScreen('main-menu');
+        }
+    });
+    document.getElementById('btn-complete-menu').addEventListener('click', () => {
+        if (AudioEngine && AudioEngine.ctx) AudioEngine.play('stick');
+        showScreen('main-menu'); Game.updateHUD(); SkinManager.updateMenuBubble();
+    });
+
+    // Shop tabs
+    document.querySelectorAll('.shop-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            SkinManager.renderShop(tab.getAttribute('data-tab'));
+        });
+    });
+
+    // Settings toggles
+    document.getElementById('toggle-sound').addEventListener('click', function() {
+        Game.settings.sound = !Game.settings.sound; this.classList.toggle('active'); this.textContent = Game.settings.sound ? 'ON' : 'OFF';
+        if (Game.settings.sound && AudioEngine && AudioEngine.ctx) AudioEngine.play('release');
+    });
+    document.getElementById('toggle-vibro').addEventListener('click', function() {
+        Game.settings.vibration = !Game.settings.vibration; this.classList.toggle('active'); this.textContent = Game.settings.vibration ? 'ON' : 'OFF';
+    });
+    document.getElementById('toggle-particles').addEventListener('click', function() {
+        Game.settings.particles = !Game.settings.particles; this.classList.toggle('active'); this.textContent = Game.settings.particles ? 'ON' : 'OFF';
+    });
+
+    // Language
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateLanguage(btn.getAttribute('data-lang'));
+            Game.save();
+        });
+    });
+
+    function updateSettingsUI() {
+        const s = Game.settings;
+        const ut = (id, v) => { const b = document.getElementById(id); b.classList.toggle('active', v); b.textContent = v ? 'ON' : 'OFF'; };
+        ut('toggle-sound', s.sound); ut('toggle-vibro', s.vibration); ut('toggle-particles', s.particles);
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === currentLang));
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (Game.state !== 'playing' || !Game.bubble || Game.paused) return;
+        if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowLeft' || e.code === 'KeyA') {
+            Game.bubble.clickSide('left');
+        } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+            Game.bubble.clickSide('right');
+        } else if (e.code === 'Escape') {
+            Game.pause();
+        }
+    });
+    document.addEventListener('touchmove', (e) => { if (Game.state === 'playing') e.preventDefault(); }, { passive: false });
+    document.addEventListener('touchstart', (e) => {
+        if (Game.state === 'playing' && Game.bubble && e.changedTouches && e.changedTouches[0] && !Game.paused) {
+            const cx = e.changedTouches[0].clientX;
+            const side = cx < window.innerWidth / 2 ? 'left' : 'right';
+            Game.bubble.clickSide(side);
+        }
+    }, { passive: false });
+});
+    </script>
+</body>
+</html>
