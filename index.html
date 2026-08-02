@@ -64,7 +64,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .stat { text-align:center; }
 .stat-label { display:block; font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:4px; }
 .stat-value { font-size:24px; font-weight:900; color:#fff; }
-.levels-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:16px; }
+
 .level-card { aspect-ratio:2.2; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; pointer-events:auto; }
 .level-card.completed { border-color:#4caf50; background:rgba(76,175,80,0.08); }
 .level-card.locked { opacity:0.35; pointer-events:none; }
@@ -78,25 +78,26 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .skins-glass { max-height:min(82vh, calc(100vh - var(--safe-top) - var(--safe-bottom) - 40px)); overflow-y:auto; padding:clamp(16px, 4vmin, 28px) clamp(12px, 3.5vmin, 20px); }
 .screen-title { font-size:24px; font-weight:900; letter-spacing:3px; margin-bottom:8px; }
 .coins-display { font-size:18px; color:#ffd700; margin-bottom:16px; font-weight:700; }
-.skins-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:clamp(10px, 3vmin, 18px); }
-.skin-card { aspect-ratio:1; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; padding:clamp(4px, 1.5vmin, 10px); pointer-events:auto; min-height:70px; }
+.skins-grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:3px; width:100%; box-sizing:border-box; }
+.skin-card { position:relative; pointer-events:auto; cursor:pointer; transition:all 0.15s ease; padding:3px 1px 2px; min-height:unset; border-radius:8px; overflow:hidden; box-sizing:border-box; aspect-ratio:auto; background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .skin-card.active { border-color:#ff8c00; background:rgba(255,140,0,0.08); }
-.skin-card.locked { opacity:0.35; }
-.skin-card.affordable { opacity:1; border-color:rgba(255,215,0,0.4); box-shadow:0 0 12px rgba(255,215,0,0.1); }
+.skin-card.locked { opacity:0.4; }
+.skin-card.affordable { opacity:1; border-color:rgba(255,215,0,0.35); }
 .skin-card:active { transform:scale(0.95); }
-.skin-preview { width:52px; height:52px; border-radius:50%; position:relative; margin-bottom:4px; }
-.skin-preview::after { content:''; position:absolute; top:15%; left:18%; width:22%; height:22%; border-radius:50%; background:rgba(255,255,255,0.7); filter:blur(0.5px); }
-.skin-name { font-size:10px; color:rgba(255,255,255,0.65); text-align:center; }
-.skin-price { font-size:10px; color:#ffd700; margin-top:2px; }
-.skin-check { position:absolute; top:4px; right:4px; width:18px; height:18px; background:#ff8c00; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; }
-.rarity-badge { position:absolute; top:4px; left:4px; width:8px; height:8px; border-radius:50%; }
+.skin-card .skin-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:1px; overflow:hidden; }
+.skin-card .skin-preview-wrap .skin-shell { width:48%; height:48%; border-radius:50%; position:relative; flex-shrink:0; }
+.skin-card .skin-preview-wrap .skin-shell::after { content:''; position:absolute; top:15%; left:18%; width:20%; height:20%; border-radius:50%; background:rgba(255,255,255,0.7); filter:blur(0.5px); }
+.skin-card .skin-name { font-size:7px; color:rgba(255,255,255,0.6); text-align:center; line-height:1; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
+.skin-card .skin-price { font-size:7px; color:#ffd700; margin-top:1px; text-align:center; width:100%; }
+.skin-check { position:absolute; top:2px; right:2px; width:14px; height:14px; background:#ff8c00; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:8px; }
+.rarity-badge { position:absolute; top:2px; left:2px; width:6px; height:6px; border-radius:50%; }
 .rarity-common { background:#a0a0a0; }
 .rarity-uncommon { background:#4caf50; }
 .rarity-rare { background:#2196f3; }
 .rarity-epic { background:#9c27b0; }
 .rarity-legendary { background:#ff9800; box-shadow:0 0 6px #ff9800; }
-.trail-preview { width:52px; height:52px; border-radius:50%; position:relative; margin-bottom:4px; overflow:hidden; background:rgba(0,0,0,0.2); }
-.case-container { position:relative; width:100%; height:120px; overflow:hidden; margin:20px 0; background:rgba(0,0,0,0.2); border-radius:12px; border:1px solid rgba(255,255,255,0.08); }
+.trail-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:1px; background:rgba(0,0,0,0.15); overflow:hidden; }
+.trail-preview { width:52px; height:52px; border-radius:50%; position:relative; margin-bottom:4px; overflow:hidden; background:rgba(0,0,0,0.2); }.case-container { position:relative; width:100%; height:120px; overflow:hidden; margin:20px 0; background:rgba(0,0,0,0.2); border-radius:12px; border:1px solid rgba(255,255,255,0.08); }
 .case-strip { display:flex; gap:12px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
 .case-item { width:80px; height:80px; border-radius:12px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; }
 .case-selector { position:absolute; top:0; left:50%; transform:translateX(-50%); width:4px; height:100%; background:linear-gradient(180deg,transparent,#ffd700,transparent); z-index:2; }
@@ -107,6 +108,8 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .lang-selector { display:flex; gap:8px; }
 .lang-btn { padding:6px 14px; border-radius:20px; border:none; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:12px; font-weight:700; cursor:pointer; pointer-events:auto; }
 .lang-btn.active { background:rgba(255,255,255,0.2); color:#fff; }
+#promo-input::placeholder { color:rgba(255,255,255,0.25); }
+#promo-input:focus { border-color:rgba(255,140,0,0.5); background:rgba(255,255,255,0.1); }
 .coin-icon { display:inline-block; width:clamp(12px, 3.8vmin, 18px); height:clamp(12px, 3.8vmin, 18px); border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #daa520); border:clamp(1px, 0.35vmin, 1.5px) solid #b8860b; box-shadow:0 0 3px rgba(255,215,0,0.4); vertical-align:middle; margin-right:3px; position:relative; top:-1px; }
 .coin-icon::after { content:'$'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:9px; font-weight:900; color:rgba(140,100,0,0.7); }
 .coin-small { width:10px !important; height:10px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; top:-1px !important; position:relative !important; }
@@ -116,10 +119,10 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .skins-glass::-webkit-scrollbar{display:none} .skins-glass{-ms-overflow-style:none;scrollbar-width:none; touch-action:pan-y !important;}
 .levels-grid{touch-action:pan-y !important;}
 
-.shop-scroll { max-height:min(48vh, 340px); overflow-y:scroll !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:10px; border-radius:var(--btn-radius); background:rgba(0,0,0,0.15); padding:10px; -webkit-overflow-scrolling:touch; min-height:120px; position:relative; z-index:1; }
+.shop-scroll { max-height:min(52vh, 380px); overflow:hidden auto !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:8px; border-radius:12px; background:rgba(0,0,0,0.08); padding:4px; -webkit-overflow-scrolling:touch; width:100%; box-sizing:border-box; }
 .shop-scroll::-webkit-scrollbar { display:none; }
-#shop-content { width:100%; overflow:visible; }
-.levels-grid { touch-action:pan-y !important; -webkit-overflow-scrolling:touch; }
+#shop-content { width:100%; overflow:visible; box-sizing:border-box; }
+.levels-grid { touch-action:pan-y !important; -webkit-overflow-scrolling:touch; display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:12px; }
 .shop-actions { display:flex; gap:8px; margin-top:8px; }
 .shop-actions .btn { margin:0; min-height:44px; }
 .shop-actions .btn:disabled { opacity:0.4; cursor:not-allowed; }
@@ -133,13 +136,17 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .skin-card.locked { opacity:0.45; }
 .skin-card.affordable { opacity:1; border-color:rgba(255,215,0,0.4); box-shadow:0 0 12px rgba(255,215,0,0.1); }
 .trail-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:2px; background:rgba(0,0,0,0.2); overflow:hidden; }
-.case-box { width:100%; height:110px; border-radius:18px; background:linear-gradient(145deg, #c8a030, #a08020); border:2px solid #d4af37; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:8px; position:relative; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.35), inset 0 -4px 12px rgba(0,0,0,0.15); }
-.case-box::before { content:''; position:absolute; top:0; left:0; width:100%; height:45%; background:linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0)); pointer-events:none; }
-.case-box::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:30%; background:linear-gradient(0deg, rgba(0,0,0,0.15), transparent); pointer-events:none; }
-.case-box .case-lid { position:absolute; top:0; left:0; width:100%; height:46%; background:linear-gradient(180deg, #e0c050, #c0a030); border-bottom:2px solid #b89020; transform-origin:top; transition:transform 0.8s cubic-bezier(0.22,1,0.36,1); box-shadow:0 4px 12px rgba(0,0,0,0.25); z-index:3; }
-.case-box .case-lid::after { content:''; position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); width:24px; height:12px; border-radius:0 0 12px 12px; background:linear-gradient(180deg, #d4b840, #b09020); border:1px solid #a88018; box-shadow:0 2px 6px rgba(0,0,0,0.3); }
+.case-box { width:100%; aspect-ratio:1.3; border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; cursor:pointer; transition:all 0.2s ease; }
+.case-box.skin-case { background:linear-gradient(145deg, #4fc3f7, #0288d1); border:2px solid #29b6f6; box-shadow:0 4px 16px rgba(2,136,209,0.3), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -4px 8px rgba(0,0,0,0.15); }
+.case-box.trail-case { background:linear-gradient(145deg, #ffd54f, #ff8f00); border:2px solid #ffb300; box-shadow:0 4px 16px rgba(255,143,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -4px 8px rgba(0,0,0,0.15); }
+.case-box::before { content:''; position:absolute; top:0; left:0; width:100%; height:40%; background:linear-gradient(180deg, rgba(255,255,255,0.3), rgba(255,255,255,0)); pointer-events:none; border-radius:14px 14px 0 0; }
+.case-box::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:25%; background:linear-gradient(0deg, rgba(0,0,0,0.2), transparent); pointer-events:none; border-radius:0 0 14px 14px; }
+.case-box .case-lid { position:absolute; top:0; left:0; width:100%; height:44%; border-radius:14px 14px 0 0; transform-origin:top; transition:transform 0.8s cubic-bezier(0.22,1,0.36,1); z-index:3; }
+.case-box.skin-case .case-lid { background:linear-gradient(180deg, #81d4fa, #4fc3f7); border-bottom:2px solid #039be5; }
+.case-box.trail-case .case-lid { background:linear-gradient(180deg, #ffe082, #ffd54f); border-bottom:2px solid #ffa000; }
+.case-box .case-lid::after { content:''; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); width:20px; height:10px; border-radius:0 0 10px 10px; background:linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.2)); border:1px solid rgba(255,255,255,0.3); box-shadow:0 2px 4px rgba(0,0,0,0.2); }
 .case-box.open .case-lid { transform:rotateX(-120deg); opacity:0.1; }
-.case-box .case-glow-ring { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:48px; height:48px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); box-shadow:0 0 20px rgba(255,215,0,0.25), inset 0 0 16px rgba(255,215,0,0.1); background:radial-gradient(circle, rgba(255,255,255,0.1), transparent 65%); }
+.case-box .case-glow-ring { position:absolute; top:55%; left:50%; transform:translate(-50%,-50%); width:44px; height:44px; border-radius:50%; border:2px solid rgba(255,255,255,0.25); box-shadow:0 0 16px rgba(255,255,255,0.2), inset 0 0 12px rgba(255,255,255,0.1); background:radial-gradient(circle, rgba(255,255,255,0.15), transparent 60%); }
 .case-strip-modern { display:flex; gap:16px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
 .case-item-modern { width:90px; height:90px; border-radius:18px; background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 0 16px rgba(255,255,255,0.02); backdrop-filter:blur(4px); }
 .case-selector-modern { position:absolute; top:0; left:50%; transform:translateX(-50%); width:2px; height:100%; background:linear-gradient(180deg,transparent,rgba(255,255,255,0.6),transparent); z-index:2; box-shadow:0 0 12px rgba(255,255,255,0.3); }
@@ -215,7 +222,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                 </div>
             </div>
             <div id="levels-screen" class="screen">
-                <div class="menu-glass" style="padding:16px;">
+                <div class="menu-glass">
                     <h2 class="screen-title" data-i18n="selectLevel">ВЫБЕРИ УРОВЕНЬ</h2>
                     <div class="levels-grid" id="levels-grid"></div>
                     <button class="btn btn-back" id="btn-levels-back" data-i18n="back">← НАЗАД</button>
@@ -246,6 +253,14 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                             <button class="lang-btn" data-lang="en">EN</button>
                         </div>
                     </div>
+                    <div style="margin:16px 0; padding:12px; background:rgba(0,0,0,0.15); border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
+                        <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:8px; text-transform:uppercase; letter-spacing:2px;" data-i18n="promo">ПРОМОКОД</div>
+                        <div style="display:flex; gap:6px;">
+                            <input type="text" id="promo-input" placeholder="CODE" style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:8px 12px; color:#fff; font-size:14px; font-weight:700; letter-spacing:2px; text-transform:uppercase; outline:none; text-align:center;" maxlength="8" autocomplete="off" autocapitalize="characters">
+                            <button class="btn btn-primary" id="btn-promo" style="margin:0; padding:8px 16px; font-size:12px; min-height:unset;">OK</button>
+                        </div>
+                        <div id="promo-message" style="margin-top:6px; font-size:11px; height:16px; text-align:center;"></div>
+                    </div>
                     <button class="btn btn-back" id="btn-settings-back" data-i18n="back">← НАЗАД</button>
                 </div>
             </div>
@@ -266,7 +281,7 @@ const I18N = {
         caseResult: 'ВЫ ПОЛУЧИЛИ!', insufficient: 'Недостаточно монет', unlock: 'КУПИТЬ',
         select: 'ВЫБРАТЬ', selected: 'ВЫБРАНО', locked: 'ЗАБЛОКИРОВАНО',
         shield: 'ЩИТ', slow: 'ЗАМЕДЛЕНИЕ', coin2x: 'МОНЕТЫ x2', mini: 'МИНИ',
-        levelLocked: 'Уровень заблокирован', needHearts: 'Соберите все сердечки!'
+        promo: 'Промокод', promoSuccess: 'Получено 10000 монет!', promoInvalid: 'Неверный код', promoUsed: 'Уже использован', levelLocked: 'Уровень заблокирован', needHearts: 'Соберите все сердечки!'
     },
     en: {
         title: 'BUBBLE', subtitle: "Don't pop.", play: 'PLAY', levels: 'LEVELS',
@@ -280,7 +295,7 @@ const I18N = {
         caseResult: 'YOU GOT!', insufficient: 'Not enough coins', unlock: 'BUY',
         select: 'SELECT', selected: 'SELECTED', locked: 'LOCKED',
         shield: 'SHIELD', slow: 'SLOWMO', coin2x: 'COINS x2', mini: 'MINI',
-        levelLocked: 'Level locked', needHearts: 'Collect all hearts!'
+        promo: 'Promo Code', promoSuccess: 'Received 10000 coins!', promoInvalid: 'Invalid code', promoUsed: 'Already used', levelLocked: 'Level locked', needHearts: 'Collect all hearts!'
     }
 };
 
@@ -305,19 +320,19 @@ const SKINS_DATA = [
       colors: { main:'rgba(255,235,100,0.35)', highlight:'rgba(255,255,220,0.9)', shadow:'rgba(200,180,0,0.25)', edge:'rgba(255,235,100,0.15)', innerGlow:'rgba(255,245,150,0.2)', glow:'rgba(255,235,100,0.35)' },
       theme: { stops:[{h:50,s:60,l:13},{h:55,s:55,l:17},{h:60,s:50,l:21},{h:45,s:70,l:11}], ray:[255,240,100], wave:[255,220,80] },
       obstacles: { ice:'#fff9c4', lemon:'#ffeb3b', mint:'#81c784', straw:'#ff9800', berry:'#f48fb1', lime:'#dce775', cherry:'#ef5350' } },
-    { id: 'berrymors', name: {ru:'Ягодный морс',en:'Berry Mors'}, rarity: 'common', price: 200, drink: 'berry',
+    { id: 'berrymors', name: {ru:'Морс',en:'Mors'}, rarity: 'common', price: 200, drink: 'berry',
       colors: { main:'rgba(200,50,100,0.35)', highlight:'rgba(255,180,200,0.85)', shadow:'rgba(150,20,60,0.3)', edge:'rgba(200,50,100,0.2)', innerGlow:'rgba(255,150,180,0.2)', glow:'rgba(200,50,100,0.35)' },
       theme: { stops:[{h:340,s:50,l:12},{h:345,s:45,l:16},{h:350,s:55,l:20},{h:335,s:60,l:10}], ray:[255,150,180], wave:[255,120,150] },
       obstacles: { ice:'#f8bbd0', lemon:'#f06292', mint:'#c2185b', straw:'#e91e63', berry:'#ad1457', lime:'#f48fb1', cherry:'#880e4f' } },
-    { id: 'minttea', name: {ru:'Мятный чай',en:'Mint Tea'}, rarity: 'common', price: 200, drink: 'tea',
+    { id: 'minttea', name: {ru:'Мята',en:'Mint'}, rarity: 'common', price: 200, drink: 'tea',
       colors: { main:'rgba(100,220,150,0.3)', highlight:'rgba(200,255,220,0.9)', shadow:'rgba(50,150,100,0.25)', edge:'rgba(100,220,150,0.15)', innerGlow:'rgba(150,255,200,0.2)', glow:'rgba(100,220,150,0.3)' },
       theme: { stops:[{h:150,s:45,l:12},{h:155,s:40,l:16},{h:160,s:50,l:20},{h:145,s:55,l:10}], ray:[150,255,200], wave:[120,230,170] },
       obstacles: { ice:'#c8e6c9', lemon:'#fff59d', mint:'#2e7d32', straw:'#66bb6a', berry:'#a5d6a7', lime:'#81c784', cherry:'#388e3c' } },
-    { id: 'orange', name: {ru:'Апельсиновый сок',en:'Orange Juice'}, rarity: 'uncommon', price: 400, drink: 'orange',
+    { id: 'orange', name: {ru:'Апельсин',en:'Orange'}, rarity: 'uncommon', price: 400, drink: 'orange',
       colors: { main:'rgba(255,160,50,0.35)', highlight:'rgba(255,230,180,0.9)', shadow:'rgba(200,120,0,0.3)', edge:'rgba(255,160,50,0.2)', innerGlow:'rgba(255,200,100,0.2)', glow:'rgba(255,160,50,0.35)' },
       theme: { stops:[{h:28,s:55,l:13},{h:32,s:50,l:17},{h:36,s:60,l:21},{h:24,s:65,l:11}], ray:[255,180,80], wave:[255,150,50] },
       obstacles: { ice:'#ffe0b2', lemon:'#ffb74d', mint:'#ff8a65', straw:'#ff5722', berry:'#ffab91', lime:'#ffcc80', cherry:'#f4511e' } },
-    { id: 'strawberry', name: {ru:'Клубничный смузи',en:'Strawberry Smoothie'}, rarity: 'uncommon', price: 400, drink: 'smoothie',
+    { id: 'strawberry', name: {ru:'Клубника',en:'Strawberry'}, rarity: 'uncommon', price: 400, drink: 'smoothie',
       colors: { main:'rgba(255,100,120,0.35)', highlight:'rgba(255,220,230,0.9)', shadow:'rgba(200,50,70,0.3)', edge:'rgba(255,100,120,0.2)', innerGlow:'rgba(255,180,190,0.2)', glow:'rgba(255,100,120,0.35)' },
       theme: { stops:[{h:350,s:50,l:13},{h:355,s:45,l:17},{h:360,s:55,l:21},{h:345,s:60,l:11}], ray:[255,150,160], wave:[255,120,130] },
       obstacles: { ice:'#ffcdd2', lemon:'#ef9a9a', mint:'#e57373', straw:'#f44336', berry:'#d32f2f', lime:'#ff8a80', cherry:'#c62828' } },
@@ -325,7 +340,7 @@ const SKINS_DATA = [
       colors: { main:'rgba(100,220,255,0.35)', highlight:'rgba(220,250,255,0.95)', shadow:'rgba(50,150,200,0.3)', edge:'rgba(100,220,255,0.2)', innerGlow:'rgba(180,240,255,0.25)', glow:'rgba(100,220,255,0.35)' },
       theme: { stops:[{h:190,s:55,l:13},{h:195,s:50,l:17},{h:200,s:60,l:21},{h:185,s:65,l:11}], ray:[180,240,255], wave:[150,220,240] },
       obstacles: { ice:'#e1f5fe', lemon:'#81d4fa', mint:'#4fc3f7', straw:'#29b6f6', berry:'#039be5', lime:'#b3e5fc', cherry:'#0288d1' } },
-    { id: 'lavender', name: {ru:'Лавандовый латте',en:'Lavender Latte'}, rarity: 'uncommon', price: 400, drink: 'latte',
+    { id: 'lavender', name: {ru:'Лаванда',en:'Lavender'}, rarity: 'uncommon', price: 400, drink: 'latte',
       colors: { main:'rgba(180,150,220,0.35)', highlight:'rgba(230,220,255,0.9)', shadow:'rgba(130,100,180,0.3)', edge:'rgba(180,150,220,0.2)', innerGlow:'rgba(210,190,240,0.2)', glow:'rgba(180,150,220,0.35)' },
       theme: { stops:[{h:270,s:40,l:13},{h:275,s:35,l:17},{h:280,s:45,l:21},{h:265,s:50,l:11}], ray:[210,190,255], wave:[190,170,230] },
       obstacles: { ice:'#e1bee7', lemon:'#ce93d8', mint:'#ba68c8', straw:'#ab47bc', berry:'#9c27b0', lime:'#d1c4e9', cherry:'#7b1fa2' } },
@@ -333,27 +348,27 @@ const SKINS_DATA = [
       colors: { main:'rgba(80,40,20,0.45)', highlight:'rgba(200,170,150,0.85)', shadow:'rgba(50,20,10,0.4)', edge:'rgba(80,40,20,0.3)', innerGlow:'rgba(140,100,70,0.25)', glow:'rgba(80,40,20,0.4)' },
       theme: { stops:[{h:20,s:45,l:10},{h:22,s:40,l:14},{h:25,s:50,l:18},{h:18,s:55,l:9}], ray:[180,150,120], wave:[150,120,90] },
       obstacles: { ice:'#d7ccc8', lemon:'#a1887f', mint:'#8d6e63', straw:'#ff5252', berry:'#bcaaa4', lime:'#ff8a80', cherry:'#5d4037' } },
-    { id: 'energy', name: {ru:'Энергетик',en:'Energy Drink'}, rarity: 'rare', price: 600, drink: 'energy',
+    { id: 'energy', name: {ru:'Энергетик',en:'Energy'}, rarity: 'rare', price: 600, drink: 'energy',
       colors: { main:'rgba(255,200,0,0.4)', highlight:'rgba(255,255,150,0.9)', shadow:'rgba(200,150,0,0.35)', edge:'rgba(255,200,0,0.25)', innerGlow:'rgba(255,230,80,0.3)', glow:'rgba(255,200,0,0.4)' },
       theme: { stops:[{h:45,s:65,l:12},{h:48,s:60,l:16},{h:52,s:70,l:20},{h:42,s:75,l:10}], ray:[255,220,50], wave:[255,200,30] },
       obstacles: { ice:'#fff9c4', lemon:'#ffee58', mint:'#cddc39', straw:'#ff9800', berry:'#ffc107', lime:'#ffeb3b', cherry:'#ff6f00' } },
-    { id: 'bubbletea', name: {ru:'Бабл-ти',en:'Bubble Tea'}, rarity: 'rare', price: 600, drink: 'bubbletea',
+    { id: 'bubbletea', name: {ru:'Бабл-ти',en:'Bubble'}, rarity: 'rare', price: 600, drink: 'bubbletea',
       colors: { main:'rgba(160,120,90,0.4)', highlight:'rgba(230,210,190,0.9)', shadow:'rgba(110,80,50,0.35)', edge:'rgba(160,120,90,0.25)', innerGlow:'rgba(200,170,140,0.25)', glow:'rgba(160,120,90,0.4)' },
       theme: { stops:[{h:25,s:35,l:12},{h:28,s:30,l:16},{h:32,s:40,l:20},{h:22,s:45,l:10}], ray:[220,200,170], wave:[200,170,140] },
       obstacles: { ice:'#efebe9', lemon:'#d7ccc8', mint:'#a1887f', straw:'#ffab91', berry:'#bcaaa4', lime:'#ffccbc', cherry:'#8d6e63' } },
-    { id: 'mango', name: {ru:'Манговый ласси',en:'Mango Lassi'}, rarity: 'rare', price: 600, drink: 'lassi',
+    { id: 'mango', name: {ru:'Манго',en:'Mango'}, rarity: 'rare', price: 600, drink: 'lassi',
       colors: { main:'rgba(255,200,80,0.35)', highlight:'rgba(255,240,180,0.9)', shadow:'rgba(200,150,30,0.3)', edge:'rgba(255,200,80,0.2)', innerGlow:'rgba(255,230,140,0.2)', glow:'rgba(255,200,80,0.35)' },
       theme: { stops:[{h:38,s:55,l:13},{h:42,s:50,l:17},{h:46,s:60,l:21},{h:34,s:65,l:11}], ray:[255,220,120], wave:[255,190,80] },
       obstacles: { ice:'#fff3e0', lemon:'#ffcc80', mint:'#ffb74d', straw:'#ff9800', berry:'#ffab91', lime:'#ffe0b2', cherry:'#f57c00' } },
-    { id: 'grape', name: {ru:'Виноградный сок',en:'Grape Juice'}, rarity: 'epic', price: 800, drink: 'grape',
+    { id: 'grape', name: {ru:'Виноград',en:'Grape'}, rarity: 'epic', price: 800, drink: 'grape',
       colors: { main:'rgba(150,80,200,0.4)', highlight:'rgba(220,180,255,0.9)', shadow:'rgba(100,40,150,0.35)', edge:'rgba(150,80,200,0.25)', innerGlow:'rgba(190,140,230,0.25)', glow:'rgba(150,80,200,0.4)' },
       theme: { stops:[{h:275,s:50,l:12},{h:280,s:45,l:16},{h:285,s:55,l:20},{h:270,s:60,l:10}], ray:[200,160,255], wave:[180,130,220] },
       obstacles: { ice:'#e1bee7', lemon:'#ce93d8', mint:'#ba68c8', straw:'#9c27b0', berry:'#7b1fa2', lime:'#d1c4e9', cherry:'#4a148c' } },
-    { id: 'blueberry', name: {ru:'Черничный йогурт',en:'Blueberry Yogurt'}, rarity: 'epic', price: 800, drink: 'yogurt',
+    { id: 'blueberry', name: {ru:'Черника',en:'Blueberry'}, rarity: 'epic', price: 800, drink: 'yogurt',
       colors: { main:'rgba(100,150,220,0.35)', highlight:'rgba(200,220,255,0.9)', shadow:'rgba(60,100,170,0.3)', edge:'rgba(100,150,220,0.2)', innerGlow:'rgba(160,190,240,0.2)', glow:'rgba(100,150,220,0.35)' },
       theme: { stops:[{h:215,s:45,l:13},{h:220,s:40,l:17},{h:225,s:50,l:21},{h:210,s:55,l:11}], ray:[180,210,255], wave:[150,190,240] },
       obstacles: { ice:'#e3f2fd', lemon:'#90caf9', mint:'#64b5f6', straw:'#42a5f5', berry:'#1e88e5', lime:'#bbdefb', cherry:'#1565c0' } },
-    { id: 'tropical', name: {ru:'Тропический микс',en:'Tropical Mix'}, rarity: 'epic', price: 800, drink: 'tropical',
+    { id: 'tropical', name: {ru:'Тропик',en:'Tropical'}, rarity: 'epic', price: 800, drink: 'tropical',
       colors: { main:'rgba(255,120,80,0.35)', highlight:'rgba(255,220,200,0.9)', shadow:'rgba(200,70,30,0.3)', edge:'rgba(255,120,80,0.2)', innerGlow:'rgba(255,180,150,0.2)', glow:'rgba(255,120,80,0.35)' },
       theme: { stops:[{h:18,s:55,l:13},{h:22,s:50,l:17},{h:26,s:60,l:21},{h:14,s:65,l:11}], ray:[255,200,160], wave:[255,170,120] },
       obstacles: { ice:'#ffccbc', lemon:'#ffab91', mint:'#ff8a65', straw:'#ff5722', berry:'#ff7043', lime:'#ff9e80', cherry:'#d84315' } },
@@ -361,19 +376,19 @@ const SKINS_DATA = [
       colors: { main:'rgba(120,180,80,0.35)', highlight:'rgba(220,255,190,0.9)', shadow:'rgba(70,130,40,0.3)', edge:'rgba(120,180,80,0.2)', innerGlow:'rgba(180,230,150,0.2)', glow:'rgba(120,180,80,0.35)' },
       theme: { stops:[{h:95,s:45,l:12},{h:100,s:40,l:16},{h:105,s:50,l:20},{h:90,s:55,l:10}], ray:[200,255,170], wave:[170,230,130] },
       obstacles: { ice:'#dcedc8', lemon:'#c5e1a5', mint:'#558b2f', straw:'#7cb342', berry:'#aed581', lime:'#9ccc65', cherry:'#33691e' } },
-    { id: 'champagne', name: {ru:'Золотой шампанского',en:'Golden Champagne'}, rarity: 'legendary', price: 1000, drink: 'champagne',
+    { id: 'champagne', name: {ru:'Шампанское',en:'Champagne'}, rarity: 'legendary', price: 1000, drink: 'champagne',
       colors: { main:'rgba(255,215,0,0.45)', highlight:'rgba(255,255,200,0.95)', shadow:'rgba(200,160,0,0.35)', edge:'rgba(255,215,0,0.3)', innerGlow:'rgba(255,240,120,0.3)', glow:'rgba(255,215,0,0.45)' },
       theme: { stops:[{h:45,s:60,l:14},{h:48,s:55,l:18},{h:52,s:65,l:22},{h:42,s:70,l:12}], ray:[255,230,100], wave:[255,200,60] },
       obstacles: { ice:'#fffde7', lemon:'#fff59d', mint:'#dce775', straw:'#fbc02d', berry:'#fff176', lime:'#f0f4c3', cherry:'#f9a825' } },
-    { id: 'slime', name: {ru:'Радужный слайм',en:'Rainbow Slime'}, rarity: 'legendary', price: 1000, drink: 'slime',
+    { id: 'slime', name: {ru:'Слайм',en:'Slime'}, rarity: 'legendary', price: 1000, drink: 'slime',
       colors: { main:'rgba(255,100,200,0.35)', highlight:'rgba(255,220,240,0.9)', shadow:'rgba(200,50,150,0.3)', edge:'rgba(255,100,200,0.2)', innerGlow:'rgba(255,180,220,0.25)', glow:'rgba(255,100,200,0.4)' },
       theme: { stops:[{h:320,s:55,l:13},{h:325,s:50,l:17},{h:330,s:60,l:21},{h:315,s:65,l:11}], ray:[255,180,220], wave:[255,150,190] },
       obstacles: { ice:'#f8bbd0', lemon:'#f48fb1', mint:'#ec407a', straw:'#e91e63', berry:'#d81b60', lime:'#f06292', cherry:'#ad1457' } },
-    { id: 'galaxy', name: {ru:'Галактический коктейль',en:'Galaxy Cocktail'}, rarity: 'legendary', price: 1000, drink: 'galaxy',
+    { id: 'galaxy', name: {ru:'Галактика',en:'Galaxy'}, rarity: 'legendary', price: 1000, drink: 'galaxy',
       colors: { main:'rgba(100,0,150,0.45)', highlight:'rgba(200,150,255,0.9)', shadow:'rgba(60,0,100,0.4)', edge:'rgba(100,0,150,0.3)', innerGlow:'rgba(150,80,200,0.3)', glow:'rgba(150,100,255,0.45)' },
       theme: { stops:[{h:270,s:55,l:11},{h:275,s:50,l:15},{h:280,s:60,l:19},{h:265,s:65,l:9}], ray:[180,120,255], wave:[150,100,220] },
       obstacles: { ice:'#e1bee7', lemon:'#b39ddb', mint:'#9575cd', straw:'#7e57c2', berry:'#5e35b1', lime:'#d1c4e9', cherry:'#4527a0' } },
-    { id: 'diamond', name: {ru:'Алмазная вода',en:'Diamond Water'}, rarity: 'legendary', price: 1000, drink: 'diamond',
+    { id: 'diamond', name: {ru:'Алмаз',en:'Diamond'}, rarity: 'legendary', price: 1000, drink: 'diamond',
       colors: { main:'rgba(200,240,255,0.45)', highlight:'rgba(255,255,255,0.95)', shadow:'rgba(150,200,220,0.35)', edge:'rgba(200,240,255,0.3)', innerGlow:'rgba(230,250,255,0.35)', glow:'rgba(200,240,255,0.45)' },
       theme: { stops:[{h:195,s:55,l:14},{h:200,s:50,l:18},{h:205,s:60,l:22},{h:190,s:65,l:12}], ray:[200,240,255], wave:[180,220,240] },
       obstacles: { ice:'#e0f7fa', lemon:'#b2ebf2', mint:'#80deea', straw:'#4dd0e1', berry:'#26c6da', lime:'#b2dfdb', cherry:'#00acc1' } }
@@ -1291,7 +1306,7 @@ const SkinManager = {
     },
     renderCases(container) {
         const wrapper = document.createElement('div');
-        wrapper.innerHTML = '<div style="display:flex;gap:12px;justify-content:center;margin-bottom:12px;align-items:flex-start;"><div style="width:48%;text-align:center;"><div style="font-size:11px;font-weight:700;color:#ffd700;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">' + t('caseSkin') + '</div><div class="case-box" id="case-skin-box"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;height:100%;"><div style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.5), rgba(50,100,200,0.3));box-shadow:0 0 14px rgba(100,200,255,0.3), inset 0 0 10px rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.12);"></div></div></div><button class="btn btn-primary" id="btn-case-skin" style="margin:6px 0 0;font-size:11px;padding:6px 10px;min-height:36px;width:100%;"><span class="coin-icon coin-tiny"></span> 500</button></div><div style="width:48%;text-align:center;"><div style="font-size:11px;font-weight:700;color:#ffd700;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">' + t('caseTrail') + '</div><div class="case-box" id="case-trail-box"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;height:100%;"><div style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);box-shadow:0 0 14px rgba(255,215,0,0.3), inset 0 0 10px rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.12);"></div></div></div><button class="btn btn-primary" id="btn-case-trail" style="margin:6px 0 0;font-size:11px;padding:6px 10px;min-height:36px;width:100%;"><span class="coin-icon coin-tiny"></span> 500</button></div></div><div id="case-result" style="min-height:80px;"></div>';
+        wrapper.innerHTML = '<div class="shop-scroll" style="max-height:min(52vh, 380px); margin-bottom:8px;"><div class="skins-grid" style="grid-template-columns:repeat(2, 1fr); gap:6px;"><div class="skin-card" style="aspect-ratio:1.3; padding:6px;"><div class="case-box skin-case" id="case-skin-box" style="position:absolute; inset:0;"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><div style="width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.5), rgba(50,100,200,0.3));box-shadow:0 0 10px rgba(100,200,255,0.3), inset 0 0 6px rgba(255,255,255,0.15);"></div></div></div></div><div class="skin-card" style="aspect-ratio:1.3; padding:6px;"><div class="case-box trail-case" id="case-trail-box" style="position:absolute; inset:0;"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><div style="width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);box-shadow:0 0 10px rgba(255,215,0,0.3), inset 0 0 6px rgba(255,255,255,0.15);"></div></div></div></div></div></div><div class="shop-actions" style="display:flex; gap:6px; margin-bottom:8px;"><button class="btn btn-primary" id="btn-case-skin" style="margin:0; flex:1; font-size:13px; padding:10px; min-height:44px;"><span class="coin-icon" style="width:14px;height:14px;top:1px;"></span> 500</button><button class="btn btn-primary" id="btn-case-trail" style="margin:0; flex:1; font-size:13px; padding:10px; min-height:44px;"><span class="coin-icon" style="width:14px;height:14px;top:1px;"></span> 500</button></div><div id="case-result" style="min-height:80px;"></div>';
         container.appendChild(wrapper);
         const self = this;
         document.getElementById('btn-case-skin').addEventListener('click', function() { self.openCase('skin'); });
@@ -1315,46 +1330,48 @@ const SkinManager = {
         if (box) box.classList.add('open');
 
         const res = document.getElementById('case-result');
-        res.innerHTML = '<div style="position:relative;width:100%;height:140px;overflow:hidden;margin:20px 0;background:rgba(0,0,0,0.25);border-radius:16px;border:1px solid rgba(255,255,255,0.1);"><div class="case-selector-modern"></div><div class="case-glow-modern"></div><div class="case-strip-modern" id="case-strip"></div></div>';
+        res.innerHTML = '<div id="case-anim-container" style="position:relative;width:100%;height:130px;overflow:hidden;margin:12px 0;background:rgba(0,0,0,0.2);border-radius:14px;border:1px solid rgba(255,255,255,0.08);"><div id="case-selector-line" style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:linear-gradient(180deg,transparent,#ffd700,transparent);z-index:5;box-shadow:0 0 8px rgba(255,215,0,0.4);"></div><div id="case-glow-zone" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:84px;height:84px;border-radius:12px;box-shadow:0 0 24px rgba(255,215,0,0.25);pointer-events:none;z-index:4;border:1px solid rgba(255,215,0,0.15);"></div><div id="case-strip" style="display:flex;gap:10px;position:absolute;top:50%;left:0;transform:translate(0, -50%);transition:none;will-change:transform;"></div></div>';
         const strip = document.getElementById('case-strip');
         const items = []; 
         const winner = pool[Math.floor(Math.random() * pool.length)];
-        for (let i = 0; i < 40; i++) { const item = pool[Math.floor(Math.random() * pool.length)]; items.push(item); }
-        items[32] = winner;
+        for (let i = 0; i < 50; i++) { const item = pool[Math.floor(Math.random() * pool.length)]; items.push(item); }
+        items[40] = winner;
         items.forEach(function(item, idx) {
-            const div = document.createElement('div'); div.className = 'case-item-modern';
+            const div = document.createElement('div');
+            div.className = 'case-item-anim';
+            div.style.cssText = 'width:74px;height:74px;border-radius:12px;background:rgba(255,255,255,0.04);border:1.5px solid ' + (idx === 40 ? 'rgba(255,215,0,0.5)' : 'rgba(255,255,255,0.08)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:' + (idx === 40 ? 'inset 0 0 16px rgba(255,215,0,0.06), 0 0 12px rgba(255,215,0,0.1)' : 'inset 0 0 12px rgba(255,255,255,0.02)') + ';';
             const isSkin = type === 'skin';
-            const isWinner = idx === 32;
-            const color = isSkin ? item.colors.main : (item.color === 'rainbow' ? '#f0f' : item.color);
-            div.style.borderColor = isWinner ? 'rgba(255,215,0,0.6)' : 'rgba(255,255,255,0.1)';
-            div.style.background = isWinner ? 'rgba(255,215,0,0.08)' : 'rgba(255,255,255,0.04)';
-            div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:' + (isSkin ? 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')' : (item.color === 'rainbow' ? 'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)' : item.color)) + ';margin-bottom:4px;box-shadow:0 0 12px ' + (isSkin ? item.colors.glow.replace(')', ',0.3)') : (item.color === 'rainbow' ? 'rgba(255,0,255,0.3)' : item.color.replace(')', ',0.3)'))) + ';"></div><div style="font-size:9px;color:rgba(255,255,255,0.6);font-weight:' + (isWinner ? '700' : '400') + ';">' + item.name[currentLang] + '</div>';
+            const innerSize = '36px';
+            const innerStyle = isSkin 
+                ? 'width:' + innerSize + ';height:' + innerSize + ';border-radius:50%;background:radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ');box-shadow:0 0 8px ' + item.colors.glow.replace(')', ',0.25)') + ';position:relative;'
+                : 'width:' + innerSize + ';height:' + innerSize + ';border-radius:50%;background:' + (item.color === 'rainbow' ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : item.color) + ';box-shadow:0 0 8px ' + (item.color === 'rainbow' ? 'rgba(255,0,255,0.25)' : item.color.replace(')', ',0.25)') + ';position:relative;';
+            div.innerHTML = '<div style="' + innerStyle + '"><div style="position:absolute;top:15%;left:18%;width:20%;height:20%;border-radius:50%;background:rgba(255,255,255,0.6);filter:blur(0.5px);"></div></div><div style="font-size:8px;color:rgba(255,255,255,0.5);margin-top:3px;font-weight:' + (idx === 40 ? '700' : '400') + ';">' + item.name[currentLang] + '</div>';
             strip.appendChild(div);
         });
-        const containerW = res.clientWidth || 320;
-        const itemW = 106;
-        const centerOffset = containerW / 2 - itemW / 2;
-        const target = -(32 * itemW) + centerOffset;
+
+        const containerW = document.getElementById('case-anim-container').clientWidth || 300;
+        const itemW = 84;
+        const target = -(40 * itemW) + (containerW / 2) - (itemW / 2);
         let pos = 0;
         let velocity = 0;
-        const maxVel = 50;
+        const maxVel = 35;
         let phase = 'accelerating';
         let holdTimer = 0;
 
         const animate = function() {
             if (phase === 'accelerating') {
-                velocity += 0.9;
-                if (velocity >= maxVel) { velocity = maxVel; phase = 'cruising'; holdTimer = 60; }
+                velocity += 0.6;
+                if (velocity >= maxVel) { velocity = maxVel; phase = 'cruising'; holdTimer = 80; }
             } else if (phase === 'cruising') {
                 holdTimer--;
                 if (holdTimer <= 0) phase = 'braking';
             } else if (phase === 'braking') {
-                velocity *= 0.96;
-                if (velocity < 8) { velocity = 8; phase = 'snap'; }
+                velocity *= 0.97;
+                if (velocity < 5) { velocity = 5; phase = 'snap'; }
             } else if (phase === 'snap') {
                 const diff = target - pos;
-                velocity = diff * 0.06;
-                if (Math.abs(diff) < 0.5) { pos = target; velocity = 0; phase = 'done'; }
+                velocity = diff * 0.05;
+                if (Math.abs(diff) < 0.3) { pos = target; velocity = 0; phase = 'done'; }
             }
             pos += velocity;
             strip.style.transform = 'translate(' + pos + 'px, -50%)';
@@ -1368,7 +1385,7 @@ const SkinManager = {
                         ? 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')' 
                         : (isRainbow ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : winner.color);
                     const glowColor = type === 'skin' ? winner.colors.glow.replace(')', ',0.5)') : (isRainbow ? 'rgba(255,0,255,0.5)' : winner.color.replace(')', ',0.5)'));
-                    res.innerHTML = '<div id="case-reveal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.4s ease;"><div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"></div><div style="position:relative;z-index:1;text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);"><div style="font-size:22px;font-weight:900;color:#ffd700;margin-bottom:16px;letter-spacing:3px;text-transform:uppercase;">' + t('caseResult') + '</div><div style="width:110px;height:110px;border-radius:50%;margin:0 auto 16px;background:' + bgStyle + ';box-shadow:0 0 40px ' + glowColor + ', 0 0 80px ' + glowColor.replace('0.5)', '0.2)') + ', inset 0 0 30px rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);position:relative;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;">' + winner.name[currentLang] + '</div><div style="font-size:14px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:4px;font-weight:800;margin-bottom:24px;">' + winner.rarity + '</div><button class="btn btn-primary" id="btn-claim-case" style="min-width:160px;">' + (type === 'skin' ? t('select') : t('select')) + '</button></div></div>';
+                    res.innerHTML = '<div id="case-reveal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.4s ease;"><div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"></div><div style="position:relative;z-index:1;text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);"><div style="font-size:22px;font-weight:900;color:#ffd700;margin-bottom:16px;letter-spacing:3px;text-transform:uppercase;">' + t('caseResult') + '</div><div style="width:110px;height:110px;border-radius:50%;margin:0 auto 16px;background:' + bgStyle + ';box-shadow:0 0 40px ' + glowColor + ', 0 0 80px ' + glowColor.replace('0.5)', '0.2)') + ', inset 0 0 30px rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);position:relative;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;">' + winner.name[currentLang] + '</div><div style="font-size:14px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:4px;font-weight:800;margin-bottom:24px;">' + winner.rarity + '</div><button class="btn btn-primary" id="btn-claim-case" style="min-width:160px;">' + t('select') + '</button></div></div>';
                     document.getElementById('btn-claim-case').addEventListener('click', function() {
                         document.getElementById('case-reveal-overlay').style.animation = 'fadeOut 0.3s ease forwards';
                         setTimeout(function() {
@@ -1378,7 +1395,7 @@ const SkinManager = {
                         if (AudioEngine.ctx) AudioEngine.play('combo');
                     });
                     if (AudioEngine.ctx) AudioEngine.play('combo');
-                }, 400);
+                }, 500);
             }
         };
         animate();
@@ -1394,7 +1411,7 @@ const Game = {
     currentSkin: 'water', currentTrail: 'default',
     gameMode: 'endless', currentLevel: 0, levelProgress: [], collectedHearts: 0,
     paused: false, speedMult: 1, showedHeartMessage: false,
-    floatingTexts: [], heartBlockTimer: 0,
+    floatingTexts: [], heartBlockTimer: 0, usedPromos: [],
 
     init() {
         this.canvas = document.getElementById('game-canvas');
@@ -1632,13 +1649,15 @@ const Game = {
             this.settings = Object.assign({}, this.settings, s.settings || {});
             this.levelProgress = s.levels || [];
             currentLang = s.lang || 'ru';
+            this.usedPromos = s.promos || [];
         } catch (e) {}
     },
 
     save() {
         localStorage.setItem('bubble_save_v2', JSON.stringify({
             best: this.bestScore, coins: this.coins, skin: this.currentSkin, trail: this.currentTrail,
-            settings: this.settings, levels: this.levelProgress, lang: currentLang, version: 2
+            settings: this.settings, levels: this.levelProgress, lang: currentLang, version: 2,
+            promos: this.usedPromos || []
         }));
     },
 
@@ -1726,6 +1745,29 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btn-settings-back').addEventListener('click', function() {
         if (AudioEngine.ctx) AudioEngine.play('stick');
         Game.save(); showScreen('main-menu');
+    });
+    document.getElementById('promo-input').addEventListener('input', function(e) {
+        e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+    document.getElementById('btn-promo').addEventListener('click', function() {
+        const input = document.getElementById('promo-input');
+        const msg = document.getElementById('promo-message');
+        const code = input.value.trim();
+        if (!code) return;
+        if (Game.usedPromos.indexOf(code) !== -1) {
+            msg.style.color = '#ff9800'; msg.textContent = t('promoUsed');
+            return;
+        }
+        if (code === 'CODE') {
+            Game.usedPromos.push(code);
+            Game.coins += 10000;
+            Game.save(); Game.updateHUD();
+            msg.style.color = '#4caf50'; msg.textContent = t('promoSuccess');
+            input.value = '';
+            if (AudioEngine.ctx) AudioEngine.play('combo');
+        } else {
+            msg.style.color = '#ff4444'; msg.textContent = t('promoInvalid');
+        }
     });
     document.getElementById('btn-pause').addEventListener('click', function() { Game.pause(); });
     document.getElementById('btn-resume').addEventListener('click', function() { Game.resume(); });
