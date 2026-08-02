@@ -141,14 +141,14 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .case-box .case-lid::after { content:''; position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); width:24px; height:12px; border-radius:0 0 12px 12px; background:linear-gradient(180deg, #d4b840, #b09020); border:1px solid #a88018; box-shadow:0 2px 6px rgba(0,0,0,0.3); }
 .case-box.open .case-lid { transform:rotateX(-120deg); opacity:0.1; }
 .case-box .case-glow-ring { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:48px; height:48px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); box-shadow:0 0 20px rgba(255,215,0,0.25), inset 0 0 16px rgba(255,215,0,0.1); background:radial-gradient(circle, rgba(255,255,255,0.1), transparent 65%); }
-.case-strip-modern { display:flex; gap:16px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
-.case-item-modern { width:90px; height:90px; border-radius:18px; background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 0 16px rgba(255,255,255,0.02); backdrop-filter:blur(4px); }
-.case-selector-modern { position:absolute; top:0; left:50%; transform:translateX(-50%); width:2px; height:100%; background:linear-gradient(180deg,transparent,rgba(255,255,255,0.6),transparent); z-index:2; box-shadow:0 0 12px rgba(255,255,255,0.3); }
-.case-glow-modern { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:94px; height:94px; border-radius:20px; box-shadow:0 0 30px rgba(100,200,255,0.2), 0 0 60px rgba(100,200,255,0.08); pointer-events:none; border:1px solid rgba(255,255,255,0.1); }
-.case-strip-modern { display:flex; gap:16px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
+.case-strip-modern { display:flex; gap:16px; position:absolute; top:50%; left:0; transform:translateY(-50%); transition:none; will-change:transform; }
 .case-item-modern { width:90px; height:90px; border-radius:16px; background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 0 20px rgba(255,255,255,0.03); }
-.case-selector-modern { position:absolute; top:0; left:50%; transform:translateX(-50%); width:4px; height:100%; background:linear-gradient(180deg,transparent,#ffd700,transparent); z-index:2; }
+.case-selector-modern { position:absolute; top:0; left:50%; transform:translateX(-50%); width:3px; height:100%; background:linear-gradient(180deg,transparent,#ffd700,transparent); z-index:2; }
 .case-glow-modern { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:94px; height:94px; border-radius:16px; box-shadow:0 0 30px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.15); pointer-events:none; }
+.case-card { aspect-ratio:auto; padding:18px 10px; border-radius:var(--btn-radius); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; overflow:hidden; pointer-events:auto; border:2px solid rgba(255,255,255,0.12); }
+.case-card:active { transform:scale(0.95); }
+.case-card .case-shine { position:absolute; top:0; left:0; width:100%; height:45%; background:linear-gradient(180deg, rgba(255,255,255,0.18), transparent); pointer-events:none; }
+.case-card .case-bottom { position:absolute; bottom:0; left:0; width:100%; height:30%; background:linear-gradient(0deg, rgba(0,0,0,0.2), transparent); pointer-events:none; }
 
 @media (max-height:600px) { .game-title{font-size:clamp(26px, 8vmin, 34px)} .menu-glass{padding:16px 12px} .btn{padding:10px;margin:5px 0;font-size:13px} .menu-bubble-demo{width:55px;height:55px;margin-bottom:12px} .score-value{font-size:clamp(28px, 9vmin, 40px)} .skin-card{padding:4px} .levels-grid{grid-template-columns:repeat(3,1fr)} }
 @media (min-height:800px) { .menu-glass{padding:clamp(28px, 6vmin, 48px) clamp(20px, 5vmin, 40px)} .game-title{font-size:clamp(40px, 11vmin, 56px)} .score-value{font-size:clamp(48px, 13vmin, 68px)} }
@@ -247,6 +247,13 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                             <button class="lang-btn" data-lang="en">EN</button>
                         </div>
                     </div>
+                    <div class="setting-row"><span data-i18n="promocode">Промокод</span>
+                        <div style="display:flex;gap:6px;align-items:center;">
+                            <input type="text" id="promo-input" placeholder="CODE" maxlength="12" style="width:100px;padding:7px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.25);color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;outline:none;text-align:center;">
+                            <button class="btn btn-primary" id="btn-promo" style="padding:7px 14px;font-size:12px;min-height:36px;margin:0;width:auto;border-radius:10px;">OK</button>
+                        </div>
+                    </div>
+                    <div id="promo-message" style="font-size:12px;margin-top:-6px;margin-bottom:8px;text-align:center;height:18px;color:#ff4444;font-weight:700;letter-spacing:0.5px;"></div>
                     <button class="btn btn-back" id="btn-settings-back" data-i18n="back">← НАЗАД</button>
                 </div>
             </div>
@@ -267,7 +274,8 @@ const I18N = {
         caseResult: 'ВЫ ПОЛУЧИЛИ!', insufficient: 'Недостаточно монет', unlock: 'КУПИТЬ',
         select: 'ВЫБРАТЬ', selected: 'ВЫБРАНО', locked: 'ЗАБЛОКИРОВАНО',
         shield: 'ЩИТ', slow: 'ЗАМЕДЛЕНИЕ', coin2x: 'МОНЕТЫ x2', mini: 'МИНИ',
-        levelLocked: 'Уровень заблокирован', needHearts: 'Соберите все сердечки!'
+        levelLocked: 'Уровень заблокирован', needHearts: 'Соберите все сердечки!',
+        promocode: 'Промокод', promoPlaceholder: 'КОД', promoSuccess: '+10000 монет!', promoInvalid: 'Неверный код', promoUsed: 'Уже использован'
     },
     en: {
         title: 'BUBBLE', subtitle: "Don't pop.", play: 'PLAY', levels: 'LEVELS',
@@ -281,7 +289,8 @@ const I18N = {
         caseResult: 'YOU GOT!', insufficient: 'Not enough coins', unlock: 'BUY',
         select: 'SELECT', selected: 'SELECTED', locked: 'LOCKED',
         shield: 'SHIELD', slow: 'SLOWMO', coin2x: 'COINS x2', mini: 'MINI',
-        levelLocked: 'Level locked', needHearts: 'Collect all hearts!'
+        levelLocked: 'Level locked', needHearts: 'Collect all hearts!',
+        promocode: 'Promocode', promoPlaceholder: 'CODE', promoSuccess: '+10000 coins!', promoInvalid: 'Invalid code', promoUsed: 'Already used'
     }
 };
 
@@ -306,27 +315,27 @@ const SKINS_DATA = [
       colors: { main:'rgba(255,235,100,0.35)', highlight:'rgba(255,255,220,0.9)', shadow:'rgba(200,180,0,0.25)', edge:'rgba(255,235,100,0.15)', innerGlow:'rgba(255,245,150,0.2)', glow:'rgba(255,235,100,0.35)' },
       theme: { stops:[{h:50,s:60,l:13},{h:55,s:55,l:17},{h:60,s:50,l:21},{h:45,s:70,l:11}], ray:[255,240,100], wave:[255,220,80] },
       obstacles: { ice:'#fff9c4', lemon:'#ffeb3b', mint:'#81c784', straw:'#ff9800', berry:'#f48fb1', lime:'#dce775', cherry:'#ef5350' } },
-    { id: 'berrymors', name: {ru:'Ягодный морс',en:'Berry Mors'}, rarity: 'common', price: 200, drink: 'berry',
+    { id: 'berrymors', name: {ru:'Морс',en:'Mors'}, rarity: 'common', price: 200, drink: 'berry',
       colors: { main:'rgba(200,50,100,0.35)', highlight:'rgba(255,180,200,0.85)', shadow:'rgba(150,20,60,0.3)', edge:'rgba(200,50,100,0.2)', innerGlow:'rgba(255,150,180,0.2)', glow:'rgba(200,50,100,0.35)' },
       theme: { stops:[{h:340,s:50,l:12},{h:345,s:45,l:16},{h:350,s:55,l:20},{h:335,s:60,l:10}], ray:[255,150,180], wave:[255,120,150] },
       obstacles: { ice:'#f8bbd0', lemon:'#f06292', mint:'#c2185b', straw:'#e91e63', berry:'#ad1457', lime:'#f48fb1', cherry:'#880e4f' } },
-    { id: 'minttea', name: {ru:'Мятный чай',en:'Mint Tea'}, rarity: 'common', price: 200, drink: 'tea',
+    { id: 'minttea', name: {ru:'Мята',en:'Mint'}, rarity: 'common', price: 200, drink: 'tea',
       colors: { main:'rgba(100,220,150,0.3)', highlight:'rgba(200,255,220,0.9)', shadow:'rgba(50,150,100,0.25)', edge:'rgba(100,220,150,0.15)', innerGlow:'rgba(150,255,200,0.2)', glow:'rgba(100,220,150,0.3)' },
       theme: { stops:[{h:150,s:45,l:12},{h:155,s:40,l:16},{h:160,s:50,l:20},{h:145,s:55,l:10}], ray:[150,255,200], wave:[120,230,170] },
       obstacles: { ice:'#c8e6c9', lemon:'#fff59d', mint:'#2e7d32', straw:'#66bb6a', berry:'#a5d6a7', lime:'#81c784', cherry:'#388e3c' } },
-    { id: 'orange', name: {ru:'Апельсиновый сок',en:'Orange Juice'}, rarity: 'uncommon', price: 400, drink: 'orange',
+    { id: 'orange', name: {ru:'Апельсин',en:'Orange'}, rarity: 'uncommon', price: 400, drink: 'orange',
       colors: { main:'rgba(255,160,50,0.35)', highlight:'rgba(255,230,180,0.9)', shadow:'rgba(200,120,0,0.3)', edge:'rgba(255,160,50,0.2)', innerGlow:'rgba(255,200,100,0.2)', glow:'rgba(255,160,50,0.35)' },
       theme: { stops:[{h:28,s:55,l:13},{h:32,s:50,l:17},{h:36,s:60,l:21},{h:24,s:65,l:11}], ray:[255,180,80], wave:[255,150,50] },
       obstacles: { ice:'#ffe0b2', lemon:'#ffb74d', mint:'#ff8a65', straw:'#ff5722', berry:'#ffab91', lime:'#ffcc80', cherry:'#f4511e' } },
-    { id: 'strawberry', name: {ru:'Клубничный смузи',en:'Strawberry Smoothie'}, rarity: 'uncommon', price: 400, drink: 'smoothie',
+    { id: 'strawberry', name: {ru:'Смузи',en:'Smoothie'}, rarity: 'uncommon', price: 400, drink: 'smoothie',
       colors: { main:'rgba(255,100,120,0.35)', highlight:'rgba(255,220,230,0.9)', shadow:'rgba(200,50,70,0.3)', edge:'rgba(255,100,120,0.2)', innerGlow:'rgba(255,180,190,0.2)', glow:'rgba(255,100,120,0.35)' },
       theme: { stops:[{h:350,s:50,l:13},{h:355,s:45,l:17},{h:360,s:55,l:21},{h:345,s:60,l:11}], ray:[255,150,160], wave:[255,120,130] },
       obstacles: { ice:'#ffcdd2', lemon:'#ef9a9a', mint:'#e57373', straw:'#f44336', berry:'#d32f2f', lime:'#ff8a80', cherry:'#c62828' } },
-    { id: 'soda', name: {ru:'Газировка',en:'Soda'}, rarity: 'uncommon', price: 400, drink: 'soda',
+    { id: 'soda', name: {ru:'Сода',en:'Soda'}, rarity: 'uncommon', price: 400, drink: 'soda',
       colors: { main:'rgba(100,220,255,0.35)', highlight:'rgba(220,250,255,0.95)', shadow:'rgba(50,150,200,0.3)', edge:'rgba(100,220,255,0.2)', innerGlow:'rgba(180,240,255,0.25)', glow:'rgba(100,220,255,0.35)' },
       theme: { stops:[{h:190,s:55,l:13},{h:195,s:50,l:17},{h:200,s:60,l:21},{h:185,s:65,l:11}], ray:[180,240,255], wave:[150,220,240] },
       obstacles: { ice:'#e1f5fe', lemon:'#81d4fa', mint:'#4fc3f7', straw:'#29b6f6', berry:'#039be5', lime:'#b3e5fc', cherry:'#0288d1' } },
-    { id: 'lavender', name: {ru:'Лавандовый латте',en:'Lavender Latte'}, rarity: 'uncommon', price: 400, drink: 'latte',
+    { id: 'lavender', name: {ru:'Латте',en:'Latte'}, rarity: 'uncommon', price: 400, drink: 'latte',
       colors: { main:'rgba(180,150,220,0.35)', highlight:'rgba(230,220,255,0.9)', shadow:'rgba(130,100,180,0.3)', edge:'rgba(180,150,220,0.2)', innerGlow:'rgba(210,190,240,0.2)', glow:'rgba(180,150,220,0.35)' },
       theme: { stops:[{h:270,s:40,l:13},{h:275,s:35,l:17},{h:280,s:45,l:21},{h:265,s:50,l:11}], ray:[210,190,255], wave:[190,170,230] },
       obstacles: { ice:'#e1bee7', lemon:'#ce93d8', mint:'#ba68c8', straw:'#ab47bc', berry:'#9c27b0', lime:'#d1c4e9', cherry:'#7b1fa2' } },
@@ -334,27 +343,27 @@ const SKINS_DATA = [
       colors: { main:'rgba(80,40,20,0.45)', highlight:'rgba(200,170,150,0.85)', shadow:'rgba(50,20,10,0.4)', edge:'rgba(80,40,20,0.3)', innerGlow:'rgba(140,100,70,0.25)', glow:'rgba(80,40,20,0.4)' },
       theme: { stops:[{h:20,s:45,l:10},{h:22,s:40,l:14},{h:25,s:50,l:18},{h:18,s:55,l:9}], ray:[180,150,120], wave:[150,120,90] },
       obstacles: { ice:'#d7ccc8', lemon:'#a1887f', mint:'#8d6e63', straw:'#ff5252', berry:'#bcaaa4', lime:'#ff8a80', cherry:'#5d4037' } },
-    { id: 'energy', name: {ru:'Энергетик',en:'Energy Drink'}, rarity: 'rare', price: 600, drink: 'energy',
+    { id: 'energy', name: {ru:'Энерго',en:'Energy'}, rarity: 'rare', price: 600, drink: 'energy',
       colors: { main:'rgba(255,200,0,0.4)', highlight:'rgba(255,255,150,0.9)', shadow:'rgba(200,150,0,0.35)', edge:'rgba(255,200,0,0.25)', innerGlow:'rgba(255,230,80,0.3)', glow:'rgba(255,200,0,0.4)' },
       theme: { stops:[{h:45,s:65,l:12},{h:48,s:60,l:16},{h:52,s:70,l:20},{h:42,s:75,l:10}], ray:[255,220,50], wave:[255,200,30] },
       obstacles: { ice:'#fff9c4', lemon:'#ffee58', mint:'#cddc39', straw:'#ff9800', berry:'#ffc107', lime:'#ffeb3b', cherry:'#ff6f00' } },
-    { id: 'bubbletea', name: {ru:'Бабл-ти',en:'Bubble Tea'}, rarity: 'rare', price: 600, drink: 'bubbletea',
+    { id: 'bubbletea', name: {ru:'Баблти',en:'Bubbletea'}, rarity: 'rare', price: 600, drink: 'bubbletea',
       colors: { main:'rgba(160,120,90,0.4)', highlight:'rgba(230,210,190,0.9)', shadow:'rgba(110,80,50,0.35)', edge:'rgba(160,120,90,0.25)', innerGlow:'rgba(200,170,140,0.25)', glow:'rgba(160,120,90,0.4)' },
       theme: { stops:[{h:25,s:35,l:12},{h:28,s:30,l:16},{h:32,s:40,l:20},{h:22,s:45,l:10}], ray:[220,200,170], wave:[200,170,140] },
       obstacles: { ice:'#efebe9', lemon:'#d7ccc8', mint:'#a1887f', straw:'#ffab91', berry:'#bcaaa4', lime:'#ffccbc', cherry:'#8d6e63' } },
-    { id: 'mango', name: {ru:'Манговый ласси',en:'Mango Lassi'}, rarity: 'rare', price: 600, drink: 'lassi',
+    { id: 'mango', name: {ru:'Ласси',en:'Lassi'}, rarity: 'rare', price: 600, drink: 'lassi',
       colors: { main:'rgba(255,200,80,0.35)', highlight:'rgba(255,240,180,0.9)', shadow:'rgba(200,150,30,0.3)', edge:'rgba(255,200,80,0.2)', innerGlow:'rgba(255,230,140,0.2)', glow:'rgba(255,200,80,0.35)' },
       theme: { stops:[{h:38,s:55,l:13},{h:42,s:50,l:17},{h:46,s:60,l:21},{h:34,s:65,l:11}], ray:[255,220,120], wave:[255,190,80] },
       obstacles: { ice:'#fff3e0', lemon:'#ffcc80', mint:'#ffb74d', straw:'#ff9800', berry:'#ffab91', lime:'#ffe0b2', cherry:'#f57c00' } },
-    { id: 'grape', name: {ru:'Виноградный сок',en:'Grape Juice'}, rarity: 'epic', price: 800, drink: 'grape',
+    { id: 'grape', name: {ru:'Виноград',en:'Grape'}, rarity: 'epic', price: 800, drink: 'grape',
       colors: { main:'rgba(150,80,200,0.4)', highlight:'rgba(220,180,255,0.9)', shadow:'rgba(100,40,150,0.35)', edge:'rgba(150,80,200,0.25)', innerGlow:'rgba(190,140,230,0.25)', glow:'rgba(150,80,200,0.4)' },
       theme: { stops:[{h:275,s:50,l:12},{h:280,s:45,l:16},{h:285,s:55,l:20},{h:270,s:60,l:10}], ray:[200,160,255], wave:[180,130,220] },
       obstacles: { ice:'#e1bee7', lemon:'#ce93d8', mint:'#ba68c8', straw:'#9c27b0', berry:'#7b1fa2', lime:'#d1c4e9', cherry:'#4a148c' } },
-    { id: 'blueberry', name: {ru:'Черничный йогурт',en:'Blueberry Yogurt'}, rarity: 'epic', price: 800, drink: 'yogurt',
+    { id: 'blueberry', name: {ru:'Йогурт',en:'Yogurt'}, rarity: 'epic', price: 800, drink: 'yogurt',
       colors: { main:'rgba(100,150,220,0.35)', highlight:'rgba(200,220,255,0.9)', shadow:'rgba(60,100,170,0.3)', edge:'rgba(100,150,220,0.2)', innerGlow:'rgba(160,190,240,0.2)', glow:'rgba(100,150,220,0.35)' },
       theme: { stops:[{h:215,s:45,l:13},{h:220,s:40,l:17},{h:225,s:50,l:21},{h:210,s:55,l:11}], ray:[180,210,255], wave:[150,190,240] },
       obstacles: { ice:'#e3f2fd', lemon:'#90caf9', mint:'#64b5f6', straw:'#42a5f5', berry:'#1e88e5', lime:'#bbdefb', cherry:'#1565c0' } },
-    { id: 'tropical', name: {ru:'Тропический микс',en:'Tropical Mix'}, rarity: 'epic', price: 800, drink: 'tropical',
+    { id: 'tropical', name: {ru:'Тропик',en:'Tropical'}, rarity: 'epic', price: 800, drink: 'tropical',
       colors: { main:'rgba(255,120,80,0.35)', highlight:'rgba(255,220,200,0.9)', shadow:'rgba(200,70,30,0.3)', edge:'rgba(255,120,80,0.2)', innerGlow:'rgba(255,180,150,0.2)', glow:'rgba(255,120,80,0.35)' },
       theme: { stops:[{h:18,s:55,l:13},{h:22,s:50,l:17},{h:26,s:60,l:21},{h:14,s:65,l:11}], ray:[255,200,160], wave:[255,170,120] },
       obstacles: { ice:'#ffccbc', lemon:'#ffab91', mint:'#ff8a65', straw:'#ff5722', berry:'#ff7043', lime:'#ff9e80', cherry:'#d84315' } },
@@ -362,19 +371,19 @@ const SKINS_DATA = [
       colors: { main:'rgba(120,180,80,0.35)', highlight:'rgba(220,255,190,0.9)', shadow:'rgba(70,130,40,0.3)', edge:'rgba(120,180,80,0.2)', innerGlow:'rgba(180,230,150,0.2)', glow:'rgba(120,180,80,0.35)' },
       theme: { stops:[{h:95,s:45,l:12},{h:100,s:40,l:16},{h:105,s:50,l:20},{h:90,s:55,l:10}], ray:[200,255,170], wave:[170,230,130] },
       obstacles: { ice:'#dcedc8', lemon:'#c5e1a5', mint:'#558b2f', straw:'#7cb342', berry:'#aed581', lime:'#9ccc65', cherry:'#33691e' } },
-    { id: 'champagne', name: {ru:'Золотой шампанского',en:'Golden Champagne'}, rarity: 'legendary', price: 1000, drink: 'champagne',
+    { id: 'champagne', name: {ru:'Шампань',en:'Champagne'}, rarity: 'legendary', price: 1000, drink: 'champagne',
       colors: { main:'rgba(255,215,0,0.45)', highlight:'rgba(255,255,200,0.95)', shadow:'rgba(200,160,0,0.35)', edge:'rgba(255,215,0,0.3)', innerGlow:'rgba(255,240,120,0.3)', glow:'rgba(255,215,0,0.45)' },
       theme: { stops:[{h:45,s:60,l:14},{h:48,s:55,l:18},{h:52,s:65,l:22},{h:42,s:70,l:12}], ray:[255,230,100], wave:[255,200,60] },
       obstacles: { ice:'#fffde7', lemon:'#fff59d', mint:'#dce775', straw:'#fbc02d', berry:'#fff176', lime:'#f0f4c3', cherry:'#f9a825' } },
-    { id: 'slime', name: {ru:'Радужный слайм',en:'Rainbow Slime'}, rarity: 'legendary', price: 1000, drink: 'slime',
+    { id: 'slime', name: {ru:'Слайм',en:'Slime'}, rarity: 'legendary', price: 1000, drink: 'slime',
       colors: { main:'rgba(255,100,200,0.35)', highlight:'rgba(255,220,240,0.9)', shadow:'rgba(200,50,150,0.3)', edge:'rgba(255,100,200,0.2)', innerGlow:'rgba(255,180,220,0.25)', glow:'rgba(255,100,200,0.4)' },
       theme: { stops:[{h:320,s:55,l:13},{h:325,s:50,l:17},{h:330,s:60,l:21},{h:315,s:65,l:11}], ray:[255,180,220], wave:[255,150,190] },
       obstacles: { ice:'#f8bbd0', lemon:'#f48fb1', mint:'#ec407a', straw:'#e91e63', berry:'#d81b60', lime:'#f06292', cherry:'#ad1457' } },
-    { id: 'galaxy', name: {ru:'Галактический коктейль',en:'Galaxy Cocktail'}, rarity: 'legendary', price: 1000, drink: 'galaxy',
+    { id: 'galaxy', name: {ru:'Галактика',en:'Galaxy'}, rarity: 'legendary', price: 1000, drink: 'galaxy',
       colors: { main:'rgba(100,0,150,0.45)', highlight:'rgba(200,150,255,0.9)', shadow:'rgba(60,0,100,0.4)', edge:'rgba(100,0,150,0.3)', innerGlow:'rgba(150,80,200,0.3)', glow:'rgba(150,100,255,0.45)' },
       theme: { stops:[{h:270,s:55,l:11},{h:275,s:50,l:15},{h:280,s:60,l:19},{h:265,s:65,l:9}], ray:[180,120,255], wave:[150,100,220] },
       obstacles: { ice:'#e1bee7', lemon:'#b39ddb', mint:'#9575cd', straw:'#7e57c2', berry:'#5e35b1', lime:'#d1c4e9', cherry:'#4527a0' } },
-    { id: 'diamond', name: {ru:'Алмазная вода',en:'Diamond Water'}, rarity: 'legendary', price: 1000, drink: 'diamond',
+    { id: 'diamond', name: {ru:'Алмаз',en:'Diamond'}, rarity: 'legendary', price: 1000, drink: 'diamond',
       colors: { main:'rgba(200,240,255,0.45)', highlight:'rgba(255,255,255,0.95)', shadow:'rgba(150,200,220,0.35)', edge:'rgba(200,240,255,0.3)', innerGlow:'rgba(230,250,255,0.35)', glow:'rgba(200,240,255,0.45)' },
       theme: { stops:[{h:195,s:55,l:14},{h:200,s:50,l:18},{h:205,s:60,l:22},{h:190,s:65,l:12}], ray:[200,240,255], wave:[180,220,240] },
       obstacles: { ice:'#e0f7fa', lemon:'#b2ebf2', mint:'#80deea', straw:'#4dd0e1', berry:'#26c6da', lime:'#b2dfdb', cherry:'#00acc1' } }
@@ -1291,71 +1300,95 @@ const SkinManager = {
         refreshActions();
     },
     renderCases(container) {
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = '<div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px;"><div style="width:48%;display:flex;flex-direction:column;align-items:center;"><div style="font-size:10px;font-weight:800;color:#ffd700;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">' + t('caseSkin') + '</div><div class="case-box" id="case-skin-box"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><div style="width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.5), rgba(50,100,200,0.3));box-shadow:0 0 12px rgba(100,200,255,0.3), inset 0 0 8px rgba(255,255,255,0.15);"></div></div></div><button class="btn btn-primary" id="btn-case-skin" style="margin-top:6px;font-size:10px;padding:5px 8px;min-height:32px;width:100%;"><span class="coin-icon coin-tiny"></span> 500</button></div><div style="width:48%;display:flex;flex-direction:column;align-items:center;"><div style="font-size:10px;font-weight:800;color:#ffd700;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">' + t('caseTrail') + '</div><div class="case-box" id="case-trail-box"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><div style="width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);box-shadow:0 0 12px rgba(255,215,0,0.3), inset 0 0 8px rgba(255,255,255,0.15);"></div></div></div><button class="btn btn-primary" id="btn-case-trail" style="margin-top:6px;font-size:10px;padding:5px 8px;min-height:32px;width:100%;"><span class="coin-icon coin-tiny"></span> 500</button></div></div><div id="case-result" style="min-height:80px;"></div>';
-        container.appendChild(wrapper);
+        const wrap = document.createElement('div'); wrap.className = 'shop-scroll';
+        const grid = document.createElement('div'); grid.className = 'levels-grid'; grid.id = 'cases-grid';
+        grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+        grid.style.gap = '10px';
+        grid.style.marginBottom = '8px';
+
         const self = this;
-        document.getElementById('btn-case-skin').addEventListener('click', function() { self.openCase('skin'); });
-        document.getElementById('btn-case-trail').addEventListener('click', function() { self.openCase('trail'); });
+
+        // Skin case card
+        const skinCard = document.createElement('div');
+        skinCard.className = 'case-card';
+        skinCard.style.background = 'linear-gradient(145deg, rgba(80,170,255,0.18), rgba(30,80,180,0.12))';
+        skinCard.style.borderColor = 'rgba(100,200,255,0.35)';
+        skinCard.innerHTML = '<div class="case-shine"></div><div class="case-bottom"></div><div style="font-size:12px;font-weight:800;color:#64c8ff;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1;">' + t('caseSkin') + '</div><div style="width:60px;height:60px;border-radius:50%;margin:0 auto 12px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.55), rgba(50,100,200,0.35));box-shadow:0 0 20px rgba(100,200,255,0.35), inset 0 0 12px rgba(255,255,255,0.2);position:relative;z-index:1;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.75);filter:blur(0.5px);"></div></div><button class="btn btn-primary" id="btn-case-skin" style="font-size:14px;padding:8px 10px;min-height:42px;width:92%;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:5px;"><span class="coin-icon" style="width:15px;height:15px;"></span> 500</button>';
+        skinCard.querySelector('#btn-case-skin').addEventListener('click', function(e) { e.stopPropagation(); self.openCase('skin'); });
+        grid.appendChild(skinCard);
+
+        // Trail case card
+        const trailCard = document.createElement('div');
+        trailCard.className = 'case-card';
+        trailCard.style.background = 'linear-gradient(145deg, rgba(255,200,50,0.15), rgba(180,140,0,0.1))';
+        trailCard.style.borderColor = 'rgba(255,215,0,0.4)';
+        trailCard.innerHTML = '<div class="case-shine"></div><div class="case-bottom"></div><div style="font-size:12px;font-weight:800;color:#ffd700;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1;">' + t('caseTrail') + '</div><div style="width:60px;height:60px;border-radius:50%;margin:0 auto 12px;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);box-shadow:0 0 20px rgba(255,215,0,0.35), inset 0 0 12px rgba(255,255,255,0.2);position:relative;z-index:1;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.75);filter:blur(0.5px);"></div></div><button class="btn btn-primary" id="btn-case-trail" style="font-size:14px;padding:8px 10px;min-height:42px;width:92%;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:5px;"><span class="coin-icon" style="width:15px;height:15px;"></span> 500</button>';
+        trailCard.querySelector('#btn-case-trail').addEventListener('click', function(e) { e.stopPropagation(); self.openCase('trail'); });
+        grid.appendChild(trailCard);
+
+        wrap.appendChild(grid);
+        const resultDiv = document.createElement('div');
+        resultDiv.id = 'case-result';
+        resultDiv.style.minHeight = '0';
+        wrap.appendChild(resultDiv);
+        container.appendChild(wrap);
     },
     openCase(type) {
         if (Game.coins < 500) {
             const res = document.getElementById('case-result');
-            res.innerHTML = '<div style="color:#ff4444;font-weight:700;">' + t('insufficient') + '</div>';
+            res.innerHTML = '<div style="color:#ff4444;font-weight:700;text-align:center;padding:12px;">' + t('insufficient') + '</div>';
             return;
         }
         Game.coins -= 500; Game.updateHUD(); Game.save();
         const pool = type === 'skin' ? SKINS_DATA.filter(function(s) { return !SkinManager.isSkinUnlocked(s.id); }) : TRAILS_DATA.filter(function(t) { return !SkinManager.isTrailUnlocked(t.id); });
         if (pool.length === 0) {
             const res = document.getElementById('case-result');
-            res.innerHTML = '<div style="color:#4caf50;font-weight:700;">Все предметы уже получены!</div>';
+            res.innerHTML = '<div style="color:#4caf50;font-weight:700;text-align:center;padding:12px;">Все предметы уже получены!</div>';
             Game.coins += 500; Game.updateHUD(); Game.save(); return;
         }
-        const boxId = type === 'skin' ? 'case-skin-box' : 'case-trail-box';
-        const box = document.getElementById(boxId);
-        if (box) box.classList.add('open');
-
         const res = document.getElementById('case-result');
-        res.innerHTML = '<div style="position:relative;width:100%;height:140px;overflow:hidden;margin:20px 0;background:rgba(0,0,0,0.25);border-radius:16px;border:1px solid rgba(255,255,255,0.1);"><div class="case-selector-modern"></div><div class="case-glow-modern"></div><div class="case-strip-modern" id="case-strip"></div></div>';
+        res.innerHTML = '<div style="position:relative;width:100%;height:150px;overflow:hidden;margin:10px 0;background:rgba(0,0,0,0.3);border-radius:16px;border:1px solid rgba(255,255,255,0.1);" id="case-anim-container"><div class="case-selector-modern"></div><div class="case-glow-modern"></div><div class="case-strip-modern" id="case-strip"></div></div>';
         const strip = document.getElementById('case-strip');
-        const items = []; 
+        const items = [];
         const winner = pool[Math.floor(Math.random() * pool.length)];
         for (let i = 0; i < 40; i++) { const item = pool[Math.floor(Math.random() * pool.length)]; items.push(item); }
         items[32] = winner;
+        const itemW = 106;
         items.forEach(function(item, idx) {
-            const div = document.createElement('div'); div.className = 'case-item-modern';
+            const div = document.createElement('div');
+            div.className = 'case-item-modern';
             const isSkin = type === 'skin';
             const isWinner = idx === 32;
-            const color = isSkin ? item.colors.main : (item.color === 'rainbow' ? '#f0f' : item.color);
-            div.style.borderColor = isWinner ? 'rgba(255,215,0,0.6)' : 'rgba(255,255,255,0.1)';
-            div.style.background = isWinner ? 'rgba(255,215,0,0.08)' : 'rgba(255,255,255,0.04)';
-            div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:' + (isSkin ? 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')' : (item.color === 'rainbow' ? 'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)' : item.color)) + ';margin-bottom:4px;box-shadow:0 0 12px ' + (isSkin ? item.colors.glow.replace(')', ',0.3)') : (item.color === 'rainbow' ? 'rgba(255,0,255,0.3)' : item.color.replace(')', ',0.3)'))) + ';"></div><div style="font-size:9px;color:rgba(255,255,255,0.6);font-weight:' + (isWinner ? '700' : '400') + ';">' + item.name[currentLang] + '</div>';
+            const bg = isSkin ? 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')' : (item.color === 'rainbow' ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : item.color);
+            const glow = isSkin ? item.colors.glow.replace(')', ',0.35)') : (item.color === 'rainbow' ? 'rgba(255,0,255,0.35)' : item.color.replace(')', ',0.35)'));
+            div.style.cssText = 'width:90px;height:90px;border-radius:16px;background:' + (isWinner ? 'rgba(255,215,0,0.1)' : 'rgba(255,255,255,0.05)') + ';border:2px solid ' + (isWinner ? 'rgba(255,215,0,0.6)' : 'rgba(255,255,255,0.1)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 0 20px rgba(255,255,255,0.03);';
+            div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:' + bg + ';box-shadow:0 0 14px ' + glow + ';position:relative;margin-bottom:6px;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:' + (isWinner ? '700' : '500') + ';text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:78px;">' + item.name[currentLang] + '</div>';
             strip.appendChild(div);
         });
-        const containerW = res.clientWidth || 320;
-        const itemW = 106;
-        const centerOffset = containerW / 2 - itemW / 2;
+        const container = document.getElementById('case-anim-container');
+        const containerW = container.clientWidth || 320;
+        const centerOffset = containerW / 2 - 45;
         const target = -(32 * itemW) + centerOffset;
-        let pos = 0;
+        let pos = containerW + 50;
         let velocity = 0;
-        const maxVel = 50;
+        const maxVel = 42;
         let phase = 'accelerating';
         let holdTimer = 0;
 
         const animate = function() {
             if (phase === 'accelerating') {
-                velocity += 0.9;
-                if (velocity >= maxVel) { velocity = maxVel; phase = 'cruising'; holdTimer = 60; }
+                velocity += 1.0;
+                if (velocity >= maxVel) { velocity = maxVel; phase = 'cruising'; holdTimer = 50; }
             } else if (phase === 'cruising') {
                 holdTimer--;
                 if (holdTimer <= 0) phase = 'braking';
             } else if (phase === 'braking') {
-                velocity *= 0.96;
-                if (velocity < 8) { velocity = 8; phase = 'snap'; }
+                velocity *= 0.965;
+                if (velocity < 5) { velocity = 5; phase = 'snap'; }
             } else if (phase === 'snap') {
                 const diff = target - pos;
-                velocity = diff * 0.06;
-                if (Math.abs(diff) < 0.5) { pos = target; velocity = 0; phase = 'done'; }
+                velocity = diff * 0.07;
+                if (Math.abs(diff) < 0.5 && Math.abs(velocity) < 0.5) { pos = target; velocity = 0; phase = 'done'; }
             }
             pos += velocity;
             strip.style.transform = 'translate(' + pos + 'px, -50%)';
@@ -1369,17 +1402,20 @@ const SkinManager = {
                         ? 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')' 
                         : (isRainbow ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : winner.color);
                     const glowColor = type === 'skin' ? winner.colors.glow.replace(')', ',0.5)') : (isRainbow ? 'rgba(255,0,255,0.5)' : winner.color.replace(')', ',0.5)'));
-                    res.innerHTML = '<div id="case-reveal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.4s ease;"><div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"></div><div style="position:relative;z-index:1;text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);"><div style="font-size:22px;font-weight:900;color:#ffd700;margin-bottom:16px;letter-spacing:3px;text-transform:uppercase;">' + t('caseResult') + '</div><div style="width:110px;height:110px;border-radius:50%;margin:0 auto 16px;background:' + bgStyle + ';box-shadow:0 0 40px ' + glowColor + ', 0 0 80px ' + glowColor.replace('0.5)', '0.2)') + ', inset 0 0 30px rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);position:relative;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;">' + winner.name[currentLang] + '</div><div style="font-size:14px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:4px;font-weight:800;margin-bottom:24px;">' + winner.rarity + '</div><button class="btn btn-primary" id="btn-claim-case" style="min-width:160px;">' + (type === 'skin' ? t('select') : t('select')) + '</button></div></div>';
+                    res.innerHTML = '<div id="case-reveal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.4s ease;"><div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"></div><div style="position:relative;z-index:1;text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);"><div style="font-size:22px;font-weight:900;color:#ffd700;margin-bottom:16px;letter-spacing:3px;text-transform:uppercase;">' + t('caseResult') + '</div><div style="width:110px;height:110px;border-radius:50%;margin:0 auto 16px;background:' + bgStyle + ';box-shadow:0 0 40px ' + glowColor + ', 0 0 80px ' + glowColor.replace('0.5)', '0.2)') + ', inset 0 0 30px rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);position:relative;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;">' + winner.name[currentLang] + '</div><div style="font-size:14px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:4px;font-weight:800;margin-bottom:24px;">' + winner.rarity + '</div><button class="btn btn-primary" id="btn-claim-case" style="min-width:160px;">' + t('select') + '</button></div></div>';
                     document.getElementById('btn-claim-case').addEventListener('click', function() {
-                        document.getElementById('case-reveal-overlay').style.animation = 'fadeOut 0.3s ease forwards';
-                        setTimeout(function() {
-                            res.innerHTML = '';
-                            if (box) box.classList.remove('open');
-                        }, 300);
+                        const overlay = document.getElementById('case-reveal-overlay');
+                        if (overlay) {
+                            overlay.style.animation = 'fadeOut 0.3s ease forwards';
+                            setTimeout(function() {
+                                res.innerHTML = '';
+                                SkinManager.renderShop('cases');
+                            }, 300);
+                        }
                         if (AudioEngine.ctx) AudioEngine.play('combo');
                     });
                     if (AudioEngine.ctx) AudioEngine.play('combo');
-                }, 400);
+                }, 500);
             }
         };
         animate();
@@ -1393,6 +1429,7 @@ const Game = {
     score: 0, bestScore: 0, coins: 0,
     settings: { sound: true, vibration: true, particles: true },
     currentSkin: 'water', currentTrail: 'default',
+    promoUsed: false,
     gameMode: 'endless', currentLevel: 0, levelProgress: [], collectedHearts: 0,
     paused: false, speedMult: 1, showedHeartMessage: false,
     floatingTexts: [], heartBlockTimer: 0,
@@ -1632,6 +1669,7 @@ const Game = {
             this.currentTrail = s.trail || 'default';
             this.settings = Object.assign({}, this.settings, s.settings || {});
             this.levelProgress = s.levels || [];
+            this.promoUsed = s.promo || false;
             currentLang = s.lang || 'ru';
         } catch (e) {}
     },
@@ -1639,7 +1677,8 @@ const Game = {
     save() {
         localStorage.setItem('bubble_save_v2', JSON.stringify({
             best: this.bestScore, coins: this.coins, skin: this.currentSkin, trail: this.currentTrail,
-            settings: this.settings, levels: this.levelProgress, lang: currentLang, version: 2
+            settings: this.settings, levels: this.levelProgress, lang: currentLang, version: 2,
+            promo: this.promoUsed
         }));
     },
 
@@ -1773,6 +1812,38 @@ document.addEventListener('DOMContentLoaded', function() {
             updateLanguage(btn.getAttribute('data-lang'));
             Game.save();
         });
+    });
+    document.getElementById('btn-promo').addEventListener('click', function() {
+        const input = document.getElementById('promo-input');
+        const msg = document.getElementById('promo-message');
+        const code = input.value.trim().toUpperCase();
+        if (!/^[A-Z0-9]+$/.test(code)) {
+            msg.textContent = t('promoInvalid');
+            msg.style.color = '#ff4444';
+            return;
+        }
+        if (code === 'CODE') {
+            if (Game.promoUsed) {
+                msg.textContent = t('promoUsed');
+                msg.style.color = '#ff9800';
+            } else {
+                Game.coins += 10000;
+                Game.promoUsed = true;
+                Game.save();
+                Game.updateHUD();
+                msg.textContent = t('promoSuccess');
+                msg.style.color = '#4caf50';
+                input.value = '';
+                if (AudioEngine.ctx) AudioEngine.play('combo');
+            }
+        } else {
+            msg.textContent = t('promoInvalid');
+            msg.style.color = '#ff4444';
+        }
+    });
+    document.getElementById('promo-input').addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        document.getElementById('promo-message').textContent = '';
     });
 
     function updateSettingsUI() {
