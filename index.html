@@ -64,8 +64,8 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .stat { text-align:center; }
 .stat-label { display:block; font-size:10px; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:4px; }
 .stat-value { font-size:24px; font-weight:900; color:#fff; }
-.levels-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:16px; }
-.level-card { aspect-ratio:1.8; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; pointer-events:auto; }
+.levels-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:16px; }
+.level-card { aspect-ratio:2.2; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; pointer-events:auto; }
 .level-card.completed { border-color:#4caf50; background:rgba(76,175,80,0.08); }
 .level-card.locked { opacity:0.35; pointer-events:none; }
 .level-card:active { transform:scale(0.95); }
@@ -78,7 +78,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .skins-glass { max-height:min(82vh, calc(100vh - var(--safe-top) - var(--safe-bottom) - 40px)); overflow-y:auto; padding:clamp(16px, 4vmin, 28px) clamp(12px, 3.5vmin, 20px); }
 .screen-title { font-size:24px; font-weight:900; letter-spacing:3px; margin-bottom:8px; }
 .coins-display { font-size:18px; color:#ffd700; margin-bottom:16px; font-weight:700; }
-.skins-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(8px, 2.5vmin, 14px); margin-bottom:clamp(10px, 3vmin, 18px); }
+.skins-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:clamp(10px, 3vmin, 18px); }
 .skin-card { aspect-ratio:1; border-radius:var(--btn-radius); background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; padding:clamp(4px, 1.5vmin, 10px); pointer-events:auto; min-height:70px; }
 .skin-card.active { border-color:#ff8c00; background:rgba(255,140,0,0.08); }
 .skin-card.locked { opacity:0.35; }
@@ -114,30 +114,29 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .skins-glass::-webkit-scrollbar{display:none} .skins-glass{-ms-overflow-style:none;scrollbar-width:none; touch-action:pan-y !important;}
 .levels-grid{touch-action:pan-y !important;}
 
-.shop-scroll { max-height:min(45vh, 320px); overflow-y:scroll !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:10px; border-radius:var(--btn-radius); background:rgba(0,0,0,0.15); padding:10px; -webkit-overflow-scrolling:touch; min-height:120px; position:relative; z-index:1; }
+.shop-scroll { max-height:min(48vh, 340px); overflow-y:scroll !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:10px; border-radius:var(--btn-radius); background:rgba(0,0,0,0.15); padding:10px; -webkit-overflow-scrolling:touch; min-height:120px; position:relative; z-index:1; }
 .shop-scroll::-webkit-scrollbar { display:none; }
 #shop-content { width:100%; overflow:visible; }
-.levels-grid { touch-action:pan-y !important; -webkit-overflow-scrolling:touch; overflow-y:auto; max-height:min(55vh, 400px); }
+.levels-grid { touch-action:pan-y !important; -webkit-overflow-scrolling:touch; }
 .shop-actions { display:flex; gap:8px; margin-top:8px; }
 .shop-actions .btn { margin:0; min-height:44px; }
 .shop-actions .btn:disabled { opacity:0.4; cursor:not-allowed; }
-.skin-card { position:relative; pointer-events:auto; cursor:pointer; transition:all 0.2s ease; }
-.skin-card .skin-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:4px; }
-.skin-card .skin-preview-wrap .skin-shell { width:90%; height:90%; border-radius:50%; position:relative; }
+.skin-card { position:relative; pointer-events:auto; cursor:pointer; transition:all 0.2s ease; padding:6px 4px 4px; min-height:unset; }
+.skin-card .skin-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:3px; }
+.skin-card .skin-preview-wrap .skin-shell { width:68%; height:68%; border-radius:50%; position:relative; }
 .skin-card .skin-preview-wrap .skin-shell::after { content:''; position:absolute; top:15%; left:18%; width:22%; height:22%; border-radius:50%; background:rgba(255,255,255,0.7); filter:blur(0.5px); }
-.skin-card .skin-name { font-size:9px; color:rgba(255,255,255,0.65); text-align:center; line-height:1.2; }
-.skin-card .skin-price { font-size:9px; color:#ffd700; margin-top:2px; text-align:center; }
+.skin-card .skin-name { font-size:9px; color:rgba(255,255,255,0.65); text-align:center; line-height:1.2; margin-top:1px; }
+.skin-card .skin-price { font-size:9px; color:#ffd700; margin-top:1px; text-align:center; }
 .skin-card.active { border-color:#ff8c00; background:rgba(255,140,0,0.08); }
 .skin-card.locked { opacity:0.45; }
 .skin-card.affordable { opacity:1; border-color:rgba(255,215,0,0.4); box-shadow:0 0 12px rgba(255,215,0,0.1); }
-.trail-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:4px; background:rgba(0,0,0,0.2); overflow:hidden; }
-.case-box { width:100%; height:150px; border-radius:20px; background:linear-gradient(135deg, rgba(100,200,255,0.08), rgba(50,100,200,0.12)); border:1.5px solid rgba(255,255,255,0.12); display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:14px; position:relative; overflow:hidden; box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04); backdrop-filter:blur(8px); }
-.case-box::before { content:''; position:absolute; inset:3px; border-radius:17px; border:1px solid rgba(255,255,255,0.06); pointer-events:none; }
-.case-box::after { content:''; position:absolute; top:0; left:20%; width:60%; height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); }
-.case-box .case-lid { position:absolute; top:0; left:0; width:100%; height:50%; background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03)); border-bottom:1.5px solid rgba(255,255,255,0.15); transform-origin:top; transition:transform 0.9s cubic-bezier(0.22,1,0.36,1); box-shadow:0 4px 16px rgba(0,0,0,0.3); z-index:3; }
-.case-box .case-lid::after { content:''; position:absolute; top:60%; left:50%; transform:translate(-50%,-50%); width:24px; height:24px; border-radius:50%; background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(100,200,255,0.5), rgba(50,100,200,0.3)); box-shadow:0 0 12px rgba(100,200,255,0.4); }
-.case-box.open .case-lid { transform:rotateX(-130deg); opacity:0.2; }
-.case-box .case-glow-ring { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:60px; height:60px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.1); box-shadow:0 0 24px rgba(100,200,255,0.15), inset 0 0 20px rgba(100,200,255,0.05); background:radial-gradient(circle, rgba(100,200,255,0.05), transparent 70%); }
+.trail-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:3px; background:rgba(0,0,0,0.2); overflow:hidden; }
+.case-box { width:100%; height:120px; border-radius:18px; background:linear-gradient(145deg, rgba(255,235,100,0.15), rgba(200,180,0,0.1)); border:2px solid rgba(255,215,0,0.25); display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:10px; position:relative; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); }
+.case-box::before { content:''; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:40%; height:3px; border-radius:2px; background:linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent); }
+.case-box .case-lid { position:absolute; top:0; left:0; width:100%; height:45%; background:linear-gradient(180deg, rgba(255,220,80,0.35), rgba(180,150,20,0.15)); border-bottom:2px solid rgba(255,200,60,0.4); transform-origin:top; transition:transform 0.8s cubic-bezier(0.22,1,0.36,1); box-shadow:0 4px 12px rgba(0,0,0,0.2); z-index:3; }
+.case-box .case-lid::after { content:''; position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:28px; height:14px; border-radius:0 0 14px 14px; background:linear-gradient(180deg, rgba(255,200,80,0.6), rgba(180,140,20,0.4)); border:1px solid rgba(255,180,40,0.5); box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.case-box.open .case-lid { transform:rotateX(-120deg); opacity:0.15; }
+.case-box .case-glow-ring { position:absolute; top:55%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; border-radius:50%; border:1.5px solid rgba(255,215,0,0.2); box-shadow:0 0 16px rgba(255,215,0,0.15), inset 0 0 12px rgba(255,215,0,0.08); background:radial-gradient(circle, rgba(255,215,0,0.08), transparent 70%); }
 .case-strip-modern { display:flex; gap:16px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
 .case-item-modern { width:90px; height:90px; border-radius:18px; background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 0 16px rgba(255,255,255,0.02); backdrop-filter:blur(4px); }
 .case-selector-modern { position:absolute; top:0; left:50%; transform:translateX(-50%); width:2px; height:100%; background:linear-gradient(180deg,transparent,rgba(255,255,255,0.6),transparent); z-index:2; box-shadow:0 0 12px rgba(255,255,255,0.3); }
@@ -213,7 +212,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                 </div>
             </div>
             <div id="levels-screen" class="screen">
-                <div class="menu-glass skins-glass">
+                <div class="menu-glass" style="padding:16px;">
                     <h2 class="screen-title" data-i18n="selectLevel">ВЫБЕРИ УРОВЕНЬ</h2>
                     <div class="levels-grid" id="levels-grid"></div>
                     <button class="btn btn-back" id="btn-levels-back" data-i18n="back">← НАЗАД</button>
@@ -1172,9 +1171,9 @@ const SkinManager = {
             } else if (unlocked) {
                 html = '<button class="btn btn-primary" id="btn-skin-action" style="margin:0;">' + t('select') + '</button>';
             } else if (affordable) {
-                html = '<button class="btn btn-primary" id="btn-skin-action" style="margin:0;"><span class="coin-icon"></span> ' + skin.price + ' — ' + t('unlock') + '</button>';
+                html = '<button class="btn btn-primary" id="btn-skin-action" style="margin:0;"><span class="coin-icon"></span> ' + skin.price + '</button>';
             } else {
-                html = '<button class="btn btn-secondary" disabled style="opacity:0.35;margin:0;"><span class="coin-icon"></span> ' + skin.price + ' — ' + t('unlock') + '</button>';
+                html = '<button class="btn btn-secondary" disabled style="opacity:0.35;margin:0;"><span class="coin-icon"></span> ' + skin.price + '</button>';
             }
             actions.innerHTML = html;
             const btn = document.getElementById('btn-skin-action');
@@ -1238,9 +1237,9 @@ const SkinManager = {
             } else if (unlocked) {
                 html = '<button class="btn btn-primary" id="btn-trail-action" style="margin:0;">' + t('select') + '</button>';
             } else if (affordable) {
-                html = '<button class="btn btn-primary" id="btn-trail-action" style="margin:0;"><span class="coin-icon"></span> ' + trail.price + ' — ' + t('unlock') + '</button>';
+                html = '<button class="btn btn-primary" id="btn-trail-action" style="margin:0;"><span class="coin-icon"></span> ' + trail.price + '</button>';
             } else {
-                html = '<button class="btn btn-secondary" disabled style="opacity:0.35;margin:0;"><span class="coin-icon"></span> ' + trail.price + ' — ' + t('unlock') + '</button>';
+                html = '<button class="btn btn-secondary" disabled style="opacity:0.35;margin:0;"><span class="coin-icon"></span> ' + trail.price + '</button>';
             }
             actions.innerHTML = html;
             const btn = document.getElementById('btn-trail-action');
@@ -1289,7 +1288,7 @@ const SkinManager = {
     },
     renderCases(container) {
         const wrapper = document.createElement('div');
-        wrapper.innerHTML = '<div style="display:flex;gap:12px;justify-content:center;margin-bottom:16px;"><div class="case-box" id="case-skin-box" style="width:48%;"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;text-align:center;"><div style="font-size:12px;font-weight:900;color:#ffd700;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;">' + t('caseSkin') + '</div><div style="width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.5), rgba(50,100,200,0.3));margin:0 auto 8px;box-shadow:0 0 16px rgba(100,200,255,0.35), inset 0 0 12px rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.15);"></div><button class="btn btn-primary" id="btn-case-skin" style="margin:0;font-size:11px;padding:7px 10px;min-height:36px;"><span class="coin-icon"></span> 500</button></div></div><div class="case-box" id="case-trail-box" style="width:48%;"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;text-align:center;"><div style="font-size:12px;font-weight:900;color:#ffd700;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;">' + t('caseTrail') + '</div><div style="width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);margin:0 auto 8px;box-shadow:0 0 16px rgba(255,215,0,0.35), inset 0 0 12px rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.15);"></div><button class="btn btn-primary" id="btn-case-trail" style="margin:0;font-size:11px;padding:7px 10px;min-height:36px;"><span class="coin-icon"></span> 500</button></div></div></div><div id="case-result" style="min-height:80px;"></div>';
+        wrapper.innerHTML = '<div style="display:flex;gap:12px;justify-content:center;margin-bottom:12px;align-items:flex-start;"><div style="width:48%;text-align:center;"><div style="font-size:11px;font-weight:700;color:#ffd700;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">' + t('caseSkin') + '</div><div class="case-box" id="case-skin-box"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;height:100%;"><div style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.5), rgba(50,100,200,0.3));box-shadow:0 0 14px rgba(100,200,255,0.3), inset 0 0 10px rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.12);"></div></div></div><button class="btn btn-primary" id="btn-case-skin" style="margin:6px 0 0;font-size:11px;padding:6px 10px;min-height:36px;width:100%;"><span class="coin-icon"></span> 500</button></div><div style="width:48%;text-align:center;"><div style="font-size:11px;font-weight:700;color:#ffd700;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;">' + t('caseTrail') + '</div><div class="case-box" id="case-trail-box"><div class="case-lid"></div><div class="case-glow-ring"></div><div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;height:100%;"><div style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);box-shadow:0 0 14px rgba(255,215,0,0.3), inset 0 0 10px rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.12);"></div></div></div><button class="btn btn-primary" id="btn-case-trail" style="margin:6px 0 0;font-size:11px;padding:6px 10px;min-height:36px;width:100%;"><span class="coin-icon"></span> 500</button></div></div><div id="case-result" style="min-height:80px;"></div>';
         container.appendChild(wrapper);
         const self = this;
         document.getElementById('btn-case-skin').addEventListener('click', function() { self.openCase('skin'); });
