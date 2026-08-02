@@ -31,7 +31,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 @keyframes glassIn { from{opacity:0;transform:translateY(30px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
 .game-title { font-size:var(--title-size); font-weight:900; letter-spacing:clamp(3px, 1.2vmin, 6px); background:linear-gradient(135deg,#ffd700,#ff8c00,#ff4500); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:clamp(4px, 1.5vmin, 8px); filter:drop-shadow(0 2px 8px rgba(255,140,0,0.3)); }
 .game-subtitle { font-size:clamp(11px, 3vmin, 15px); color:rgba(255,255,255,0.45); letter-spacing:clamp(4px, 1.8vmin, 8px); margin-bottom:clamp(16px, 6vmin, 32px); text-transform:uppercase; }
-.menu-bubble-demo { width:clamp(60px, 18vmin, 100px); height:clamp(60px, 18vmin, 100px); margin:0 auto clamp(14px, 5vmin, 32px); border-radius:50%; background:radial-gradient(circle at 30% 30%,rgba(255,255,255,0.9),rgba(100,200,255,0.4),rgba(50,100,200,0.2)); box-shadow:0 0 24px rgba(100,200,255,0.25),inset 0 0 24px rgba(255,255,255,0.15); animation:bubbleFloat 3s ease-in-out infinite; position:relative; }
+.menu-bubble-demo { width:clamp(60px, 18vmin, 100px); height:clamp(60px, 18vmin, 100px); margin:0 auto clamp(14px, 5vmin, 32px); border-radius:50%; background:radial-gradient(circle at 30% 30%,rgba(255,255,255,0.9),rgba(100,200,255,0.4),rgba(50,100,200,0.2)); box-shadow:0 0 24px rgba(100,200,255,0.25),inset 0 0 24px rgba(255,255,255,0.15); animation:bubbleFloat 3s ease-in-out infinite; position:relative; transition:background 0.4s ease, box-shadow 0.4s ease; }
 .menu-bubble-demo::after { content:''; position:absolute; top:18%; left:22%; width:22%; height:22%; border-radius:50%; background:rgba(255,255,255,0.8); filter:blur(1px); }
 @keyframes bubbleFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.05)} }
 .best-score { margin-top:22px; font-size:14px; color:rgba(255,255,255,0.45); letter-spacing:1px; }
@@ -75,10 +75,10 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .shop-tabs { display:flex; gap:8px; margin-bottom:16px; justify-content:center; }
 .shop-tab { padding:8px 16px; border-radius:20px; border:none; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.5); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; pointer-events:auto; }
 .shop-tab.active { background:linear-gradient(135deg,#ff8c00,#ff4500); color:#fff; }
-.skins-glass { max-height:min(82vh, calc(100vh - var(--safe-top) - var(--safe-bottom) - 40px)); overflow-y:auto; padding:clamp(16px, 4vmin, 28px) clamp(12px, 3.5vmin, 20px); }
+.skins-glass { height:min(58vh, 420px); overflow-y:auto; padding:clamp(16px, 4vmin, 28px) clamp(12px, 3.5vmin, 20px); }
 .screen-title { font-size:24px; font-weight:900; letter-spacing:3px; margin-bottom:8px; }
 .coins-display { font-size:18px; color:#ffd700; margin-bottom:16px; font-weight:700; }
-.skins-grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:3px; width:100%; box-sizing:border-box; }
+.skins-grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:3px; width:100%; box-sizing:border-box; align-content:flex-start; }
 .skin-card { position:relative; pointer-events:auto; cursor:pointer; transition:all 0.15s ease; padding:3px 1px 2px; min-height:unset; border-radius:8px; overflow:hidden; box-sizing:border-box; aspect-ratio:auto; background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .skin-card.active { border-color:#ff8c00; background:rgba(255,140,0,0.08); }
 .skin-card.locked { opacity:0.4; }
@@ -117,10 +117,10 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .skins-glass::-webkit-scrollbar{display:none} .skins-glass{-ms-overflow-style:none;scrollbar-width:none; touch-action:pan-y !important;}
 .levels-grid{touch-action:pan-y !important;}
 
-.shop-scroll { max-height:min(52vh, 380px); overflow:hidden auto !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:8px; border-radius:12px; background:rgba(0,0,0,0.08); padding:4px; -webkit-overflow-scrolling:touch; width:100%; box-sizing:border-box; }
+.shop-scroll { height:min(58vh, 420px); overflow:hidden auto !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:8px; border-radius:12px; background:rgba(0,0,0,0.08); padding:4px; -webkit-overflow-scrolling:touch; width:100%; box-sizing:border-box; }
 .shop-scroll::-webkit-scrollbar { display:none; }
 #shop-content { width:100%; overflow:visible; box-sizing:border-box; }
-.levels-grid { touch-action:pan-y !important; -webkit-overflow-scrolling:touch; display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:12px; }
+.levels-grid { touch-action:pan-y !important; -webkit-overflow-scrolling:touch; display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:12px; align-content:center; min-height:320px; }
 .shop-actions { display:flex; gap:8px; margin-top:8px; }
 .shop-actions .btn { margin:0; min-height:44px; }
 .shop-actions .btn:disabled { opacity:0.4; cursor:not-allowed; }
@@ -223,7 +223,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                 </div>
             </div>
             <div id="shop-screen" class="screen">
-                <div class="menu-glass" style="padding-bottom:12px;">
+                <div class="menu-glass">
                     <h2 class="screen-title" data-i18n="shop">МАГАЗИН</h2>
                     <div class="coins-display"><span class="coin-icon"></span> <span id="shop-coins">0</span></div>
                     <div class="shop-tabs">
@@ -1154,7 +1154,10 @@ const SkinManager = {
         const el = document.getElementById('menu-bubble');
         if (el) {
             el.style.background = 'radial-gradient(circle at 30% 30%, ' + c.highlight + ', ' + c.main + ', ' + c.shadow + ')';
-            el.style.boxShadow = '0 0 16px ' + c.glow.replace(')', ',0.55)') + ', 0 0 32px ' + c.glow.replace(')', ',0.2)') + ', inset 0 0 20px rgba(255,255,255,0.12)';
+            const glow60 = c.glow.replace(/[\d.]+\)$/, '0.6)');
+            const glow30 = c.glow.replace(/[\d.]+\)$/, '0.3)');
+            const glow15 = c.glow.replace(/[\d.]+\)$/, '0.15)');
+            el.style.boxShadow = '0 0 20px ' + glow60 + ', 0 0 40px ' + glow30 + ', 0 0 60px ' + glow15 + ', inset 0 0 24px rgba(255,255,255,0.15)';
         }
     },
     renderShop(tab) {
@@ -1360,7 +1363,7 @@ const SkinManager = {
             const isSkin = type === 'skin';
             const isWinner = idx === 32;
             const bg = isSkin ? 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')' : (item.color === 'rainbow' ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : item.color);
-            const glow = isSkin ? item.colors.glow.replace(')', ',0.35)') : (item.color === 'rainbow' ? 'rgba(255,0,255,0.35)' : item.color.replace(')', ',0.35)'));
+            const glow = isSkin ? item.colors.glow.replace(/[\d.]+\)$/, '0.35)') : (item.color === 'rainbow' ? 'rgba(255,0,255,0.35)' : item.color.replace(/[\d.]+\)$/, '0.35)'));
             div.style.cssText = 'width:90px;height:90px;border-radius:16px;background:' + (isWinner ? 'rgba(255,215,0,0.1)' : 'rgba(255,255,255,0.05)') + ';border:2px solid ' + (isWinner ? 'rgba(255,215,0,0.6)' : 'rgba(255,255,255,0.1)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 0 20px rgba(255,255,255,0.03);';
             div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:' + bg + ';box-shadow:0 0 14px ' + glow + ';position:relative;margin-bottom:6px;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:' + (isWinner ? '700' : '500') + ';text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:78px;">' + item.name[currentLang] + '</div>';
             strip.appendChild(div);
@@ -1369,25 +1372,26 @@ const SkinManager = {
         const containerW = container.clientWidth || 320;
         const centerOffset = containerW / 2 - 45;
         const target = -(32 * itemW) + centerOffset;
-        let pos = containerW + 50;
+        // Start with item 0 centered, then scroll left (negative direction) toward target
+        let pos = centerOffset;
         let velocity = 0;
-        const maxVel = 42;
+        const maxVel = -35; // negative = scroll left
         let phase = 'accelerating';
         let holdTimer = 0;
 
         const animate = function() {
             if (phase === 'accelerating') {
-                velocity += 1.0;
-                if (velocity >= maxVel) { velocity = maxVel; phase = 'cruising'; holdTimer = 50; }
+                velocity -= 1.3; // become more negative (faster left)
+                if (velocity <= maxVel) { velocity = maxVel; phase = 'cruising'; holdTimer = 60; }
             } else if (phase === 'cruising') {
                 holdTimer--;
                 if (holdTimer <= 0) phase = 'braking';
             } else if (phase === 'braking') {
-                velocity *= 0.965;
-                if (velocity < 5) { velocity = 5; phase = 'snap'; }
+                velocity *= 0.96; // reduce speed (less negative)
+                if (velocity > -5) { velocity = -5; phase = 'snap'; }
             } else if (phase === 'snap') {
                 const diff = target - pos;
-                velocity = diff * 0.07;
+                velocity = diff * 0.08;
                 if (Math.abs(diff) < 0.5 && Math.abs(velocity) < 0.5) { pos = target; velocity = 0; phase = 'done'; }
             }
             pos += velocity;
@@ -1401,21 +1405,23 @@ const SkinManager = {
                     const bgStyle = type === 'skin' 
                         ? 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')' 
                         : (isRainbow ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : winner.color);
-                    const glowColor = type === 'skin' ? winner.colors.glow.replace(')', ',0.5)') : (isRainbow ? 'rgba(255,0,255,0.5)' : winner.color.replace(')', ',0.5)'));
-                    res.innerHTML = '<div id="case-reveal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.4s ease;"><div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"></div><div style="position:relative;z-index:1;text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);"><div style="font-size:22px;font-weight:900;color:#ffd700;margin-bottom:16px;letter-spacing:3px;text-transform:uppercase;">' + t('caseResult') + '</div><div style="width:110px;height:110px;border-radius:50%;margin:0 auto 16px;background:' + bgStyle + ';box-shadow:0 0 40px ' + glowColor + ', 0 0 80px ' + glowColor.replace('0.5)', '0.2)') + ', inset 0 0 30px rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);position:relative;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;">' + winner.name[currentLang] + '</div><div style="font-size:14px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:4px;font-weight:800;margin-bottom:24px;">' + winner.rarity + '</div><button class="btn btn-primary" id="btn-claim-case" style="min-width:160px;">' + t('select') + '</button></div></div>';
+                    const glowColor = type === 'skin' ? winner.colors.glow.replace(/[\d.]+\)$/, '0.5)') : (isRainbow ? 'rgba(255,0,255,0.5)' : winner.color.replace(/[\d.]+\)$/, '0.5)'));
+                    const overlay = document.createElement('div');
+                    overlay.id = 'case-reveal-overlay';
+                    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.4s ease;';
+                    overlay.innerHTML = '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);"></div><div style="position:relative;z-index:1;text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);"><div style="font-size:22px;font-weight:900;color:#ffd700;margin-bottom:16px;letter-spacing:3px;text-transform:uppercase;">' + t('caseResult') + '</div><div style="width:110px;height:110px;border-radius:50%;margin:0 auto 16px;background:' + bgStyle + ';box-shadow:0 0 40px ' + glowColor + ', 0 0 80px ' + glowColor.replace('0.5)', '0.2)') + ', inset 0 0 30px rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);position:relative;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;">' + winner.name[currentLang] + '</div><div style="font-size:14px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:4px;font-weight:800;margin-bottom:24px;">' + winner.rarity + '</div><button class="btn btn-primary" id="btn-claim-case" style="min-width:160px;">' + t('select') + '</button></div>';
+                    document.body.appendChild(overlay);
                     document.getElementById('btn-claim-case').addEventListener('click', function() {
-                        const overlay = document.getElementById('case-reveal-overlay');
-                        if (overlay) {
-                            overlay.style.animation = 'fadeOut 0.3s ease forwards';
-                            setTimeout(function() {
-                                res.innerHTML = '';
-                                SkinManager.renderShop('cases');
-                            }, 300);
-                        }
+                        overlay.style.animation = 'fadeOut 0.3s ease forwards';
+                        setTimeout(function() {
+                            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                            res.innerHTML = '';
+                            SkinManager.renderShop('cases');
+                        }, 300);
                         if (AudioEngine.ctx) AudioEngine.play('combo');
                     });
                     if (AudioEngine.ctx) AudioEngine.play('combo');
-                }, 500);
+                }, 600);
             }
         };
         animate();
@@ -1758,14 +1764,21 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btn-levels-back').addEventListener('click', function() {
         if (AudioEngine.ctx) AudioEngine.play('stick');
         showScreen('main-menu');
+        SkinManager.updateMenuBubble();
     });
     document.getElementById('btn-shop-back').addEventListener('click', function() {
         if (AudioEngine.ctx) AudioEngine.play('stick');
         showScreen('main-menu');
+        SkinManager.updateMenuBubble();
     });
     document.getElementById('btn-settings-back').addEventListener('click', function() {
         if (AudioEngine.ctx) AudioEngine.play('stick');
         Game.save(); showScreen('main-menu');
+        SkinManager.updateMenuBubble();
+        const pm = document.getElementById('promo-message');
+        if (pm) pm.textContent = '';
+        const pi = document.getElementById('promo-input');
+        if (pi) pi.value = '';
     });
     document.getElementById('btn-pause').addEventListener('click', function() { Game.pause(); });
     document.getElementById('btn-resume').addEventListener('click', function() { Game.resume(); });
