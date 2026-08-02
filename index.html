@@ -1698,7 +1698,7 @@ function renderLevels() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
     AudioEngine.init();
     SkinManager.init();
     Game.init();
@@ -1837,7 +1837,7 @@ document.addEventListener('DOMContentLoaded', function() {
             Game.bubble.clickSide(cx < window.innerWidth / 2 ? 'left' : 'right');
         }
     }, { passive: false });
-});
+})();
 </script>
 </body>
 </html>
