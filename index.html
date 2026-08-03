@@ -34,8 +34,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .menu-bubble-demo { width:clamp(60px, 18vmin, 100px); height:clamp(60px, 18vmin, 100px); margin:0 auto clamp(14px, 5vmin, 32px); border-radius:50%; background:radial-gradient(circle at 30% 30%,rgba(255,255,255,0.9),rgba(100,200,255,0.4),rgba(50,100,200,0.2)); box-shadow:0 0 24px rgba(100,200,255,0.25),inset 0 0 24px rgba(255,255,255,0.15); animation:bubbleFloat 3s ease-in-out infinite; position:relative; transition:background 0.4s ease, box-shadow 0.4s ease; }
 .menu-bubble-demo::after { content:''; position:absolute; top:18%; left:22%; width:22%; height:22%; border-radius:50%; background:rgba(255,255,255,0.8); filter:blur(1px); }
 @keyframes bubbleFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.05)} }
-.best-score { margin-top:22px; font-size:14px; color:rgba(255,255,255,0.45); letter-spacing:1px; }
-.best-score span { color:#ffd700; font-weight:700; font-size:20px; }
+
 .btn { display:block; width:100%; padding:var(--btn-pad) clamp(12px, 3vmin, 20px); margin:clamp(5px, 1.5vmin, 10px) 0; border:none; border-radius:var(--btn-radius); font-size:clamp(13px, 3.8vmin, 18px); font-weight:700; letter-spacing:clamp(1px, 0.5vmin, 3px); cursor:pointer; transition:all 0.15s ease; pointer-events:auto; position:relative; overflow:hidden; min-height:44px; }
 .btn:active { transform:scale(0.96); }
 .btn-primary { background:linear-gradient(135deg,#ff8c00,#ff4500); color:#fff; box-shadow:0 4px 18px rgba(255,69,0,0.3); }
@@ -75,7 +74,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .shop-tabs { display:flex; gap:8px; margin-bottom:16px; justify-content:center; }
 .shop-tab { padding:8px 16px; border-radius:20px; border:none; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.5); font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; pointer-events:auto; }
 .shop-tab.active { background:linear-gradient(135deg,#ff8c00,#ff4500); color:#fff; }
-.skins-glass { height:min(58vh, 420px); overflow-y:auto; padding:clamp(16px, 4vmin, 28px) clamp(12px, 3.5vmin, 20px); }
+.skins-glass { height:min(46vh, 320px); overflow-y:auto; padding:clamp(16px, 4vmin, 28px) clamp(12px, 3.5vmin, 20px); }
 .screen-title { font-size:24px; font-weight:900; letter-spacing:3px; margin-bottom:8px; }
 .coins-display { font-size:18px; color:#ffd700; margin-bottom:16px; font-weight:700; }
 .skins-grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:3px; width:100%; box-sizing:border-box; align-content:flex-start; }
@@ -108,20 +107,20 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .lang-selector { display:flex; gap:8px; }
 .lang-btn { padding:6px 14px; border-radius:20px; border:none; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:12px; font-weight:700; cursor:pointer; pointer-events:auto; }
 .lang-btn.active { background:rgba(255,255,255,0.2); color:#fff; }
-.coin-icon { display:inline-block; width:clamp(12px, 3.8vmin, 18px); height:clamp(12px, 3.8vmin, 18px); border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #daa520); border:clamp(1px, 0.35vmin, 1.5px) solid #b8860b; box-shadow:0 0 3px rgba(255,215,0,0.4); vertical-align:middle; margin-right:3px; position:relative; top:-1px; }
-.coin-icon::after { content:'$'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:9px; font-weight:900; color:rgba(140,100,0,0.7); }
-.coin-small { width:10px !important; height:10px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; top:-1px !important; position:relative !important; }
-.coin-small::after { font-size:6px !important; transform:translate(-50%,-50%) !important; }
-.coin-tiny { width:11px !important; height:11px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; top:0px !important; position:relative !important; display:inline-block; }
-.coin-tiny::after { font-size:7px !important; position:absolute !important; top:50% !important; left:50% !important; transform:translate(-50%,-50%) !important; }
+.coin-icon { display:inline-flex; align-items:center; justify-content:center; width:clamp(12px, 3.8vmin, 18px); height:clamp(12px, 3.8vmin, 18px); border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #daa520); border:clamp(1px, 0.35vmin, 1.5px) solid #b8860b; box-shadow:0 0 3px rgba(255,215,0,0.4); vertical-align:middle; margin-right:3px; position:relative; }
+.coin-icon::after { content:'$'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:9px; font-weight:900; color:rgba(140,100,0,0.7); line-height:1; }
+.coin-small { width:10px !important; height:10px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; position:relative !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; }
+.coin-small::after { font-size:6px !important; line-height:1 !important; }
+.coin-tiny { width:11px !important; height:11px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; position:relative !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; }
+.coin-tiny::after { font-size:7px !important; line-height:1 !important; }
 .skins-glass::-webkit-scrollbar{display:none} .skins-glass{-ms-overflow-style:none;scrollbar-width:none; touch-action:pan-y !important;}
 .levels-grid{touch-action:pan-y !important;}
 
-.shop-scroll { height:min(58vh, 420px); overflow:hidden auto !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:8px; border-radius:12px; background:rgba(0,0,0,0.08); padding:4px; -webkit-overflow-scrolling:touch; width:100%; box-sizing:border-box; }
+.shop-scroll { height:min(46vh, 320px); overflow:hidden auto !important; touch-action:pan-y !important; -ms-overflow-style:none; scrollbar-width:none; margin-bottom:8px; border-radius:12px; background:rgba(0,0,0,0.08); padding:4px; -webkit-overflow-scrolling:touch; width:100%; box-sizing:border-box; }
 .shop-scroll::-webkit-scrollbar { display:none; }
 #shop-content { width:100%; overflow:visible; box-sizing:border-box; }
 .levels-grid { touch-action:pan-y !important; -webkit-overflow-scrolling:touch; display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:12px; align-content:center; min-height:320px; }
-.shop-actions { display:flex; gap:8px; margin-top:8px; }
+.shop-actions { display:flex; gap:8px; margin-top:8px; min-height:52px; align-items:center; }
 .shop-actions .btn { margin:0; min-height:44px; }
 .shop-actions .btn:disabled { opacity:0.4; cursor:not-allowed; }
 .skin-card { position:relative; pointer-events:auto; cursor:pointer; transition:all 0.2s ease; padding:4px 2px 3px; min-height:unset; border-radius:10px; }
@@ -155,6 +154,25 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 @media (max-width:360px) { .menu-glass{width:92%;padding:16px 12px} .skins-grid{grid-template-columns:repeat(3,1fr);gap:8px} .skin-card{padding:4px} .skin-preview{width:40px;height:40px} .levels-grid{grid-template-columns:repeat(2,1fr)} }
 @media (min-width:420px) and (max-width:600px) { .menu-glass{max-width:340px} }
 @media (max-height:500px) { .hud-center{top:max(6px,var(--safe-top))} .score-value{font-size:clamp(24px,8vmin,32px)} .progress-bar{height:2px} }
+    
+.case-modal-overlay { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; animation:fadeIn 0.4s ease; }
+.case-modal-bg { position:absolute; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+.case-modal-content { position:relative; z-index:1; width:min(92%, 420px); text-align:center; }
+.case-stage { animation:glassIn 0.6s cubic-bezier(0.22,1,0.36,1); }
+.case-box-3d { width:140px; height:140px; margin:0 auto 24px; position:relative; transform-style:preserve-3d; perspective:600px; }
+.case-lid-3d { position:absolute; top:0; left:0; width:100%; height:50%; background:linear-gradient(180deg, #e8c850, #c0a030); border-radius:12px 12px 0 0; transform-origin:top; transition:transform 1s cubic-bezier(0.22,1,0.36,1); box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:3; border:2px solid #d4af37; border-bottom:none; }
+.case-lid-3d::after { content:''; position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:28px; height:14px; border-radius:0 0 14px 14px; background:linear-gradient(180deg, #d4b840, #b09020); border:1px solid #a88018; box-shadow:0 2px 6px rgba(0,0,0,0.3); }
+.case-body-3d { position:absolute; top:50%; left:0; width:100%; height:50%; background:linear-gradient(145deg, #c8a030, #a08020); border-radius:0 0 12px 12px; border:2px solid #d4af37; border-top:none; box-shadow:0 6px 20px rgba(0,0,0,0.35), inset 0 -4px 12px rgba(0,0,0,0.15); overflow:hidden; }
+.case-body-3d::before { content:''; position:absolute; top:0; left:0; width:100%; height:40%; background:linear-gradient(180deg, rgba(255,255,255,0.2), transparent); }
+.case-body-3d::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:30%; background:linear-gradient(0deg, rgba(0,0,0,0.15), transparent); }
+.case-glow-inside { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:60px; height:60px; border-radius:50%; background:radial-gradient(circle, rgba(255,215,0,0.6), rgba(255,215,0,0.2), transparent 70%); box-shadow:0 0 40px rgba(255,215,0,0.4); opacity:0; transition:opacity 0.8s ease; }
+.case-box-3d.open .case-lid-3d { transform:rotateX(-110deg); }
+.case-box-3d.open .case-glow-inside { opacity:1; }
+.case-roulette-stage { animation:glassIn 0.5s cubic-bezier(0.22,1,0.36,1); }
+.case-roulette-container { position:relative; width:100%; height:150px; overflow:hidden; margin:0 auto; background:rgba(0,0,0,0.3); border-radius:16px; border:1px solid rgba(255,255,255,0.1); }
+.best-score { margin-top:22px; font-size:14px; color:rgba(255,255,255,0.45); letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:6px; }
+.best-score svg { width:18px; height:18px; fill:#ffd700; filter:drop-shadow(0 0 4px rgba(255,215,0,0.4)); flex-shrink:0; }
+.best-score span { color:#ffd700; font-weight:700; font-size:20px; }
     </style>
 </head>
 <body>
@@ -170,7 +188,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                     <button class="btn btn-secondary" id="btn-levels" data-i18n="levels">УРОВНИ</button>
                     <button class="btn btn-secondary" id="btn-shop" data-i18n="shop">МАГАЗИН</button>
                     <button class="btn btn-secondary" id="btn-settings" data-i18n="settings">НАСТРОЙКИ</button>
-                    <div class="best-score"><span data-i18n="best">Рекорд</span>: <span id="menu-best">0</span></div>
+                    <div class="best-score"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.74 4.39 4.97A5.99 5.99 0 0 0 11 17.91V20H7v2h10v-2h-4v-2.09a5.99 5.99 0 0 0 3.61-4.94C19.08 12.74 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.5c0 1.67-.83 3.11-2 3.98C4.17 13.11 4 11.67 4 10V8h1zm14 0c0 1.67-.17 3.11-1 3.98-.83-.87-1-2.31-1-3.98V7h2v1z"/></svg><span id="menu-best">0</span></div>
                 </div>
             </div>
             <div id="hud" class="screen">
@@ -965,10 +983,16 @@ class World {
             }
         }
         this.updateParticles(dt);
-        if (Game.settings.particles && bubble.state === 'floating' && !bubble.dead) {
+        if (Game.settings.particles && !bubble.dead) {
             if (Math.random() < 0.2) {
+                let offsetX = (Math.random() - 0.5) * 6;
+                let offsetY = bubble.radius + 2;
+                if (bubble.state === 'moving_to_wall') {
+                    offsetX = -Math.sign(bubble.vx || 1) * bubble.radius * 0.6 + (Math.random() - 0.5) * 4;
+                    offsetY = (Math.random() - 0.5) * 6;
+                }
                 const trailColor = SkinManager.getTrailColor();
-                this.particles.push({ x: bubble.x + (Math.random() - 0.5) * 6, y: bubble.y + bubble.radius + 2, vx: (Math.random() - 0.5) * 10, vy: 6 + Math.random() * 10, life: 0.35 + Math.random() * 0.35, size: 1.2 + Math.random() * 2, color: trailColor, type: 'trail' });
+                this.particles.push({ x: bubble.x + offsetX, y: bubble.y + offsetY, vx: (Math.random() - 0.5) * 10, vy: 6 + Math.random() * 10, life: 0.35 + Math.random() * 0.35, size: 1.2 + Math.random() * 2, color: trailColor, type: 'trail' });
             }
         }
     }
@@ -1304,10 +1328,11 @@ const SkinManager = {
     },
     renderCases(container) {
         const wrap = document.createElement('div'); wrap.className = 'shop-scroll';
-        const grid = document.createElement('div'); grid.className = 'levels-grid'; grid.id = 'cases-grid';
+        const grid = document.createElement('div'); grid.className = 'skins-grid';
         grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
         grid.style.gap = '10px';
-        grid.style.marginBottom = '8px';
+        grid.style.alignContent = 'center';
+        grid.style.minHeight = 'calc(min(46vh, 320px) - 16px)';
 
         const self = this;
 
@@ -1316,7 +1341,8 @@ const SkinManager = {
         skinCard.className = 'case-card';
         skinCard.style.background = 'linear-gradient(145deg, rgba(80,170,255,0.18), rgba(30,80,180,0.12))';
         skinCard.style.borderColor = 'rgba(100,200,255,0.35)';
-        skinCard.innerHTML = '<div class="case-shine"></div><div class="case-bottom"></div><div style="font-size:12px;font-weight:800;color:#64c8ff;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1;">' + t('caseSkin') + '</div><div style="width:60px;height:60px;border-radius:50%;margin:0 auto 12px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.55), rgba(50,100,200,0.35));box-shadow:0 0 20px rgba(100,200,255,0.35), inset 0 0 12px rgba(255,255,255,0.2);position:relative;z-index:1;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.75);filter:blur(0.5px);"></div></div><button class="btn btn-primary" id="btn-case-skin" style="font-size:14px;padding:8px 10px;min-height:42px;width:92%;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:5px;"><span class="coin-icon" style="width:15px;height:15px;"></span> 500</button>';
+        skinCard.style.padding = '24px 12px';
+        skinCard.innerHTML = '<div class="case-shine"></div><div class="case-bottom"></div><div style="font-size:13px;font-weight:800;color:#64c8ff;margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1;">' + t('caseSkin') + '</div><div style="width:68px;height:68px;border-radius:50%;margin:0 auto 14px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(100,200,255,0.55), rgba(50,100,200,0.35));box-shadow:0 0 24px rgba(100,200,255,0.4), inset 0 0 14px rgba(255,255,255,0.2);position:relative;z-index:1;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.75);filter:blur(0.5px);"></div></div><button class="btn btn-primary" id="btn-case-skin" style="font-size:14px;padding:8px 10px;min-height:42px;width:92%;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:5px;"><span class="coin-icon" style="width:15px;height:15px;"></span> 500</button>';
         skinCard.querySelector('#btn-case-skin').addEventListener('click', function(e) { e.stopPropagation(); self.openCase('skin'); });
         grid.appendChild(skinCard);
 
@@ -1325,7 +1351,8 @@ const SkinManager = {
         trailCard.className = 'case-card';
         trailCard.style.background = 'linear-gradient(145deg, rgba(255,200,50,0.15), rgba(180,140,0,0.1))';
         trailCard.style.borderColor = 'rgba(255,215,0,0.4)';
-        trailCard.innerHTML = '<div class="case-shine"></div><div class="case-bottom"></div><div style="font-size:12px;font-weight:800;color:#ffd700;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1;">' + t('caseTrail') + '</div><div style="width:60px;height:60px;border-radius:50%;margin:0 auto 12px;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);box-shadow:0 0 20px rgba(255,215,0,0.35), inset 0 0 12px rgba(255,255,255,0.2);position:relative;z-index:1;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.75);filter:blur(0.5px);"></div></div><button class="btn btn-primary" id="btn-case-trail" style="font-size:14px;padding:8px 10px;min-height:42px;width:92%;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:5px;"><span class="coin-icon" style="width:15px;height:15px;"></span> 500</button>';
+        trailCard.style.padding = '24px 12px';
+        trailCard.innerHTML = '<div class="case-shine"></div><div class="case-bottom"></div><div style="font-size:13px;font-weight:800;color:#ffd700;margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1;">' + t('caseTrail') + '</div><div style="width:68px;height:68px;border-radius:50%;margin:0 auto 14px;background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #b8860b);box-shadow:0 0 24px rgba(255,215,0,0.4), inset 0 0 14px rgba(255,255,255,0.2);position:relative;z-index:1;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.75);filter:blur(0.5px);"></div></div><button class="btn btn-primary" id="btn-case-trail" style="font-size:14px;padding:8px 10px;min-height:42px;width:92%;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:5px;"><span class="coin-icon" style="width:15px;height:15px;"></span> 500</button>';
         trailCard.querySelector('#btn-case-trail').addEventListener('click', function(e) { e.stopPropagation(); self.openCase('trail'); });
         grid.appendChild(trailCard);
 
@@ -1335,6 +1362,35 @@ const SkinManager = {
         resultDiv.style.minHeight = '0';
         wrap.appendChild(resultDiv);
         container.appendChild(wrap);
+
+        const actions = document.createElement('div');
+        actions.className = 'shop-actions';
+        actions.id = 'shop-actions';
+        container.appendChild(actions);
+    },
+    pickWeightedItem(pool) {
+        const weights = { common: 50, uncommon: 30, rare: 12, epic: 6, legendary: 2 };
+        const byRarity = {};
+        pool.forEach(function(item) {
+            if (!byRarity[item.rarity]) byRarity[item.rarity] = [];
+            byRarity[item.rarity].push(item);
+        });
+        let totalWeight = 0;
+        const entries = [];
+        for (const r in byRarity) {
+            const w = weights[r] || 1;
+            totalWeight += w;
+            entries.push({ rarity: r, weight: w, items: byRarity[r] });
+        }
+        let rand = Math.random() * totalWeight;
+        for (let i = 0; i < entries.length; i++) {
+            rand -= entries[i].weight;
+            if (rand <= 0) {
+                const arr = entries[i].items;
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+        }
+        return pool[Math.floor(Math.random() * pool.length)];
     },
     openCase(type) {
         if (Game.coins < 500) {
@@ -1353,8 +1409,8 @@ const SkinManager = {
         res.innerHTML = '<div style="position:relative;width:100%;height:150px;overflow:hidden;margin:10px 0;background:rgba(0,0,0,0.3);border-radius:16px;border:1px solid rgba(255,255,255,0.1);" id="case-anim-container"><div class="case-selector-modern"></div><div class="case-glow-modern"></div><div class="case-strip-modern" id="case-strip"></div></div>';
         const strip = document.getElementById('case-strip');
         const items = [];
-        const winner = pool[Math.floor(Math.random() * pool.length)];
-        for (let i = 0; i < 40; i++) { const item = pool[Math.floor(Math.random() * pool.length)]; items.push(item); }
+        const winner = this.pickWeightedItem(pool);
+        for (let i = 0; i < 40; i++) { items.push(this.pickWeightedItem(pool)); }
         items[32] = winner;
         const itemW = 106;
         items.forEach(function(item, idx) {
@@ -1364,8 +1420,18 @@ const SkinManager = {
             const isWinner = idx === 32;
             const bg = isSkin ? 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')' : (item.color === 'rainbow' ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : item.color);
             const glow = isSkin ? item.colors.glow.replace(/[\d.]+\)$/, '0.35)') : (item.color === 'rainbow' ? 'rgba(255,0,255,0.35)' : item.color.replace(/[\d.]+\)$/, '0.35)'));
-            div.style.cssText = 'width:90px;height:90px;border-radius:16px;background:' + (isWinner ? 'rgba(255,215,0,0.1)' : 'rgba(255,255,255,0.05)') + ';border:2px solid ' + (isWinner ? 'rgba(255,215,0,0.6)' : 'rgba(255,255,255,0.1)') + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 0 20px rgba(255,255,255,0.03);';
-            div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:' + bg + ';box-shadow:0 0 14px ' + glow + ';position:relative;margin-bottom:6px;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:10px;color:rgba(255,255,255,0.75);font-weight:' + (isWinner ? '700' : '500') + ';text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:78px;">' + item.name[currentLang] + '</div>';
+            const rarityColor = RARITY_COLORS[item.rarity] || '#a0a0a0';
+            function hexToRgba(hex, a) {
+                const r = parseInt(hex.slice(1, 3), 16);
+                const g = parseInt(hex.slice(3, 5), 16);
+                const b = parseInt(hex.slice(5, 7), 16);
+                return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+            }
+            const borderWidth = isWinner ? '3px' : '2px';
+            const cellBg = isWinner ? hexToRgba(rarityColor, 0.15) : 'rgba(255,255,255,0.05)';
+            const winGlow = isWinner ? '0 0 20px ' + hexToRgba(rarityColor, 0.45) + ', 0 0 40px ' + hexToRgba(rarityColor, 0.2) + ', ' : '';
+            div.style.cssText = 'width:90px;height:90px;border-radius:16px;background:' + cellBg + ';border:' + borderWidth + ' solid ' + rarityColor + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:' + winGlow + 'inset 0 0 20px rgba(255,255,255,0.03);';
+            div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:' + bg + ';box-shadow:0 0 14px ' + glow + ';position:relative;margin-bottom:6px;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:10px;color:' + (isWinner ? rarityColor : 'rgba(255,255,255,0.75)') + ';font-weight:' + (isWinner ? '800' : '500') + ';text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:78px;">' + item.name[currentLang] + '</div>';
             strip.appendChild(div);
         });
         const container = document.getElementById('case-anim-container');
