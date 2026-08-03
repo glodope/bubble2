@@ -27,6 +27,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 #ui-layer .screen.active { display:flex; pointer-events:auto; }
 .menu-glass { background:rgba(15,15,35,0.88); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.08); border-radius:var(--btn-radius); padding:var(--glass-pad) clamp(16px, 4.5vmin, 32px); width:min(90%, 380px); text-align:center; box-shadow:0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06); animation:glassIn 0.5s cubic-bezier(0.22,1,0.36,1); }
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes winnerPop { from{opacity:0;transform:scale(0.6)} to{opacity:1;transform:scale(1)} }
 @keyframes fadeOut { from{opacity:1} to{opacity:0} }
 @keyframes glassIn { from{opacity:0;transform:translateY(30px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
 .game-title { font-size:var(--title-size); font-weight:900; letter-spacing:clamp(3px, 1.2vmin, 6px); background:linear-gradient(135deg,#ffd700,#ff8c00,#ff4500); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:clamp(4px, 1.5vmin, 8px); filter:drop-shadow(0 2px 8px rgba(255,140,0,0.3)); }
@@ -96,22 +97,23 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .rarity-epic { background:#9c27b0; }
 .rarity-legendary { background:#ff9800; box-shadow:0 0 6px #ff9800; }
 .trail-preview-wrap { width:100%; aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; margin-bottom:1px; background:rgba(0,0,0,0.15); overflow:hidden; }
-.trail-preview { width:52px; height:52px; border-radius:50%; position:relative; margin-bottom:4px; overflow:hidden; background:rgba(0,0,0,0.2); }.case-container { position:relative; width:100%; height:120px; overflow:hidden; margin:20px 0; background:rgba(0,0,0,0.2); border-radius:12px; border:1px solid rgba(255,255,255,0.08); }
-.case-strip { display:flex; gap:12px; position:absolute; top:50%; transform:translateY(-50%); transition:none; }
-.case-item { width:80px; height:80px; border-radius:12px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; }
-.case-selector { position:absolute; top:0; left:50%; transform:translateX(-50%); width:4px; height:100%; background:linear-gradient(180deg,transparent,#ffd700,transparent); z-index:2; }
-.case-glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:84px; height:84px; border-radius:12px; box-shadow:0 0 20px rgba(255,215,0,0.3); pointer-events:none; }
+.trail-preview { width:52px; height:52px; border-radius:50%; position:relative; margin-bottom:4px; overflow:hidden; background:rgba(0,0,0,0.2); }
+
+
+
+
 .setting-row { display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:16px; color:rgba(255,255,255,0.8); }
 .toggle-btn { padding:6px 16px; border-radius:20px; border:none; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.45); font-size:12px; font-weight:700; cursor:pointer; transition:all 0.2s; pointer-events:auto; }
 .toggle-btn.active { background:linear-gradient(135deg,#ff8c00,#ff4500); color:#fff; }
 .lang-selector { display:flex; gap:8px; }
 .lang-btn { padding:6px 14px; border-radius:20px; border:none; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:12px; font-weight:700; cursor:pointer; pointer-events:auto; }
 .lang-btn.active { background:rgba(255,255,255,0.2); color:#fff; }
-.coin-icon { display:inline-flex; align-items:center; justify-content:center; width:clamp(12px, 3.8vmin, 18px); height:clamp(12px, 3.8vmin, 18px); border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #daa520); border:clamp(1px, 0.35vmin, 1.5px) solid #b8860b; box-shadow:0 0 3px rgba(255,215,0,0.4); vertical-align:middle; margin-right:3px; position:relative; }
+.coin-icon { display:inline-block; width:clamp(12px, 3.8vmin, 18px); height:clamp(12px, 3.8vmin, 18px); border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff8c8, #ffd700, #daa520); border:clamp(1px, 0.35vmin, 1.5px) solid #b8860b; box-shadow:0 0 3px rgba(255,215,0,0.4); vertical-align:middle; margin-right:3px; position:relative; }
 .coin-icon::after { content:'$'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:9px; font-weight:900; color:rgba(140,100,0,0.7); line-height:1; }
-.coin-small { width:10px !important; height:10px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; position:relative !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; }
+.btn .coin-icon, .btn-primary .coin-icon, .btn-secondary .coin-icon { vertical-align:middle; top:-1px; }
+.coin-small { width:10px !important; height:10px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; position:relative !important; display:inline-block !important; }
 .coin-small::after { font-size:6px !important; line-height:1 !important; }
-.coin-tiny { width:11px !important; height:11px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; position:relative !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; }
+.coin-tiny { width:11px !important; height:11px !important; vertical-align:middle !important; margin-right:2px !important; border-width:1px !important; position:relative !important; display:inline-block !important; }
 .coin-tiny::after { font-size:7px !important; line-height:1 !important; }
 .skins-glass::-webkit-scrollbar{display:none} .skins-glass{-ms-overflow-style:none;scrollbar-width:none; touch-action:pan-y !important;}
 .levels-grid{touch-action:pan-y !important;}
@@ -140,10 +142,10 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 .case-box .case-lid::after { content:''; position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); width:24px; height:12px; border-radius:0 0 12px 12px; background:linear-gradient(180deg, #d4b840, #b09020); border:1px solid #a88018; box-shadow:0 2px 6px rgba(0,0,0,0.3); }
 .case-box.open .case-lid { transform:rotateX(-120deg); opacity:0.1; }
 .case-box .case-glow-ring { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:48px; height:48px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); box-shadow:0 0 20px rgba(255,215,0,0.25), inset 0 0 16px rgba(255,215,0,0.1); background:radial-gradient(circle, rgba(255,255,255,0.1), transparent 65%); }
-.case-strip-modern { display:flex; gap:16px; position:absolute; top:50%; left:0; transform:translateY(-50%); transition:none; will-change:transform; }
-.case-item-modern { width:90px; height:90px; border-radius:16px; background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; box-shadow:inset 0 0 20px rgba(255,255,255,0.03); }
-.case-selector-modern { position:absolute; top:0; left:50%; transform:translateX(-50%); width:3px; height:100%; background:linear-gradient(180deg,transparent,#ffd700,transparent); z-index:2; }
-.case-glow-modern { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:94px; height:94px; border-radius:16px; box-shadow:0 0 30px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.15); pointer-events:none; }
+
+
+
+
 .case-card { aspect-ratio:auto; padding:18px 10px; border-radius:var(--btn-radius); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s ease; position:relative; overflow:hidden; pointer-events:auto; border:2px solid rgba(255,255,255,0.12); }
 .case-card:active { transform:scale(0.95); }
 .case-card .case-shine { position:absolute; top:0; left:0; width:100%; height:45%; background:linear-gradient(180deg, rgba(255,255,255,0.18), transparent); pointer-events:none; }
@@ -155,21 +157,18 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
 @media (min-width:420px) and (max-width:600px) { .menu-glass{max-width:340px} }
 @media (max-height:500px) { .hud-center{top:max(6px,var(--safe-top))} .score-value{font-size:clamp(24px,8vmin,32px)} .progress-bar{height:2px} }
     
-.case-modal-overlay { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; animation:fadeIn 0.4s ease; }
-.case-modal-bg { position:absolute; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
-.case-modal-content { position:relative; z-index:1; width:min(92%, 420px); text-align:center; }
-.case-stage { animation:glassIn 0.6s cubic-bezier(0.22,1,0.36,1); }
-.case-box-3d { width:140px; height:140px; margin:0 auto 24px; position:relative; transform-style:preserve-3d; perspective:600px; }
-.case-lid-3d { position:absolute; top:0; left:0; width:100%; height:50%; background:linear-gradient(180deg, #e8c850, #c0a030); border-radius:12px 12px 0 0; transform-origin:top; transition:transform 1s cubic-bezier(0.22,1,0.36,1); box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:3; border:2px solid #d4af37; border-bottom:none; }
-.case-lid-3d::after { content:''; position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:28px; height:14px; border-radius:0 0 14px 14px; background:linear-gradient(180deg, #d4b840, #b09020); border:1px solid #a88018; box-shadow:0 2px 6px rgba(0,0,0,0.3); }
-.case-body-3d { position:absolute; top:50%; left:0; width:100%; height:50%; background:linear-gradient(145deg, #c8a030, #a08020); border-radius:0 0 12px 12px; border:2px solid #d4af37; border-top:none; box-shadow:0 6px 20px rgba(0,0,0,0.35), inset 0 -4px 12px rgba(0,0,0,0.15); overflow:hidden; }
-.case-body-3d::before { content:''; position:absolute; top:0; left:0; width:100%; height:40%; background:linear-gradient(180deg, rgba(255,255,255,0.2), transparent); }
-.case-body-3d::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:30%; background:linear-gradient(0deg, rgba(0,0,0,0.15), transparent); }
-.case-glow-inside { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:60px; height:60px; border-radius:50%; background:radial-gradient(circle, rgba(255,215,0,0.6), rgba(255,215,0,0.2), transparent 70%); box-shadow:0 0 40px rgba(255,215,0,0.4); opacity:0; transition:opacity 0.8s ease; }
-.case-box-3d.open .case-lid-3d { transform:rotateX(-110deg); }
-.case-box-3d.open .case-glow-inside { opacity:1; }
-.case-roulette-stage { animation:glassIn 0.5s cubic-bezier(0.22,1,0.36,1); }
-.case-roulette-container { position:relative; width:100%; height:150px; overflow:hidden; margin:0 auto; background:rgba(0,0,0,0.3); border-radius:16px; border:1px solid rgba(255,255,255,0.1); }
+.case-modal-overlay { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.35s ease; }
+.case-modal-overlay.visible { opacity:1; pointer-events:auto; }
+.case-modal-bg { position:absolute; inset:0; background:rgba(0,0,0,0.82); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+.case-modal-content { position:relative; z-index:1; width:100%; max-width:480px; padding:20px; display:flex; flex-direction:column; align-items:center; }
+.case-roulette-wrap { position:relative; width:100%; height:160px; overflow:hidden; border-radius:20px; background:transparent; border:none; margin:0 auto; }
+.case-strip-roulette { display:flex; gap:0; position:absolute; top:50%; left:0; transform:translateY(-50%); will-change:transform; transition:none; }
+
+.case-item-roulette { width:96px; height:96px; border-radius:16px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0; margin:0 5px; box-shadow:inset 0 0 20px rgba(255,255,255,0.03); }
+.case-roulette-selector { position:absolute; top:0; left:50%; transform:translateX(-50%); width:4px; height:100%; background:linear-gradient(180deg,transparent,#ffd700,transparent); z-index:2; box-shadow:0 0 10px rgba(255,215,0,0.5); }
+.case-roulette-glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:100px; height:100px; border-radius:16px; box-shadow:0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(255,215,0,0.1); pointer-events:none; z-index:1; }
+#shop-screen .menu-glass { transition:opacity 0.35s ease, transform 0.35s ease; }
+#shop-screen.case-open .menu-glass { opacity:0.15; transform:scale(0.96); pointer-events:none; }
 .best-score { margin-top:22px; font-size:14px; color:rgba(255,255,255,0.45); letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:6px; }
 .best-score svg { width:18px; height:18px; fill:#ffd700; filter:drop-shadow(0 0 4px rgba(255,215,0,0.4)); flex-shrink:0; }
 .best-score span { color:#ffd700; font-weight:700; font-size:20px; }
@@ -188,7 +187,7 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                     <button class="btn btn-secondary" id="btn-levels" data-i18n="levels">УРОВНИ</button>
                     <button class="btn btn-secondary" id="btn-shop" data-i18n="shop">МАГАЗИН</button>
                     <button class="btn btn-secondary" id="btn-settings" data-i18n="settings">НАСТРОЙКИ</button>
-                    <div class="best-score"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.74 4.39 4.97A5.99 5.99 0 0 0 11 17.91V20H7v2h10v-2h-4v-2.09a5.99 5.99 0 0 0 3.61-4.94C19.08 12.74 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.5c0 1.67-.83 3.11-2 3.98C4.17 13.11 4 11.67 4 10V8h1zm14 0c0 1.67-.17 3.11-1 3.98-.83-.87-1-2.31-1-3.98V7h2v1z"/></svg><span id="menu-best">0</span></div>
+                    <div class="best-score"><svg viewBox="0 0 24 24" width="20" height="20" style="filter:drop-shadow(0 0 5px rgba(255,215,0,0.6));"><path d="M5 3h14v2h-1v1c0 3.87-3.13 7-7 7s-7-3.13-7-7V5H5V3zm11.6 2H7.4c.24 2.5 2.32 4.5 4.6 4.5s4.36-2 4.6-4.5zM3 5h2v1c0 2.76 2.24 5 5 5h2c2.76 0 5-2.24 5-5V5h2v1c0 3.87-3.13 7-7 7h-2c-3.87 0-7-3.13-7-7V5z" fill="#ffd700"/><path d="M9 20h6v2H9z" fill="#ffd700"/></svg><span id="menu-best">0</span></div>
                 </div>
             </div>
             <div id="hud" class="screen">
@@ -289,7 +288,7 @@ const I18N = {
         back: '← НАЗАД', skins: 'СКИНЫ', trails: 'СЛЕДЫ', cases: 'КЕЙСЫ',
         sound: 'Звук', vibration: 'Вибрация', particles: 'Частицы', language: 'Язык',
         caseSkin: 'КЕЙС СКИНОВ', caseTrail: 'КЕЙС СЛЕДОВ', openCase: 'ОТКРЫТЬ ЗА',
-        caseResult: 'ВЫ ПОЛУЧИЛИ!', insufficient: 'Недостаточно монет', unlock: 'КУПИТЬ',
+        caseResult: 'ВЫ ПОЛУЧИЛИ!', caseOpening: 'ОТКРЫТИЕ...', claim: 'ПОЛУЧИТЬ', insufficient: 'Недостаточно монет', unlock: 'КУПИТЬ',
         select: 'ВЫБРАТЬ', selected: 'ВЫБРАНО', locked: 'ЗАБЛОКИРОВАНО',
         shield: 'ЩИТ', slow: 'ЗАМЕДЛЕНИЕ', coin2x: 'МОНЕТЫ x2', mini: 'МИНИ',
         levelLocked: 'Уровень заблокирован', needHearts: 'Соберите все сердечки!',
@@ -304,7 +303,7 @@ const I18N = {
         back: '← BACK', skins: 'SKINS', trails: 'TRAILS', cases: 'CASES',
         sound: 'Sound', vibration: 'Vibration', particles: 'Particles', language: 'Language',
         caseSkin: 'SKIN CASE', caseTrail: 'TRAIL CASE', openCase: 'OPEN FOR',
-        caseResult: 'YOU GOT!', insufficient: 'Not enough coins', unlock: 'BUY',
+        caseResult: 'YOU GOT!', caseOpening: 'OPENING...', claim: 'CLAIM', insufficient: 'Not enough coins', unlock: 'BUY',
         select: 'SELECT', selected: 'SELECTED', locked: 'LOCKED',
         shield: 'SHIELD', slow: 'SLOWMO', coin2x: 'COINS x2', mini: 'MINI',
         levelLocked: 'Level locked', needHearts: 'Collect all hearts!',
@@ -1395,31 +1394,44 @@ const SkinManager = {
     openCase(type) {
         if (Game.coins < 500) {
             const res = document.getElementById('case-result');
-            res.innerHTML = '<div style="color:#ff4444;font-weight:700;text-align:center;padding:12px;">' + t('insufficient') + '</div>';
+            if (res) res.innerHTML = '<div style="color:#ff4444;font-weight:700;text-align:center;padding:12px;">' + t('insufficient') + '</div>';
             return;
         }
         Game.coins -= 500; Game.updateHUD(); Game.save();
         const pool = type === 'skin' ? SKINS_DATA.filter(function(s) { return !SkinManager.isSkinUnlocked(s.id); }) : TRAILS_DATA.filter(function(t) { return !SkinManager.isTrailUnlocked(t.id); });
         if (pool.length === 0) {
             const res = document.getElementById('case-result');
-            res.innerHTML = '<div style="color:#4caf50;font-weight:700;text-align:center;padding:12px;">Все предметы уже получены!</div>';
+            if (res) res.innerHTML = '<div style="color:#4caf50;font-weight:700;text-align:center;padding:12px;">Все предметы уже получены!</div>';
             Game.coins += 500; Game.updateHUD(); Game.save(); return;
         }
-        const res = document.getElementById('case-result');
-        res.innerHTML = '<div style="position:relative;width:100%;height:150px;overflow:hidden;margin:10px 0;background:rgba(0,0,0,0.3);border-radius:16px;border:1px solid rgba(255,255,255,0.1);" id="case-anim-container"><div class="case-selector-modern"></div><div class="case-glow-modern"></div><div class="case-strip-modern" id="case-strip"></div></div>';
-        const strip = document.getElementById('case-strip');
+
+        const shopScreen = document.getElementById('shop-screen');
+        if (shopScreen) shopScreen.classList.add('case-open');
+        const overlay = document.createElement('div');
+        overlay.className = 'case-modal-overlay';
+        overlay.id = 'case-modal-overlay';
+        overlay.innerHTML = '<div class="case-modal-bg"></div><div class="case-modal-content" id="case-modal-content"></div>';
+        document.body.appendChild(overlay);
+        requestAnimationFrame(function() { overlay.classList.add('visible'); });
+
+        const content = document.getElementById('case-modal-content');
+        const strip = document.createElement('div');
+        strip.className = 'case-strip-roulette';
+        strip.id = 'case-strip-roulette';
+
         const items = [];
         const winner = this.pickWeightedItem(pool);
-        for (let i = 0; i < 40; i++) { items.push(this.pickWeightedItem(pool)); }
-        items[32] = winner;
-        const itemW = 106;
+        const winnerIndex = 45;
+        for (let i = 0; i < 60; i++) { items.push(this.pickWeightedItem(pool)); }
+        items[winnerIndex] = winner;
+
+        const slotW = 106;
+        const halfItem = 48;
         items.forEach(function(item, idx) {
             const div = document.createElement('div');
-            div.className = 'case-item-modern';
+            div.className = 'case-item-roulette';
             const isSkin = type === 'skin';
-            const isWinner = idx === 32;
-            const bg = isSkin ? 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')' : (item.color === 'rainbow' ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : item.color);
-            const glow = isSkin ? item.colors.glow.replace(/[\d.]+\)$/, '0.35)') : (item.color === 'rainbow' ? 'rgba(255,0,255,0.35)' : item.color.replace(/[\d.]+\)$/, '0.35)'));
+            const isWinner = idx === winnerIndex;
             const rarityColor = RARITY_COLORS[item.rarity] || '#a0a0a0';
             function hexToRgba(hex, a) {
                 const r = parseInt(hex.slice(1, 3), 16);
@@ -1430,68 +1442,329 @@ const SkinManager = {
             const borderWidth = isWinner ? '3px' : '2px';
             const cellBg = isWinner ? hexToRgba(rarityColor, 0.15) : 'rgba(255,255,255,0.05)';
             const winGlow = isWinner ? '0 0 20px ' + hexToRgba(rarityColor, 0.45) + ', 0 0 40px ' + hexToRgba(rarityColor, 0.2) + ', ' : '';
-            div.style.cssText = 'width:90px;height:90px;border-radius:16px;background:' + cellBg + ';border:' + borderWidth + ' solid ' + rarityColor + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:' + winGlow + 'inset 0 0 20px rgba(255,255,255,0.03);';
-            div.innerHTML = '<div style="width:48px;height:48px;border-radius:50%;background:' + bg + ';box-shadow:0 0 14px ' + glow + ';position:relative;margin-bottom:6px;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:10px;color:' + (isWinner ? rarityColor : 'rgba(255,255,255,0.75)') + ';font-weight:' + (isWinner ? '800' : '500') + ';text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:78px;">' + item.name[currentLang] + '</div>';
+            div.style.cssText = 'width:96px;height:96px;border-radius:16px;background:' + cellBg + ';border:' + borderWidth + ' solid ' + rarityColor + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;box-shadow:' + winGlow + 'inset 0 0 20px rgba(255,255,255,0.03);margin:0 5px;';
+            if (isSkin) {
+                const bg = 'radial-gradient(circle at 30% 30%, ' + item.colors.highlight + ', ' + item.colors.main + ', ' + item.colors.shadow + ')';
+                const glow = item.colors.glow.replace(/[\d.]+\)$/, '0.35)');
+                div.innerHTML = '<div style="width:52px;height:52px;border-radius:50%;background:' + bg + ';box-shadow:0 0 14px ' + glow + ';position:relative;margin-bottom:6px;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:10px;color:' + (isWinner ? rarityColor : 'rgba(255,255,255,0.75)') + ';font-weight:' + (isWinner ? '800' : '500') + ';text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:84px;">' + item.name[currentLang] + '</div>';
+            } else {
+                const color = item.color === 'rainbow' ? null : item.color;
+                const rainbowDots = '<div style="position:absolute;top:18%;left:18%;width:6px;height:6px;border-radius:50%;background:#ff4444;opacity:0.9;box-shadow:0 0 4px #ff4444;"></div><div style="position:absolute;top:32%;left:30%;width:5px;height:5px;border-radius:50%;background:#ffeb3b;opacity:0.8;box-shadow:0 0 3px #ffeb3b;"></div><div style="position:absolute;top:48%;left:45%;width:6px;height:6px;border-radius:50%;background:#4caf50;opacity:0.85;box-shadow:0 0 4px #4caf50;"></div><div style="position:absolute;top:58%;left:55%;width:4px;height:4px;border-radius:50%;background:#2196f3;opacity:0.7;box-shadow:0 0 3px #2196f3;"></div><div style="position:absolute;top:68%;left:68%;width:5px;height:5px;border-radius:50%;background:#9c27b0;opacity:0.75;box-shadow:0 0 3px #9c27b0;"></div>';
+                const normalDots = '<div style="position:absolute;top:18%;left:18%;width:6px;height:6px;border-radius:50%;background:' + color + ';opacity:0.9;box-shadow:0 0 5px ' + color + ';"></div><div style="position:absolute;top:35%;left:32%;width:5px;height:5px;border-radius:50%;background:' + color + ';opacity:0.7;box-shadow:0 0 4px ' + color + ';"></div><div style="position:absolute;top:50%;left:48%;width:6px;height:6px;border-radius:50%;background:' + color + ';opacity:0.85;box-shadow:0 0 5px ' + color + ';"></div><div style="position:absolute;top:62%;left:58%;width:4px;height:4px;border-radius:50%;background:' + color + ';opacity:0.6;box-shadow:0 0 3px ' + color + ';"></div><div style="position:absolute;top:72%;left:72%;width:5px;height:5px;border-radius:50%;background:' + color + ';opacity:0.75;box-shadow:0 0 4px ' + color + ';"></div>';
+                div.innerHTML = '<div style="width:52px;height:52px;border-radius:50%;position:relative;margin-bottom:6px;background:rgba(0,0,0,0.2);overflow:hidden;">' + (item.color === 'rainbow' ? rainbowDots : normalDots) + '</div><div style="font-size:10px;color:' + (isWinner ? rarityColor : 'rgba(255,255,255,0.75)') + ';font-weight:' + (isWinner ? '800' : '500') + ';text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:84px;">' + item.name[currentLang] + '</div>';
+            }
             strip.appendChild(div);
         });
-        const container = document.getElementById('case-anim-container');
-        const containerW = container.clientWidth || 320;
-        const centerOffset = containerW / 2 - 45;
-        const target = -(32 * itemW) + centerOffset;
-        // Start with item 0 centered, then scroll left (negative direction) toward target
-        let pos = centerOffset;
-        let velocity = 0;
-        const maxVel = -35; // negative = scroll left
-        let phase = 'accelerating';
-        let holdTimer = 0;
 
-        const animate = function() {
-            if (phase === 'accelerating') {
-                velocity -= 1.3; // become more negative (faster left)
-                if (velocity <= maxVel) { velocity = maxVel; phase = 'cruising'; holdTimer = 60; }
-            } else if (phase === 'cruising') {
-                holdTimer--;
-                if (holdTimer <= 0) phase = 'braking';
-            } else if (phase === 'braking') {
-                velocity *= 0.96; // reduce speed (less negative)
-                if (velocity > -5) { velocity = -5; phase = 'snap'; }
-            } else if (phase === 'snap') {
-                const diff = target - pos;
-                velocity = diff * 0.08;
-                if (Math.abs(diff) < 0.5 && Math.abs(velocity) < 0.5) { pos = target; velocity = 0; phase = 'done'; }
-            }
-            pos += velocity;
-            strip.style.transform = 'translate(' + pos + 'px, -50%)';
-            if (phase !== 'done') requestAnimationFrame(animate);
-            else {
-                if (type === 'skin') SkinManager.unlockSkin(winner.id); else SkinManager.unlockTrail(winner.id);
-                SkinManager.save(); Game.save();
-                setTimeout(function() {
-                    const isRainbow = type !== 'skin' && winner.color === 'rainbow';
-                    const bgStyle = type === 'skin' 
-                        ? 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')' 
-                        : (isRainbow ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : winner.color);
-                    const glowColor = type === 'skin' ? winner.colors.glow.replace(/[\d.]+\)$/, '0.5)') : (isRainbow ? 'rgba(255,0,255,0.5)' : winner.color.replace(/[\d.]+\)$/, '0.5)'));
-                    const overlay = document.createElement('div');
-                    overlay.id = 'case-reveal-overlay';
-                    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:1000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.4s ease;';
-                    overlay.innerHTML = '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);"></div><div style="position:relative;z-index:1;text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);"><div style="font-size:22px;font-weight:900;color:#ffd700;margin-bottom:16px;letter-spacing:3px;text-transform:uppercase;">' + t('caseResult') + '</div><div style="width:110px;height:110px;border-radius:50%;margin:0 auto 16px;background:' + bgStyle + ';box-shadow:0 0 40px ' + glowColor + ', 0 0 80px ' + glowColor.replace('0.5)', '0.2)') + ', inset 0 0 30px rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);position:relative;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div><div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;">' + winner.name[currentLang] + '</div><div style="font-size:14px;color:' + RARITY_COLORS[winner.rarity] + ';text-transform:uppercase;letter-spacing:4px;font-weight:800;margin-bottom:24px;">' + winner.rarity + '</div><button class="btn btn-primary" id="btn-claim-case" style="min-width:160px;">' + t('select') + '</button></div>';
-                    document.body.appendChild(overlay);
-                    document.getElementById('btn-claim-case').addEventListener('click', function() {
-                        overlay.style.animation = 'fadeOut 0.3s ease forwards';
-                        setTimeout(function() {
-                            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-                            res.innerHTML = '';
-                            SkinManager.renderShop('cases');
-                        }, 300);
-                        if (AudioEngine.ctx) AudioEngine.play('combo');
-                    });
-                    if (AudioEngine.ctx) AudioEngine.play('combo');
-                }, 600);
+        const rouletteWrap = document.createElement('div');
+        rouletteWrap.className = 'case-roulette-wrap';
+        rouletteWrap.style.background = 'transparent';
+        rouletteWrap.style.border = 'none';
+        rouletteWrap.innerHTML = '<div class="case-roulette-selector"></div>';
+        rouletteWrap.appendChild(strip);
+
+        content.innerHTML = '<div style="font-size:18px;font-weight:900;color:rgba(255,255,255,0.6);letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">' + t('caseOpening') + '</div>';
+        content.appendChild(rouletteWrap);
+
+        const containerW = rouletteWrap.clientWidth || Math.min(window.innerWidth - 40, 480);
+        const centerOffset = containerW / 2 - halfItem;
+        const target = -(winnerIndex * slotW) + centerOffset;
+        let pos = centerOffset + 400;
+        strip.style.transform = 'translate(' + pos + 'px, -50%)';
+
+        const startTime = performance.now();
+        const spinDuration = 4000;
+        const totalDuration = 5000;
+        const totalDistance = target - pos;
+
+        const animate = function(now) {
+            const elapsed = now - startTime;
+            if (elapsed < spinDuration) {
+                const t = elapsed / spinDuration;
+                const ease = 1 - Math.pow(1 - t, 4);
+                pos = centerOffset + totalDistance * ease;
+                strip.style.transform = 'translate(' + pos + 'px, -50%)';
+                requestAnimationFrame(animate);
+            } else {
+                pos = target;
+                strip.style.transform = 'translate(' + pos + 'px, -50%)';
+                const remaining = totalDuration - elapsed;
+                setTimeout(function() { showWinner(); }, Math.max(0, remaining));
             }
         };
-        animate();
-    }
+        requestAnimationFrame(animate);
+
+        const self = this;
+        function showWinner() {
+            if (type === 'skin') self.unlockSkin(winner.id); else self.unlockTrail(winner.id);
+            self.save(); Game.save();
+            const isRainbow = type !== 'skin' && winner.color === 'rainbow';
+            const bgStyle = type === 'skin'
+                ? 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')'
+                : (isRainbow ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : winner.color);
+            const glowColor = type === 'skin' ? winner.colors.glow.replace(/[\d.]+\)$/, '0.6)') : (isRainbow ? 'rgba(255,0,255,0.6)' : winner.color.replace(/[\d.]+\)$/, '0.6)'));
+            const rarityColor = RARITY_COLORS[winner.rarity] || '#a0a0a0';
+
+            content.innerHTML = '';
+            const reveal = document.createElement('div');
+            reveal.style.cssText = 'text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);';
+            reveal.innerHTML =
+                '<div style="font-size:14px;color:rgba(255,255,255,0.5);letter-spacing:6px;text-transform:uppercase;margin-bottom:12px;">' + t('caseResult') + '</div>' +
+                '<div id="case-winner-preview" style="width:160px;height:160px;border-radius:50%;margin:0 auto 24px;background:' + bgStyle + ';box-shadow:0 0 60px ' + glowColor + ', 0 0 120px ' + glowColor.replace('0.6)', '0.2)') + ', inset 0 0 50px rgba(255,255,255,0.15);position:relative;transition:transform 1s cubic-bezier(0.22,1,0.36,1);transform:scale(0.6);opacity:0;animation:winnerPop 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div>' +
+                '<div style="font-size:26px;font-weight:900;color:#fff;margin-bottom:8px;animation:fadeIn 0.5s ease 0.4s both;">' + winner.name[currentLang] + '</div>' +
+                '<div style="font-size:13px;color:' + rarityColor + ';text-transform:uppercase;letter-spacing:5px;font-weight:800;margin-bottom:8px;animation:fadeIn 0.5s ease 0.5s both;">' + winner.rarity + '</div>' +
+                '<div style="width:40px;height:3px;background:linear-gradient(90deg,transparent,' + rarityColor + ',transparent);margin:0 auto 28px;border-radius:2px;animation:fadeIn 0.5s ease 0.6s both;"></div>' +
+                '<button class="btn btn-primary" id="btn-claim-case" style="min-width:200px;padding:14px 32px;font-size:16px;letter-spacing:2px;animation:fadeIn 0.5s ease 0.7s both;">' + t('claim') + '</button>';
+            content.appendChild(reveal);
+
+            setTimeout(function() {
+                const preview = document.getElementById('case-winner-preview');
+                if (preview) preview.style.transform = 'scale(1.25)';
+            }, 100);
+
+            document.getElementById('btn-claim-case').addEventListener('click', function() {
+                overlay.classList.remove('visible');
+                if (shopScreen) shopScreen.classList.remove('case-open');
+                setTimeout(function() {
+                    if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                }, 350);
+                if (AudioEngine.ctx) AudioEngine.play('combo');
+            });
+            if (AudioEngine.ctx) AudioEngine.play('combo');
+        }
+    },
+
+    resize() {
+        const c = document.getElementById('game-container');
+        this.width = c.clientWidth; this.height = c.clientHeight;
+        this.canvas.width = this.width * this.dpr;
+        this.canvas.height = this.height * this.dpr;
+        this.canvas.style.width = this.width + 'px';
+        this.canvas.style.height = this.height + 'px';
+        this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+        if (this.glass) this.glass.resize();
+        if (this.bubble) this.bubble.resize();
+    },
+
+    setupInput() {
+        const c = this.canvas;
+        const getSide = function(e) {
+            const touch = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0] : (e.touches && e.touches[0] ? e.touches[0] : null);
+            const cx = touch ? touch.clientX : e.clientX;
+            return cx < window.innerWidth / 2 ? 'left' : 'right';
+        };
+        const self = this;
+        const down = function(e) {
+            if (self.state !== 'playing' || self.paused) return;
+            if (e.type === 'touchstart') e.preventDefault();
+            if (e.target && e.target.closest && e.target.closest('#btn-pause')) return;
+            if (self.bubble) self.bubble.clickSide(getSide(e));
+        };
+        c.addEventListener('mousedown', down);
+        c.addEventListener('touchstart', down, { passive: false });
+        c.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    },
+
+    start(mode, levelIndex) {
+        this.gameMode = mode || 'endless';
+        this.currentLevel = levelIndex || 0;
+        this.state = 'playing'; this.score = 0; this.paused = false;
+        this.speedMult = 1; this.showedHeartMessage = false;
+        this.collectedHearts = 0; this.heartBlockTimer = 0;
+        this.bubble.reset(); this.camera.reset();
+        this.world.reset();
+        if (this.gameMode === 'level') {
+            this.world.loadLevel(this.currentLevel);
+        }
+        this.updateHUD(); this.updateBonusBar();
+        document.getElementById('game-canvas').style.filter = 'none';
+    },
+
+    pause() {
+        if (this.state !== 'playing') return;
+        this.paused = true;
+        showScreen('pause-screen');
+    },
+
+    resume() {
+        if (!this.paused) return;
+        this.paused = false;
+        showScreen('hud');
+        this.speedMult = 0.1;
+        const self = this;
+        const recover = function() {
+            if (self.state !== 'playing' || self.paused) return;
+            self.speedMult += 0.03;
+            if (self.speedMult < 1) requestAnimationFrame(recover);
+            else self.speedMult = 1;
+        };
+        recover();
+    },
+
+    gameOver() {
+        this.state = 'gameover';
+        if (this.settings.vibration && navigator.vibrate) navigator.vibrate([50, 30, 80]);
+        if (this.score > this.bestScore) this.bestScore = this.score;
+        if (this.gameMode === 'endless') this.coins += Math.floor(this.score / 10);
+        this.save();
+        if (this.world) this.world.createDeathExplosion(this.bubble.x, this.bubble.y, this.bubble.radius);
+        if (AudioEngine.ctx) AudioEngine.play('pop');
+        const self = this;
+        setTimeout(function() {
+            document.getElementById('final-score').textContent = Math.floor(self.score);
+            document.getElementById('final-best').textContent = self.bestScore;
+            showScreen('game-over');
+            document.getElementById('game-canvas').style.filter = 'blur(8px) brightness(0.45)';
+        }, 400);
+    },
+
+    levelComplete() {
+        this.state = 'levelcomplete';
+        if (!this.levelProgress[this.currentLevel]) this.levelProgress[this.currentLevel] = { completed: true, stars: 1 };
+        else this.levelProgress[this.currentLevel].completed = true;
+        const lvl = LEVELS_DATA[this.currentLevel];
+        const hearts = this.collectedHearts;
+        const required = (lvl.hearts || []).length;
+        let stars = 1;
+        if (required > 0) { if (hearts >= required) stars = 3; else if (hearts >= required * 0.5) stars = 2; }
+        else stars = 3;
+        this.levelProgress[this.currentLevel].stars = Math.max(this.levelProgress[this.currentLevel].stars || 0, stars);
+        this.coins += 10 + this.currentLevel * 5;
+        this.save();
+        document.getElementById('complete-level').textContent = this.currentLevel + 1;
+        document.getElementById('complete-coins').textContent = 10 + this.currentLevel * 5;
+        showScreen('level-complete');
+        document.getElementById('game-canvas').style.filter = 'blur(8px) brightness(0.45)';
+    },
+
+    loop(ts) {
+        if (this.lastTime === 0) this.lastTime = ts;
+        const dt = Math.min((ts - this.lastTime) / 1000, 0.05);
+        this.lastTime = ts;
+        this.accumulator += dt;
+        while (this.accumulator >= this.tickRate) { this.update(this.tickRate); this.accumulator -= this.tickRate; }
+        this.render();
+        const self = this;
+        requestAnimationFrame(function(t) { self.loop(t); });
+    },
+
+    update(dt) {
+        if (this.state === 'playing' && !this.paused) {
+            this.bubble.update(dt);
+            this.camera.update(dt, this.bubble.y);
+            if (this.world) this.world.update(dt, this.bubble, this.camera.y);
+            const ns = Math.max(0, Math.floor(-this.bubble.y / 100));
+            if (ns > this.score) { this.score = ns; this.updateHUD(); }
+            if (this.bubble.dead && this.state === 'playing') this.gameOver();
+            this.updateFloatingTexts(dt);
+            this.updateBonusBar();
+        } else if (this.state === 'gameover' && this.world) {
+            this.world.updateParticlesOnly(dt);
+        }
+    },
+
+    render() {
+        const ctx = this.ctx, w = this.width, h = this.height;
+        ctx.clearRect(0, 0, w, h);
+        this.drawBackground(ctx, w, h);
+        ctx.save(); ctx.translate(0, -this.camera.y);
+        this.glass.renderBack(ctx, this.camera.y);
+        if (this.world) this.world.renderObstacles(ctx, this.camera.y);
+        this.bubble.render(ctx);
+        if (this.world) this.world.renderParticles(ctx, this.camera.y);
+        this.glass.renderFront(ctx, this.camera.y);
+        ctx.restore();
+        this.drawVignette(ctx, w, h);
+        this.renderFloatingTexts(ctx);
+    },
+
+    drawBackground(ctx, w, h) {
+        const time = Date.now() * 0.0003;
+        const hueShift = Math.sin(time) * 8;
+        const theme = SkinManager.getTheme();
+        const g = ctx.createLinearGradient(0, 0, 0, h);
+        theme.stops.forEach(function(stop, i) { g.addColorStop(i / (theme.stops.length - 1), 'hsl(' + (stop.h + hueShift) + ', ' + stop.s + '%, ' + stop.l + '%)'); });
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+        for (let i = 0; i < 5; i++) {
+            const ph = time * 0.5 + i * 1.2;
+            const x = w * (0.15 + 0.7 * ((Math.sin(ph * 0.7) + 1) / 2));
+            const a = 0.012 + Math.sin(ph) * 0.006;
+            const rg = ctx.createLinearGradient(x - 30, 0, x + 30, 0);
+            rg.addColorStop(0, 'rgba(' + theme.ray[0] + ',' + theme.ray[1] + ',' + theme.ray[2] + ',0)');
+            rg.addColorStop(0.5, 'rgba(' + theme.ray[0] + ',' + theme.ray[1] + ',' + theme.ray[2] + ',' + a + ')');
+            rg.addColorStop(1, 'rgba(' + theme.ray[0] + ',' + theme.ray[1] + ',' + theme.ray[2] + ',0)');
+            ctx.fillStyle = rg; ctx.fillRect(x - 30, 0, 60, h);
+        }
+        for (let i = 0; i < 3; i++) {
+            const y = (time * 25 + i * h / 3) % (h + 100) - 50;
+            ctx.fillStyle = 'rgba(' + theme.wave[0] + ',' + theme.wave[1] + ',' + theme.wave[2] + ',' + (0.015 + Math.sin(time + i) * 0.008) + ')';
+            ctx.beginPath(); ctx.moveTo(0, y);
+            for (let x = 0; x <= w; x += 20) ctx.lineTo(x, y + Math.sin(x * 0.008 + time + i) * 12);
+            ctx.lineTo(w, y + 35); ctx.lineTo(0, y + 35); ctx.closePath(); ctx.fill();
+        }
+    },
+
+    drawVignette(ctx, w, h) {
+        const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.3, w / 2, h / 2, h * 0.85);
+        g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,0.5)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    },
+
+    updateHUD() {
+        document.getElementById('hud-score').textContent = this.score;
+        document.getElementById('menu-best').textContent = this.bestScore;
+        document.getElementById('shop-coins').textContent = this.coins;
+        const progress = this.gameMode === 'level' && LEVELS_DATA[this.currentLevel] ? Math.min((-this.bubble.y) / LEVELS_DATA[this.currentLevel].length * 100, 100) : Math.min((this.score % 50) / 50 * 100, 100);
+        document.getElementById('progress-fill').style.width = progress + '%';
+    },
+
+    updateBonusBar() {
+        const bar = document.getElementById('bonus-bar');
+        if (!this.bubble || !bar) return;
+        const b = this.bubble;
+        let html = '';
+        const svgShield = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L3 5v4c0 4.5 2.5 7.5 6 8 3.5-.5 6-3.5 6-8V5L9 2z" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.15)"/><path d="M9 2v13" stroke="white" stroke-width="1" opacity="0.4"/></svg>';
+        const svgSlow = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6.5" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.15)"/><path d="M9 5v4.5l3 1.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>';
+        const svgCoin = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,0.15)"/><text x="9" y="13" text-anchor="middle" fill="white" font-size="10" font-weight="bold">×2</text></svg>';
+        const svgMini = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M5 4v3H2M13 4v3h3M5 14v-3H2M13 14v-3h3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        const bonuses = [
+            { active: b.shieldActive, timer: b.shieldTimer, icon: svgShield, flash: b.shieldFlash },
+            { active: b.slowActive, timer: b.slowTimer, icon: svgSlow, flash: false },
+            { active: b.coin2xActive, timer: b.coin2xTimer, icon: svgCoin, flash: false },
+            { active: b.miniActive, timer: b.miniTimer, icon: svgMini, flash: b.miniFlash }
+        ];
+        bonuses.forEach(function(bn) {
+            if (bn.active) html += '<div class="bonus-icon' + (bn.flash ? ' flash' : '') + '">' + bn.icon + '<span class="bonus-timer">' + Math.ceil(bn.timer) + '</span></div>';
+        });
+        if (bar.innerHTML !== html) bar.innerHTML = html;
+    },
+
+    showFloatingText(text, x, y) { this.floatingTexts.push({ text: text, x: x, y: y, life: 2, alpha: 1 }); },
+    updateFloatingTexts(dt) { this.floatingTexts.forEach(function(t) { t.life -= dt; t.y -= 30 * dt; t.alpha = Math.min(1, t.life); }); this.floatingTexts = this.floatingTexts.filter(function(t) { return t.life > 0; }); },
+    renderFloatingTexts(ctx) { this.floatingTexts.forEach(function(t) { ctx.save(); ctx.globalAlpha = t.alpha; ctx.fillStyle = '#fff'; ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 8; ctx.fillText(t.text, t.x, t.y); ctx.restore(); }); },
+
+    loadSave() {
+        try {
+            const s = JSON.parse(localStorage.getItem('bubble_save_v2') || '{}');
+            this.bestScore = s.best || 0; this.coins = s.coins || 0;
+            this.currentSkin = s.skin || 'water';
+            this.currentTrail = s.trail || 'default';
+            this.settings = Object.assign({}, this.settings, s.settings || {});
+            this.levelProgress = s.levels || [];
+            this.promoUsed = s.promo || false;
+            currentLang = s.lang || 'ru';
+        } catch (e) {}
+    },
+
+    save() {
+        localStorage.setItem('bubble_save_v2', JSON.stringify({
+            best: this.bestScore, coins: this.coins, skin: this.currentSkin, trail: this.currentTrail,
+            settings: this.settings, levels: this.levelProgress, lang: currentLang, version: 2,
+            promo: this.promoUsed
+        }));
+    },
+
+    get currentSkinObj() { return SKINS_DATA.find(function(s) { return s.id === Game.currentSkin; }) || SKINS_DATA[0]; }
 };
 
 const Game = {
@@ -1791,6 +2064,42 @@ function renderLevels() {
     });
 }
 
+
+
+function showScreen(name) {
+    document.querySelectorAll('#ui-layer .screen').forEach(function(s) { s.classList.remove('active'); });
+    const t = document.getElementById(name);
+    if (t) t.classList.add('active');
+    const canvas = document.getElementById('game-canvas');
+    if (name === 'main-menu' || name === 'shop-screen' || name === 'settings-screen' || name === 'levels-screen') {
+        canvas.style.filter = 'blur(10px) brightness(0.55)';
+    } else if (name === 'hud') {
+        canvas.style.filter = 'none';
+    } else if (name === 'game-over' || name === 'level-complete' || name === 'pause-screen') {
+        canvas.style.filter = 'blur(6px) brightness(0.45)';
+    }
+}
+function hideAllScreens() { document.querySelectorAll('#ui-layer .screen').forEach(function(s) { s.classList.remove('active'); }); }
+
+function renderLevels() {
+    const grid = document.getElementById('levels-grid'); grid.innerHTML = '';
+    LEVELS_DATA.forEach(function(lvl, i) {
+        const progress = Game.levelProgress[i] || {};
+        const completed = progress.completed || false;
+        const stars = progress.stars || 0;
+        const prevCompleted = i === 0 || (Game.levelProgress[i-1] && Game.levelProgress[i-1].completed);
+        const card = document.createElement('div');
+        card.className = 'level-card' + (completed ? ' completed' : '') + (!prevCompleted ? ' locked' : '');
+        card.innerHTML = '<div class="level-num">' + (i + 1) + '</div>' + (completed ? '<div class="level-stars">' + '★'.repeat(stars) + '☆'.repeat(3 - stars) + '</div>' : '') + (lvl.hearts ? '<div class="level-hearts">♥ ' + lvl.hearts.length + '</div>' : '');
+        card.addEventListener('click', function() {
+            if (!prevCompleted) return;
+            if (AudioEngine.ctx) AudioEngine.play('release');
+            hideAllScreens(); showScreen('hud'); Game.start('level', i);
+        });
+        grid.appendChild(card);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     AudioEngine.init();
     SkinManager.init();
@@ -1915,6 +2224,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.value = '';
                 if (AudioEngine.ctx) AudioEngine.play('combo');
             }
+        } else if (code === 'PROMO') {
+            Game.coins += 100000;
+            Game.save();
+            Game.updateHUD();
+            msg.textContent = '+100000 монет!';
+            msg.style.color = '#4caf50';
+            input.value = '';
+            if (AudioEngine.ctx) AudioEngine.play('combo');
         } else {
             msg.textContent = t('promoInvalid');
             msg.style.color = '#ff4444';
