@@ -187,7 +187,31 @@ html,body { width:100%; height:100%; overflow:hidden; background:#0a0a1a; font-f
                     <button class="btn btn-secondary" id="btn-levels" data-i18n="levels">УРОВНИ</button>
                     <button class="btn btn-secondary" id="btn-shop" data-i18n="shop">МАГАЗИН</button>
                     <button class="btn btn-secondary" id="btn-settings" data-i18n="settings">НАСТРОЙКИ</button>
-                    <div class="best-score"><svg viewBox="0 0 24 24" width="20" height="20" style="filter:drop-shadow(0 0 5px rgba(255,215,0,0.6));"><path d="M5 3h14v2h-1v1c0 3.87-3.13 7-7 7s-7-3.13-7-7V5H5V3zm11.6 2H7.4c.24 2.5 2.32 4.5 4.6 4.5s4.36-2 4.6-4.5zM3 5h2v1c0 2.76 2.24 5 5 5h2c2.76 0 5-2.24 5-5V5h2v1c0 3.87-3.13 7-7 7h-2c-3.87 0-7-3.13-7-7V5z" fill="#ffd700"/><path d="M9 20h6v2H9z" fill="#ffd700"/></svg><span id="menu-best">0</span></div>
+                    <div class="best-score"><svg viewBox="0 0 64 64" width="22" height="22" style="filter:drop-shadow(0 0 6px rgba(255,215,0,0.5));">
+  <defs>
+    <linearGradient id="cupG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff8c8"/>
+      <stop offset="0.4" stop-color="#ffd700"/>
+      <stop offset="1" stop-color="#daa520"/>
+    </linearGradient>
+    <linearGradient id="cupS" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff8c8" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffd700" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Handles -->
+  <path d="M12 18 C4 18,4 34,14 36" fill="none" stroke="url(#cupG)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M52 18 C60 18,60 34,50 36" fill="none" stroke="url(#cupG)" stroke-width="4" stroke-linecap="round"/>
+  <!-- Cup body -->
+  <path d="M18 10 L20 44 C20 52,28 56,32 56 C36 56,44 52,44 44 L46 10 Z" fill="url(#cupG)"/>
+  <!-- Shine -->
+  <path d="M22 14 L23 40 C23 46,26 50,30 50" fill="none" stroke="url(#cupS)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Base -->
+  <rect x="24" y="56" width="16" height="4" rx="2" fill="#daa520"/>
+  <rect x="22" y="60" width="20" height="3" rx="1.5" fill="#b8860b"/>
+  <!-- Star -->
+  <path d="M32 24 L34 30 L40 30 L35 34 L37 40 L32 36 L27 40 L29 34 L24 30 L30 30 Z" fill="#fff8c8" opacity="0.9"/>
+</svg><span id="menu-best">0</span></div>
                 </div>
             </div>
             <div id="hud" class="screen">
@@ -1475,14 +1499,15 @@ const SkinManager = {
         const startTime = performance.now();
         const spinDuration = 4000;
         const totalDuration = 5000;
-        const totalDistance = target - pos;
+        const startPos = pos;
+        const totalDistance = target - startPos;
 
         const animate = function(now) {
             const elapsed = now - startTime;
             if (elapsed < spinDuration) {
                 const t = elapsed / spinDuration;
                 const ease = 1 - Math.pow(1 - t, 4);
-                pos = centerOffset + totalDistance * ease;
+                pos = startPos + totalDistance * ease;
                 strip.style.transform = 'translate(' + pos + 'px, -50%)';
                 requestAnimationFrame(animate);
             } else {
@@ -1499,18 +1524,28 @@ const SkinManager = {
             if (type === 'skin') self.unlockSkin(winner.id); else self.unlockTrail(winner.id);
             self.save(); Game.save();
             const isRainbow = type !== 'skin' && winner.color === 'rainbow';
-            const bgStyle = type === 'skin'
-                ? 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')'
-                : (isRainbow ? 'conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)' : winner.color);
-            const glowColor = type === 'skin' ? winner.colors.glow.replace(/[\d.]+\)$/, '0.6)') : (isRainbow ? 'rgba(255,0,255,0.6)' : winner.color.replace(/[\d.]+\)$/, '0.6)'));
             const rarityColor = RARITY_COLORS[winner.rarity] || '#a0a0a0';
+
+            let previewHTML = '';
+            if (type === 'skin') {
+                const bgStyle = 'radial-gradient(circle at 30% 30%, ' + winner.colors.highlight + ', ' + winner.colors.main + ', ' + winner.colors.shadow + ')';
+                const glowColor = winner.colors.glow.replace(/[\d.]+\)$/, '0.6)');
+                previewHTML = '<div id="case-winner-preview" style="width:160px;height:160px;border-radius:50%;margin:0 auto 24px;background:' + bgStyle + ';box-shadow:0 0 60px ' + glowColor + ', 0 0 120px ' + glowColor.replace('0.6)', '0.2)') + ', inset 0 0 50px rgba(255,255,255,0.15);position:relative;transition:transform 1s cubic-bezier(0.22,1,0.36,1);transform:scale(0.6);opacity:0;animation:winnerPop 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div>';
+            } else {
+                const isRainbow = winner.color === 'rainbow';
+                const glowColor = isRainbow ? 'rgba(255,0,255,0.6)' : winner.color.replace(/[\d.]+\)$/, '0.6)');
+                const color = winner.color === 'rainbow' ? null : winner.color;
+                const rainbowDots = '<div style="position:absolute;top:18%;left:18%;width:14px;height:14px;border-radius:50%;background:#ff4444;opacity:0.9;box-shadow:0 0 8px #ff4444;"></div><div style="position:absolute;top:32%;left:30%;width:12px;height:12px;border-radius:50%;background:#ffeb3b;opacity:0.8;box-shadow:0 0 6px #ffeb3b;"></div><div style="position:absolute;top:48%;left:45%;width:14px;height:14px;border-radius:50%;background:#4caf50;opacity:0.85;box-shadow:0 0 8px #4caf50;"></div><div style="position:absolute;top:58%;left:55%;width:10px;height:10px;border-radius:50%;background:#2196f3;opacity:0.7;box-shadow:0 0 6px #2196f3;"></div><div style="position:absolute;top:68%;left:68%;width:12px;height:12px;border-radius:50%;background:#9c27b0;opacity:0.75;box-shadow:0 0 6px #9c27b0;"></div>';
+                const normalDots = '<div style="position:absolute;top:18%;left:18%;width:14px;height:14px;border-radius:50%;background:' + color + ';opacity:0.9;box-shadow:0 0 8px ' + color + ';"></div><div style="position:absolute;top:32%;left:30%;width:12px;height:12px;border-radius:50%;background:' + color + ';opacity:0.7;box-shadow:0 0 6px ' + color + ';"></div><div style="position:absolute;top:48%;left:45%;width:14px;height:14px;border-radius:50%;background:' + color + ';opacity:0.85;box-shadow:0 0 8px ' + color + ';"></div><div style="position:absolute;top:58%;left:55%;width:10px;height:10px;border-radius:50%;background:' + color + ';opacity:0.6;box-shadow:0 0 6px ' + color + ';"></div><div style="position:absolute;top:68%;left:68%;width:12px;height:12px;border-radius:50%;background:' + color + ';opacity:0.75;box-shadow:0 0 6px ' + color + ';"></div>';
+                previewHTML = '<div id="case-winner-preview" style="width:160px;height:160px;border-radius:50%;margin:0 auto 24px;background:rgba(0,0,0,0.35);box-shadow:0 0 60px ' + glowColor + ', 0 0 120px ' + glowColor.replace('0.6)', '0.2)') + ', inset 0 0 50px rgba(255,255,255,0.05);position:relative;transition:transform 1s cubic-bezier(0.22,1,0.36,1);transform:scale(0.6);opacity:0;animation:winnerPop 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;overflow:hidden;">' + (isRainbow ? rainbowDots : normalDots) + '</div>';
+            }
 
             content.innerHTML = '';
             const reveal = document.createElement('div');
             reveal.style.cssText = 'text-align:center;animation:glassIn 0.7s cubic-bezier(0.22,1,0.36,1);';
             reveal.innerHTML =
                 '<div style="font-size:14px;color:rgba(255,255,255,0.5);letter-spacing:6px;text-transform:uppercase;margin-bottom:12px;">' + t('caseResult') + '</div>' +
-                '<div id="case-winner-preview" style="width:160px;height:160px;border-radius:50%;margin:0 auto 24px;background:' + bgStyle + ';box-shadow:0 0 60px ' + glowColor + ', 0 0 120px ' + glowColor.replace('0.6)', '0.2)') + ', inset 0 0 50px rgba(255,255,255,0.15);position:relative;transition:transform 1s cubic-bezier(0.22,1,0.36,1);transform:scale(0.6);opacity:0;animation:winnerPop 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s forwards;"><div style="position:absolute;top:18%;left:20%;width:22%;height:22%;border-radius:50%;background:rgba(255,255,255,0.7);filter:blur(0.5px);"></div></div>' +
+                previewHTML +
                 '<div style="font-size:26px;font-weight:900;color:#fff;margin-bottom:8px;animation:fadeIn 0.5s ease 0.4s both;">' + winner.name[currentLang] + '</div>' +
                 '<div style="font-size:13px;color:' + rarityColor + ';text-transform:uppercase;letter-spacing:5px;font-weight:800;margin-bottom:8px;animation:fadeIn 0.5s ease 0.5s both;">' + winner.rarity + '</div>' +
                 '<div style="width:40px;height:3px;background:linear-gradient(90deg,transparent,' + rarityColor + ',transparent);margin:0 auto 28px;border-radius:2px;animation:fadeIn 0.5s ease 0.6s both;"></div>' +
